@@ -1,0 +1,143 @@
+@import './shared.less';
+@menu-speed: 0.3s;
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: @darkblue;
+  color: @lightgrey;
+  font-family: @font-body;
+  font-size: 18px;
+}
+
+header {
+  top: 0;
+  margin: 20px 0 0;
+
+  .name {
+    font-weight: 700;
+    line-height: 20px;
+    text-transform: uppercase;
+
+    span {
+      font-weight: 300;
+      padding-left: 5px;
+    }
+  }
+
+  .settings {
+    text-align: right;
+  }
+
+  .app-logo {
+    margin: 50px auto 0;
+    display: block;
+  }
+}
+
+nav {
+  margin: 30px 0;
+
+  img {
+    display: block;
+    margin: auto;
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+
+    &.showMenu {
+      max-height: 500px;
+      opacity: 1;
+      transition: all @menu-speed ease-in;
+    }
+
+    &.hideMenu {
+      max-height: 0;
+      opacity: 0.2;
+      transition: all @menu-speed ease-out;
+    }
+
+    li {
+      padding: 0;
+      margin: 0 0 30px;
+      text-align: center;
+      list-style: none;
+
+      a {
+        text-transform: uppercase;
+        font-family: @font-body;
+        color: @almostwhite;
+        text-decoration: none;
+        font-size: 24px;
+        font-weight: 300;
+        line-height: 27px;
+      }
+    }
+  }
+}
+
+h1 {
+  font-family: @font-heading;
+  color: @limeyellow;
+  text-align: center;
+  font-size: 36px;
+  line-height: 47px;
+  font-weight: 700;
+}
+
+button {
+  &.large {
+    background-color: @limeyellow;
+    width: 100%;
+    font-size: 24px;
+    line-height: 64px;
+    text-align: center;
+    color: @darkblue;
+    text-transform: uppercase;
+    margin: 10px 0;
+  }
+
+  &.small {
+    background-color: none;
+    display: block;
+    margin: auto;
+    color: @limeyellow;
+    font-size: 14px;
+    text-transform: uppercase;
+    line-height: 30px;
+  }
+}
+
+.fixedBottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.menuIsVisible {
+  .fixedBottom {
+    transition: all @menu-speed ease-out;
+    opacity: 0;
+  }
+
+  &.container .fader {
+    transition: all @menu-speed ease-out;
+    opacity: 0.15;
+  }
+}
+
+.menuIsNotVisible {
+  .fixedBottom {
+    transition: all @menu-speed ease-in;
+    opacity: 1;
+  }
+
+  &.container .fader {
+    transition: all @menu-speed ease-in;
+    opacity: 1;
+  }
+}
