@@ -18,11 +18,16 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      menuIsVisible: false
+      menuIsVisible: false,
+      showJoinClubOrLeague: false,
+      clubOrLeague: 0
     }
 
     this.menuToggled = this.menuToggled.bind(this);
     this.getMenuState = this.getMenuState.bind(this);
+    this.handleJoinClub = this.handleJoinClub.bind(this);
+    this.handleJoinLeague = this.handleJoinLeague.bind(this);
+    this.handleCloseJoinModal = this.handleCloseJoinModal.bind(this);
   }
 
   getUsername() {
@@ -51,6 +56,18 @@ export class App extends React.Component {
       : 'menuIsNotVisible';
   }
 
+  handleJoinClub() {
+    this.setState({showJoinClubOrLeague: true, clubOrLeague: 1});
+  }
+
+  handleJoinLeague() {
+    this.setState({showJoinClubOrLeague: true, clubOrLeague: 2});
+  }
+
+  handleCloseJoinModal() {
+    this.setState({showJoinClubOrLeague: false});
+  }
+
   render() {
     return (<div className={`container ${this.getMenuState()}`}>
       {!this.isLoggedIn() || <AppHeader username={this.getUsername()} clubname={this.getClubname()}></AppHeader>}
@@ -58,8 +75,8 @@ export class App extends React.Component {
       {!this.isLoggedIn() || <AppMenu visible={false} onToggle={this.menuToggled}></AppMenu>}
       <div className="fader">
         {
-          !this.isMemberOfSomething()
-            ? <DefaultWelcome></DefaultWelcome>
+          !this.isMemberOfSomething() && this.isLoggedIn()
+            ? <DefaultWelcome onJoinClub={this.handleJoinClub} onJoinLeague={this.handleJoinLeague}></DefaultWelcome>
             : <Switch>
                 <Route path="/login " component={Login}/>
                 <Route exact={true} path="/" component={MyLeagues}/>
@@ -74,7 +91,6 @@ export class App extends React.Component {
             <button className="large">Play a Match</button>
           </div>
       }
-
     </div>)
   }
 }
@@ -89,7 +105,8 @@ App.propTypes = {
 }
 
 App.defaultProps = {
-  menuIsVisible: false
+  menuIsVisible: false,
+  showJoinClubOrLeague: 0
 }
 
 export default App;

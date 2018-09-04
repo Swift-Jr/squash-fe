@@ -1,0 +1,54 @@
+@import "../../shared.less";
+
+.searchBar {
+  margin-top: 40px;
+}
+
+.optionTitle {
+  font-family: @font-display;
+  font-size: 24px;
+  line-height: 27px;
+}
+
+.optionDetail {
+  font-size: 14px;
+  font-family: @font-body;
+}
+
+ul.optionList {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+
+  li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 15px;
+    transition: all 500ms;
+    max-height: 200px;
+    overflow: hidden;
+    opacity: 1;
+
+    &.optionHidden {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    i {
+      float: right;
+      margin-top: 10px;
+    }
+  }
+}
+
+.addOption {
+  z-index: 1500;
+  display: block;
+  margin: auto;
+  font-size: 14px;
+  text-transform: uppercase;
+  line-height: 30px;
+  font-weight: 300;
+  margin-bottom: 15px;
+}

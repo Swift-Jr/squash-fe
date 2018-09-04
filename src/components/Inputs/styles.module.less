@@ -1,0 +1,22 @@
+@import "../../shared.less";
+
+input[type="text"] {
+  //width: (100% - 20px);
+  margin: 20px;
+  width: fill-available;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid @limeyellow;
+  font-family: @font-body;
+  font-size: 24px;
+  line-height: 27px;
+  padding: 10px 0;
+  outline: none;
+  opacity: 0.8;
+  transition: all 500ms;
+
+  &:focus {
+    border-bottom: 2px solid @limeyellow;
+    opacity: 1;
+  }
+}
