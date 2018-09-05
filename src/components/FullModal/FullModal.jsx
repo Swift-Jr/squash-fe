@@ -27,6 +27,9 @@ export class FullModal extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.close === true) {
+      return this.handleOnClose();
+    }
     if (this.state != nextProps) {
       this.setState({modalTitle: nextProps.modalTitle, bodyContent: nextProps.bodyContent, headContent: nextProps.headContent});
     }

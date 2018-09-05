@@ -50,7 +50,9 @@ export const BodyContent = (props) => {
           : <li className={styles.optionTitle}>Nothing found :(</li>
       }
     </ul>
-    <div className={`fixedBottom ${styles.addOption}`}>Create a new {props.noun}</div>
+    <div className={`fixedBottom ${styles.addOption}`}>
+      <button className={`small ${styles.small}`} onClick={props.handleOnClickCreate}>Create a new {props.noun}</button>
+    </div>
   </div>);
 }
 
@@ -60,10 +62,12 @@ export class JoinLeagueClub extends React.Component {
 
     this.state = {
       visible: props.visible || false,
+      closeModal: false,
       clubOrLeague: props.clubOrLeague || 1,
       buttonClass: props.buttonClass,
       buttonTitle: props.buttonTitle,
       filterValue: '',
+      createType: props.createType || null,
       options: [
         {
           id: 1,
@@ -87,6 +91,7 @@ export class JoinLeagueClub extends React.Component {
     this.handleOnOpen = this.handleOnOpen.bind(this);
     this.handleOnClose = this.handleOnClose.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
+    this.handleOnClickCreate = this.handleOnClickCreate.bind(this);
     this.getNoun = this.getNoun.bind(this);
 
     this.getHeadContent = this.getHeadContent.bind(this);
@@ -122,7 +127,13 @@ export class JoinLeagueClub extends React.Component {
   }
 
   getBodyContent() {
-    return <BodyContent noun={this.getNoun()} options={this.state.options} filterValue={this.state.filterValue}></BodyContent>;
+    return <BodyContent noun={this.getNoun()} handleOnClickCreate={this.handleOnClickCreate} options={this.state.options} filterValue={this.state.filterValue}></BodyContent>;
+  }
+
+  handleOnClickCreate() {
+    this.setState({closeModal: true});
+    const {createType} = this.state;
+    createType && createType(this.state.clubOrLeague);
   }
 
   render() {
@@ -130,7 +141,7 @@ export class JoinLeagueClub extends React.Component {
       <button className={this.state.buttonClass} onClick={this.handleOnOpen}>{this.state.buttonTitle}</button>
       {
         this.state.visible
-          ? <FullModal onClose={this.handleOnClose} headContent={this.getHeadContent()} bodyContent={this.getBodyContent()}></FullModal>
+          ? <FullModal close={this.state.closeModal} onClose={this.handleOnClose} headContent={this.getHeadContent()} bodyContent={this.getBodyContent()}></FullModal>
           : null
       }
     </div>);
