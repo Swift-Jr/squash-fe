@@ -1,0 +1,72 @@
+@import "../../shared.less";
+
+.leagueList {
+  padding: 0;
+  margin: 0;
+
+  li {
+    font-family: @font-display;
+    font-size: 24px;
+    line-height: 27px;
+    text-align: center;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+  }
+}
+
+.playerList {
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin: 0 0 20px;
+    padding: 0;
+    list-style: none;
+    transition: opacity 0.5s;
+  }
+}
+
+.player {
+  font-family: @font-body;
+  font-size: 24px;
+  line-height: 27px;
+  text-transform: uppercase;
+
+  &.two {
+    text-align: right;
+  }
+
+  .selected {}
+
+  .notselected {
+    opacity: 0.5;
+  }
+}
+
+.vs {
+  text-align: center;
+  font-weight: lighter;
+}
+
+.spacer {
+  margin-top: 40px;
+}
+
+.halfspacer {
+  margin-top: 20px;
+}
+
+.scoreInput {
+  font-family: @font-display;
+  font-size: 96px;
+  text-align: center;
+  text-align-last: center;
+  line-height: 96px;
+  border: 0;
+  margin: 0;
+  width: 100%;
+  background-color: @plaingrey;
+  height: auto;
+  padding: 20px 0;
+}

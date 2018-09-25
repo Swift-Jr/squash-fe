@@ -3,7 +3,19 @@ import React from 'react';
 import styles from './styles.module.css';
 
 export const InputText = (props) => {
-  return (<input type="text" placeholder={props.placeholder} onChange={props.onChange}/>);
+  const inputType = props.type || 'text';
+  const className = props.darkStyle
+    ? styles.dark
+    : null;
+
+  return (<div className={styles.inputContainer}>
+    {
+      props.label
+        ? <label>{props.label}</label>
+        : null
+    }
+    <input className={className} type={inputType} placeholder={props.placeholder} onChange={props.onChange}/>
+  </div>);
 }
 
 export default InputText;

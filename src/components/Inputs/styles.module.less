@@ -1,22 +1,50 @@
 @import "../../shared.less";
 
-input[type="text"] {
+.inputContainer {
+  margin-bottom: 19px;
+  text-align: left;
+}
+
+label {
+  text-align: left;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 13px;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+input[type="text"],
+input[type="password"],
+select {
   //width: (100% - 20px);
-  margin: 20px;
-  width: fill-available;
+  width: stretch;
   background-color: transparent;
   border: 0;
   border-bottom: 1px solid @limeyellow;
   font-family: @font-body;
   font-size: 24px;
-  line-height: 27px;
-  padding: 10px 0;
+  line-height: 40px;
+  height: 43px; //for select
   outline: none;
   opacity: 0.8;
   transition: all 500ms;
+  margin-bottom: 1px;
+
+  &:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px @darkblue inset;
+    outline: 0;
+    -webkit-text-fill-color: @almostwhite !important;
+    border-bottom: 1px solid @limeyellow;
+  }
 
   &:focus {
     border-bottom: 2px solid @limeyellow;
+    margin-bottom: 0;
     opacity: 1;
+  }
+
+  &.dark {
+    border-bottom-color: @darkblue;
   }
 }

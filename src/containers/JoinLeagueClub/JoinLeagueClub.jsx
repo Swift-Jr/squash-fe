@@ -9,7 +9,7 @@ import {InputText} from '../../components/Inputs';
 import styles from './styles.module.css';
 
 export const TopContent = (props) => {
-  return (<div className={styles.searchBar}>
+  return (<div>
     <InputText placeholder={`Find a ${props.noun}`} onChange={props.onChange}/>
   </div>);
 }

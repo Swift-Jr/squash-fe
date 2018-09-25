@@ -1,0 +1,69 @@
+@import "../../shared.less";
+
+p.gamesPlayed {
+  font-family: @font-display;
+  font-size: 36px;
+  line-height: 20px;
+  text-align: center;
+  color: @almostwhite;
+}
+
+.displayPicker {
+  select {
+    text-align: center;
+    text-align-last: center;
+    border-bottom: 0;
+    font-family: @font-display;
+    margin-bottom: 0;
+    appearance: none;
+  }
+}
+
+.bar {
+  margin-top: 20px;
+
+  div {
+    display: inline-block;
+    height: 16px;
+    transition: width 2s;
+  }
+
+  div:first-of-type {
+    background-color: @limeyellow;
+    width: 50%;
+  }
+
+  div:last-of-type {
+    background-color: @bloodred;
+    width: 50%;
+  }
+}
+
+.detail {
+  margin-top: -5px;
+
+  div {
+    display: inline-block;
+    vertical-align: text-top;
+  }
+
+  .number {
+    font-family: @font-display;
+    font-size: 48px;
+    line-height: 55px;
+    color: @almostwhite;
+  }
+
+  .text {
+    font-size: 24px;
+    text-transform: uppercase;
+    line-height: 42px;
+    font-weight: bold;
+    color: fade(@almostwhite, 75%);
+  }
+
+  .against {
+    text-align: right;
+    float: right;
+  }
+}

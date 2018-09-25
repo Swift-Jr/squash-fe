@@ -10,6 +10,10 @@ body {
   font-size: 18px;
 }
 
+a {
+  color: inherit;
+}
+
 header {
   top: 0;
   margin: 20px 0 0;
@@ -88,7 +92,45 @@ h1 {
   font-weight: 700;
 }
 
+h2 {
+  font-family: @font-display;
+  font-size: 24px;
+  line-height: 27px;
+
+  a {
+    color: @lightgrey;
+  }
+}
+
+h3 {
+  font-family: @font-body;
+  font-weight: lighter;
+  font-size: 18px;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 20px;
+
+  &.light {
+    color: fade(@lightgrey, 70%);
+  }
+}
+
+h4 {
+  font-family: @font-body;
+  font-weight: lighter;
+  font-size: 12px;
+  text-align: center;
+  color: @darkblue;
+  text-transform: uppercase;
+
+  &.light {
+    color: fade(@lightgrey, 70%);
+  }
+}
+
 button {
+  transition: opacity 0.5s;
+
   &.large {
     background-color: @limeyellow;
     width: 100%;
@@ -98,6 +140,7 @@ button {
     color: @darkblue;
     text-transform: uppercase;
     margin: 10px 0;
+    border: 3px solid rgba(220, 237, 49, 0.3);
   }
 
   &.small {
@@ -111,6 +154,10 @@ button {
     text-transform: uppercase;
     line-height: 30px;
   }
+
+  &[disabled] {
+    opacity: 0.5;
+  }
 }
 
 .fixedBottom {
@@ -118,6 +165,25 @@ button {
   bottom: 0;
   left: 0;
   right: 0;
+  padding: 0 20px 10px;
+}
+
+.fixedBottom+.fader,
+.fixedPaddingBottom {
+  margin-bottom: 102px;
+}
+
+.fixedTop~.fader {
+  margin-top: 178px;
+}
+
+.fixedTop {
+  position: fixed;
+  top: 0;
+  right: 15px;
+  left: 15px;
+  background: @darkblue;
+  z-index: 500;
 }
 
 .menuIsVisible {
@@ -130,6 +196,11 @@ button {
     transition: all @menu-speed ease-out;
     opacity: 0.15;
   }
+}
+
+.play-match {
+  z-index: 1000;
+  background-color: @darkblue;
 }
 
 .menuIsNotVisible {

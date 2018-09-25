@@ -11,7 +11,7 @@ export class FullModal extends React.Component {
 
     this.state = {
       headContent: props.headContent,
-      modalTitle: props.modalTitle || 'Title',
+      modalTitle: props.title || 'Title',
       bodyContent: props.bodyContent,
       animationStyle: null,
       onClose: props.onClose || null,
@@ -30,8 +30,8 @@ export class FullModal extends React.Component {
     if (nextProps.close === true) {
       return this.handleOnClose();
     }
-    if (this.state != nextProps) {
-      this.setState({modalTitle: nextProps.modalTitle, bodyContent: nextProps.bodyContent, headContent: nextProps.headContent});
+    if (this.state !== nextProps) {
+      this.setState(nextProps);
     }
   }
 
@@ -54,13 +54,13 @@ export class FullModal extends React.Component {
         {
           this.state.onBack
             ? <div className='col-xs-2' onClick={this.handleOnBack}>
-                <img src={iconChevronLeft}/>
+                <img src={iconChevronLeft} alt="Back Button"/>
               </div>
             : <div className='col-xs-2'></div>
         }
         <div className='col-xs-8'></div>
         <div className='col-xs-2' onClick={this.handleOnClose}>
-          <img src={iconClear}/>
+          <img className={styles.closeIcon} src={iconClear} alt="Close Button"/>
         </div>
 
         <div className="col-xs-12">

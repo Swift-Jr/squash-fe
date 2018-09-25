@@ -1,19 +1,34 @@
 import React from 'react';
 
-import Moment from 'react-moment';
+//import Moment from 'react-moment';
 //import 'moment-timezone';
 
 import {FullModal} from '../../components/FullModal';
-import {InputText} from '../../components/Inputs';
+import {InputText, InputSelect} from '../../components/Inputs';
 
-import styles from './styles.module.css';
+import styles from './styles.module.css'; // eslint-disable-line no-unused-vars
 
 export const TopContent = (props) => {
   return (<InputText label="Name" placeholder="Club Name"/>);
 }
 
 export const BodyContent = (props) => {
-  return (<InputText label="Free to Join" placeholder="Yes No"/>);
+  const selectOptions = [
+    {
+      value: 1,
+      option: 'Anyone can Join'
+    }, {
+      value: 0,
+      option: 'Requires Invite to Join'
+    }
+  ];
+
+  return (<div>
+    <InputSelect darkStyle={true} label="Invite only club?" placeholder="Select an option" options={selectOptions}/>
+    <div className="fixedBottom">
+      <button className="large">Create Club</button>
+    </div>
+  </div>);
 }
 
 export class CreateClub extends React.Component {
@@ -34,7 +49,7 @@ export class CreateClub extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state != nextProps) {
+    if (this.state !== nextProps) {
       this.setState(nextProps);
     }
   }

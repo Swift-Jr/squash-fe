@@ -1,10 +1,7 @@
 import React from 'react';
 
-import Moment from 'react-moment';
-//import 'moment-timezone';
-
 import {FullModal} from '../../components/FullModal';
-import {InputText} from '../../components/Inputs';
+import {InputText, InputSelect} from '../../components/Inputs';
 
 import styles from './styles.module.css';
 
@@ -13,11 +10,42 @@ export const TopContent = (props) => {
 }
 
 export const BodyContent = (props) => {
-  return (<div>
-    <InputText label="Sport" placeholder="Yes No"/>
-    <InputText label="Club Association" placeholder="Yes No"/>
-    <InputText label="Free to Join" placeholder="Yes No"/>
-    <InputText label="Short Name" placeholder="Yes No"/>
+  const sportOptions = [
+    {
+      value: 1,
+      option: 'Squash'
+    }
+  ];
+
+  const clubOptions = [
+    {
+      value: null,
+      option: 'No Club',
+      default: true
+    }, {
+      value: null,
+      option: 'Your club'
+    }
+  ];
+
+  const inviteOptions = [
+    {
+      value: 1,
+      option: 'Anyone can Join'
+    }, {
+      value: 0,
+      option: 'Requires Invite to Join'
+    }
+  ];
+
+  return (<div className={styles.bottomContent}>
+    <InputSelect darkStyle={true} label="Sport" placeholder="Select a Sport" options={sportOptions}/>
+    <InputSelect darkStyle={true} label="Club Association" placeholder="Select an option" options={clubOptions}/>
+    <InputSelect darkStyle={true} label="Invite only league?" placeholder="Select an option" options={inviteOptions}/>
+    <InputText darkStyle={true} label="Short Name" placeholder="Max 10 characters"/>
+    <div className="fixedBottom">
+      <button className="large">Create League</button>
+    </div>
   </div>);
 }
 
@@ -40,7 +68,7 @@ export class CreateLeague extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state != nextProps) {
+    if (this.state !== nextProps) {
       this.setState(nextProps);
     }
   }

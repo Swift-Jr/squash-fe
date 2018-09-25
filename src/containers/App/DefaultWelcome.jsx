@@ -12,6 +12,7 @@ class DefaultWelcome extends React.Component {
     this.state = props;
 
     this.handleCreateType = this.handleCreateType.bind(this);
+    this.handleClubClose = this.handleClubClose.bind(this);
   }
 
   handleCreateType(type) {
@@ -20,6 +21,10 @@ class DefaultWelcome extends React.Component {
     } else {
       this.setState({createLeague: true});
     }
+  }
+
+  handleClubClose() {
+    this.setState({createClub: false});
   }
 
   render() {
@@ -39,7 +44,7 @@ class DefaultWelcome extends React.Component {
           Want your own club or league?
         </p>
         <div className="col-xs-6">
-          <CreateClub visible={this.state.createClub} buttonClass="small" buttonTitle="Create a club"></CreateClub>
+          <CreateClub visible={this.state.createClub} onClose={this.handleClubClose} buttonClass="small" buttonTitle="Create a club"></CreateClub>
         </div>
         <div className="col-xs-6">
           <CreateLeague visible={this.state.createLeague} buttonClass="small" buttonTitle="Create a league"></CreateLeague>

@@ -2,6 +2,9 @@ import React from 'react';
 import {Route, Switch} from 'react-router-dom';
 
 import PropTypes from 'prop-types';
+import {ProtectedRoute} from '../../system'
+
+import {authService} from '../../services';
 
 import AppHeader from './AppHeader';
 import AppMenu from './AppMenu';
@@ -11,6 +14,9 @@ import {Login} from '../Login';
 import {MyLeagues} from '../MyLeagues';
 import {HeadToHead} from '../HeadToHead';
 import {Scorecard} from '../Scorecard';
+import {PlayMatch} from '../PlayMatch';
+import {NotFound} from '../NotFound';
+import {ViewLeague} from '../ViewLeague';
 
 //import {Authenticator} from './services/Authenticator';
 
@@ -19,15 +25,14 @@ export class App extends React.Component {
     super(props);
     this.state = {
       menuIsVisible: false,
-      showJoinClubOrLeague: false,
-      clubOrLeague: 0
+      authState: null
     }
 
     this.menuToggled = this.menuToggled.bind(this);
     this.getMenuState = this.getMenuState.bind(this);
-    this.handleJoinClub = this.handleJoinClub.bind(this);
-    this.handleJoinLeague = this.handleJoinLeague.bind(this);
-    this.handleCloseJoinModal = this.handleCloseJoinModal.bind(this);
+    this.handleAuthChange = this.handleAuthChange.bind(this);
+
+    authService.registerAuthChange(this.handleAuthChange);
   }
 
   getUsername() {
@@ -35,18 +40,21 @@ export class App extends React.Component {
   }
 
   getClubname() {
-    return "420 Club";
+    return "Jam Club";
   }
 
   isLoggedIn() {
-    return true;
+    return authService.check();
   }
 
   isMemberOfSomething() {
-    return false;
+    return authService.getClubs().length > 0 || authService.getLeagues().length > 0;
   }
 
   menuToggled(state) {
+    if (!authService.check()) {
+      state = false;
+    }
     this.setState({menuIsVisible: state});
   }
 
@@ -56,41 +64,40 @@ export class App extends React.Component {
       : 'menuIsNotVisible';
   }
 
-  handleJoinClub() {
-    this.setState({showJoinClubOrLeague: true, clubOrLeague: 1});
-  }
-
-  handleJoinLeague() {
-    this.setState({showJoinClubOrLeague: true, clubOrLeague: 2});
-  }
-
-  handleCloseJoinModal() {
-    this.setState({showJoinClubOrLeague: false});
+  handleAuthChange(state) {
+    //this.menuToggled(false);
+    this.setState({
+      authState: state/*, menuIsVisible: true*/
+    });
   }
 
   render() {
     return (<div className={`container ${this.getMenuState()}`}>
-      {!this.isLoggedIn() || <AppHeader username={this.getUsername()} clubname={this.getClubname()}></AppHeader>}
+      {
+        this.isLoggedIn()
+          ? <div className="fixedTop">
+              <AppHeader username={this.getUsername()} clubname={this.getClubname()}></AppHeader>
+              <AppMenu visible={this.state.menuIsVisible} onToggle={this.menuToggled}></AppMenu>
+            </div>
+          : null
+      }
 
-      {!this.isLoggedIn() || <AppMenu visible={false} onToggle={this.menuToggled}></AppMenu>}
       <div className="fader">
         {
-          !this.isMemberOfSomething() && this.isLoggedIn()
-            ? <DefaultWelcome onJoinClub={this.handleJoinClub} onJoinLeague={this.handleJoinLeague}></DefaultWelcome>
+          this.isLoggedIn() && !this.isMemberOfSomething()
+            ? <DefaultWelcome></DefaultWelcome>
             : <Switch>
-                <Route path="/login " component={Login}/>
-                <Route exact={true} path="/" component={MyLeagues}/>
-                <Route path="/myleagues" component={MyLeagues}/>
-                <Route path="/headtohead" component={HeadToHead}/>
-                <Route path="/scorecard" component={Scorecard}/>
+                <ProtectedRoute exact={true} path="/" component={MyLeagues}/>
+                <ProtectedRoute path="/myleagues" component={MyLeagues}/>
+                <ProtectedRoute path="/league/:id" component={ViewLeague}/>
+                <ProtectedRoute path="/headtohead" component={HeadToHead}/>
+                <ProtectedRoute path="/scorecard/:id?" component={Scorecard}/>
+                <ProtectedRoute path="/" component={NotFound}/>
+                <Route path="/login" component={Login}/>
               </Switch>
         }
       </div>
-      {
-        !this.isMemberOfSomething() || <div className="play-match">
-            <button className="large">Play a Match</button>
-          </div>
-      }
+
     </div>)
   }
 }
