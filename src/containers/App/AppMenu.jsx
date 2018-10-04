@@ -2,6 +2,8 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import {PlayMatch} from '../PlayMatch';
+
 import {iconMenu} from './images';
 
 export class AppMenu extends React.Component {
@@ -10,6 +12,8 @@ export class AppMenu extends React.Component {
     this.state = {
       visible: props.visible || false
     }
+
+    this.handleLinkClick = this.handleLinkClick.bind(this);
   }
 
   toggleMenu() {
@@ -17,6 +21,11 @@ export class AppMenu extends React.Component {
     this.setState({
       visible: !this.state.visible
     }, () => onToggle && onToggle(this.state.visible));
+  }
+
+  handleLinkClick(e) {
+    this.setState({visible: false});
+    this.toggleMenu();
   }
 
   render() {
@@ -27,19 +36,25 @@ export class AppMenu extends React.Component {
           ? 'showMenu'
           : 'hideMenu'}>
         <li>
-          <Link to="/myleagues">My Leagues</Link>
+          <Link to="/myleagues" onClick={this.handleLinkClick}>My Leagues</Link>
         </li>
         <li>
-          <Link to="/results">Results</Link>
+          <Link to="/results" onClick={this.handleLinkClick}>Results</Link>
         </li>
         <li>
-          <Link to="/headtohead">Head to Head</Link>
+          <Link to="/headtohead" onClick={this.handleLinkClick}>Head to Head</Link>
         </li>
         <li>
-          <Link to="/scorecard">Scorecard</Link>
+          <Link to="/scorecard" onClick={this.handleLinkClick}>Scorecard</Link>
         </li>
       </ul>
-      <img src={iconMenu} onClick={() => this.toggleMenu()} alt="Menu Toggle"/>
+      <img src={iconMenu} onClick={() => this.toggleMenu()} alt="Menu Toggle"/> {
+        visible
+          ? <div className={`fixedBottom play-match reverseVisible`}>
+              <PlayMatch onClose={() => this.toggleMenu()}></PlayMatch>
+            </div>
+          : null
+      }
     </nav>)
   }
 }

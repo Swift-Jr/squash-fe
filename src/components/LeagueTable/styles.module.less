@@ -1,0 +1,48 @@
+@import "../../shared.less";
+
+table {
+  width: 100%;
+  font-family: @font-body;
+
+  thead {
+    tr {
+      td {
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 10px;
+        line-height: 11px;
+        opacity: 0.5;
+        padding: 15px 10px;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      &.stripedRow {
+        background-color: rgba(196, 196, 196, 0.1);
+      }
+
+      &.currentUserHighlight {
+        background-color: rgba(196, 196, 196, 0.2);
+
+        td {
+          color: @almostwhite;
+        }
+      }
+
+      td {
+        padding: 15px 10px;
+        text-transform: uppercase;
+        font-weight: lighter;
+        font-size: 18px;
+        line-height: 20px;
+        color: rgba(229, 229, 229, 0.5);
+
+        &.bold {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
