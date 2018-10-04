@@ -7,7 +7,7 @@ export const InputSelect = (props) => {
     ? styles.dark
     : null;
 
-  const {options} = props;
+  const {options, selected} = props;
 
   return (<div className={styles.inputContainer}>
     {
@@ -15,7 +15,7 @@ export const InputSelect = (props) => {
         ? <label>{props.label}</label>
         : null
     }
-    <select className={className} placeholder={props.placeholder} onChange={props.onChange}>
+    <select value={selected} className={className} placeholder={props.placeholder} onChange={props.onChange}>
       <SelectOptions options={options}></SelectOptions>
     </select>
   </div>);

@@ -8,6 +8,7 @@ import styles from './styles.module.css';
 
 export const GameHistory = (props) => {
   const {games, showLeague} = props;
+  const userId = parseInt(props.userContext || authService.getUserId(), 10);
   return <table className={styles.gameTable}>
     <thead>
       <tr>
@@ -27,16 +28,16 @@ export const GameHistory = (props) => {
       </tr>
     </thead>
     <tbody className={styles.bold}>
-      <GameHistoryRows games={games} showLeague={showLeague}></GameHistoryRows>
+      <GameHistoryRows games={games} showLeague={showLeague} userId={userId}></GameHistoryRows>
     </tbody>
   </table>
 }
 
 export const GameHistoryRows = (props) => {
-  const {games, showLeague} = props;
+  const {games, showLeague, userId} = props;
   var counter = 1;
 
-  const selectOtherPlayer = (player1, player2) => player1.id == authService.getUserId()
+  const selectOtherPlayer = (player1, player2) => player1.getUserId() === userId
     ? player2
     : player1;
 
@@ -45,8 +46,9 @@ export const GameHistoryRows = (props) => {
     const rowStyle = counter % 2 === 0
       ? styles.stripedRow
       : null;
+
     const userStyle = (
-      game.player1.id === authService.getUserId() || game.player2.id === authService.getUserId()
+      game.getPlayer1().getUserId() === userId || game.getPlayer2().getUserId() === userId
       ? styles.currentUserHighlight
       : null);
 
@@ -54,46 +56,46 @@ export const GameHistoryRows = (props) => {
       {
         showLeague
           ? <td>
-              <Link to={`/league/${game.league.id}`}>{game.league.shortName}</Link>
+              <Link to={`/league/${game.getLeague().getId()}`}>{game.getLeague().getShortName()}</Link>
             </td>
           : null
       }
       <td>
         <span className={styles.lightText}>
-          <Moment format="D">{game.date}</Moment>
+          <Moment format="D">{game.getDate()}</Moment>
         </span>
-        <Moment format="MMM">{game.date}</Moment>
+        <Moment format="MMM">{game.getDate()}</Moment>
         <span className={styles.lightText}>
-          <Moment format="YY">{game.date}</Moment>
+          <Moment format="YY">{game.getDate()}</Moment>
         </span>
       </td>
       <td>
         {
           showLeague
-            ? <Link to={`/scorecard/${selectOtherPlayer(game.player1, game.player2).id}`}>
-                <span className={styles.lightText}>{selectOtherPlayer(game.player1, game.player2).firstname}</span>
+            ? <Link to={`/scorecard/${selectOtherPlayer(game.getPlayer1(), game.getPlayer2()).getUserId()}`}>
+                <span className={styles.lightText}>{selectOtherPlayer(game.getPlayer1(), game.getPlayer2()).getFirstname()}</span>
               </Link>
             : <div>
                 <span className={styles.lightText}>
-                  <Link to={`/scorecard/${game.player1.id}`}>{
-                      game.player1.id === authService.getUserId()
+                  <Link to={`/scorecard/${game.getPlayer1().getUserId()}`}>{
+                      game.getPlayer1().getUserId() === authService.getUserId()
                         ? 'Me'
-                        : game.player1.firstname
+                        : game.getPlayer1().getFirstname()
                     }</Link>
                 </span>
                 &nbsp;v&nbsp;
                 <span className={styles.lightText}>
-                  <Link to={`/scorecard/${game.player2.id}`}>{
-                      game.player2.id === authService.getUserId()
+                  <Link to={`/scorecard/${game.getPlayer2().getUserId()}`}>{
+                      game.getPlayer2().getUserId() === authService.getUserId()
                         ? 'Me'
-                        : game.player2.firstname
+                        : game.getPlayer2().getFirstname()
                     }</Link>
                 </span>
               </div>
         }
       </td>
       <td className={styles.score}>
-        <span className={styles.lightText}>{game.player1Score}&nbsp;-&nbsp;{game.player2Score}</span>
+        <span className={styles.lightText}>{game.getPlayer1Score()}&nbsp;-&nbsp;{game.getPlayer2Score()}</span>
       </td>
     </tr>
   })

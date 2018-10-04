@@ -1,8 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
-import {authService} from '../../services';
-import {leagueService} from '../../services';
+import {userService} from '../../services';
 
 import {LeagueTable} from '../../components/LeagueTable';
 import {PlayMatch} from '../PlayMatch';
@@ -15,7 +14,7 @@ export const LeagueRepeater = (props) => {
     ? false
     : true;
 
-  const LeagueDetails = leagueService.getUsersLeagues();
+  const LeagueDetails = userService.getCurrentUser().getLeagues();
 
   return LeagueDetails.map((league) => <LeaguePreview league={league} header={header} preview={preview}></LeaguePreview>);
 }
@@ -25,10 +24,10 @@ const LeaguePreview = (props) => {
 
   return <div>
     <h2>
-      <Link to={`/league/${league.id}`}>{league.name}</Link>
+      <Link to={`/league/${league.getId()}`}>{league.getName()}</Link>
     </h2>
     {
-      league.results.length > 0
+      league.getResults().length > 0
         ? <LeagueTable league={league} header={header} preview={preview}></LeagueTable>
         : <p className={styles.noResults}>You need to play at least one match to rank in this league</p>
     }

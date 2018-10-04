@@ -1,5 +1,4 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
 
 import {authService} from '../../services';
 
@@ -17,34 +16,48 @@ export class Login extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = props;
+    if (this.props.match.params.func) {
+      switch (this.props.match.params.func) {
+        case 'out':
+          authService.logout();
+          break;
+        default:
 
-    this.handleLogin = this.handleLogin.bind(this);
-
+      }
+    }
     if (authService.check()) {
       props.history.push('/myleagues');
     }
 
-    //authService.logout();
   }
 
-  handleLogin(e) {
+  handleLogin = (e) => {
     e.preventDefault();
     if (authService.login()) {
       this.props.history.push('/myleagues');
     }
   }
 
+  handleCreate = (e) => {
+    e.preventDefault();
+    this.props.history.push('/account/create');
+  }
+
+  handleForgot = (e) => {
+    e.preventDefault();
+    this.props.history.push('/account/forgot');
+  }
+
   render() {
     return (<div>
-      <img className={styles.appLogo} src={logoSmall} alt="Application Logo"/>
+      <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/>
       <form className={styles.loginForm} onSubmit={this.handleLogin}>
         <InputText name="username" placeholder="Username"/>
         <InputText name="password" placeholder="Password" type="password"/>
-        <button className={`small ${styles.forgotPassword}`}>Forgot Password</button>
+        <button className={`small ${styles.forgotPassword}`} onClick={this.handleForgot}>Forgot Password</button>
         <div className="fixedBottom">
-          <button className="small">Create Account</button>
-          <button className="large" type="submit">Sign In</button>
+          <button className="small" onClick={this.handleCreate}>Create Account</button>
+          <button className="large" onClick={this.handleLogin}>Sign In</button>
         </div>
       </form>
     </div>)

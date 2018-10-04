@@ -34,9 +34,18 @@ header {
   }
 
   .app-logo {
-    margin: 50px auto 0;
+    margin: 15px auto 0;
     display: block;
   }
+
+  #topBar {
+    //height: 25px;
+  }
+}
+
+.appLogoExternal {
+  display: block;
+  margin: 150px auto 60px;
 }
 
 nav {
@@ -174,7 +183,7 @@ button {
 }
 
 .fixedTop~.fader {
-  margin-top: 178px;
+  margin-top: 173px;
 }
 
 .fixedTop {
@@ -190,6 +199,10 @@ button {
   .fixedBottom {
     transition: all @menu-speed ease-out;
     opacity: 0;
+
+    &.reverseVisible {
+      opacity: 1;
+    }
   }
 
   &.container .fader {
@@ -207,10 +220,20 @@ button {
   .fixedBottom {
     transition: all @menu-speed ease-in;
     opacity: 1;
+
+    &.reverseVisible {
+      opacity: 0;
+    }
   }
 
   &.container .fader {
     transition: all @menu-speed ease-in;
+    opacity: 1;
+  }
+}
+
+.fixedBottom {
+  .fixedBottom {
     opacity: 1;
   }
 }

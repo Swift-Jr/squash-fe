@@ -26,7 +26,7 @@ export const LeagueTable = (props) => {
           : null
       }
       <tbody>
-        <LeagueTableRows rows={league.results} preview={preview}></LeagueTableRows>
+        <LeagueTableRows rows={league.getResults()} preview={preview}></LeagueTableRows>
       </tbody>
     </table>
   </div>
@@ -39,7 +39,7 @@ export const LeagueTableRows = (props) => {
   if (preview) {
     var i;
     for (i = 0; i < rows.length; i++) {
-      if (rows[i].player.id === authService.getUserId()) {
+      if (rows[i].getPlayer().getUserId() === authService.getUserId()) {
         break;
       }
     }
@@ -75,8 +75,8 @@ export const LeagueTableRows = (props) => {
   var counter = 0;
 
   return leagueRows.map((row) => {
-    const pointDiff = row.pointsWon - row.pointsLost;
-    const isUserScore = authService.getUserId() === row.player.id;
+    const pointDiff = row.getPointsWon() - row.getPointsLost();
+    const isUserScore = authService.getUserId() === row.getPlayer().getUserId();
 
     counter++;
     const rowStyle = counter % 2 === 0
@@ -88,19 +88,19 @@ export const LeagueTableRows = (props) => {
         : null}`}>
       <td className={styles.bold}>{
           isUserScore
-            ? numberToPlace(row.place)
-            : <Link to={`/scorecard/${row.player.id}`}>{row.player.name}</Link>
+            ? numberToPlace(row.getPlace())
+            : <Link to={`/scorecard/${row.getPlayer().getUserId()}`}>{row.getPlayer().getFirstname()}</Link>
         }</td>
-      <td>{row.played}</td>
-      <td>{row.won}</td>
-      <td>{row.pointsWon}</td>
-      <td>{row.pointsLost}</td>
+      <td>{row.getPlayed()}</td>
+      <td>{row.getWon()}</td>
+      <td>{row.getPointsWon()}</td>
+      <td>{row.getPointsLost()}</td>
       <td>{
           pointDiff > 0
             ? '+'
             : '-'
         }{pointDiff}</td>
-      <td className={styles.bold}>{row.score}</td>
+      <td className={styles.bold}>{row.getScore()}</td>
     </tr>);
   })
 }

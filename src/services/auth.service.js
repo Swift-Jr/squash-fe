@@ -1,3 +1,5 @@
+import {userService} from './';
+
 var registerAuthChangeFn;
 
 function check(){
@@ -8,35 +10,19 @@ function getClubs(){
   return [1,2,3];
 }
 
-function getLeagues(){
-  return [];
-}
-
 function getUserId(){
-  return getUser().id;
+  return getUser().getUserId();
 }
 
 function getUser(){
-  return {
-    id: 1,
-    firstname: 'Rob',
-    lastname: 'Guard'
-  };
-}
-
-function getUserById(id){
-  return {
-    id: id,
-    firstname: 'Gavin',
-    lastname: 'Brooks'
-  };
+  return userService.getUserById(1);
 }
 
 function registerAuthChange(fn){
   registerAuthChangeFn = fn;
 }
 
-function login(){
+function login(username, password){
   localStorage.setItem('user',true);
   registerAuthChangeFn && registerAuthChangeFn(true);
   return true;
@@ -48,14 +34,12 @@ function logout(){
 
 export const authService = {
   check,
-  getClubs,
-  getLeagues,
+  getUser,
   getUserId,
   login,
   logout,
   registerAuthChange,
-  getUser,
-  getUserById
+  getClubs
 };
 
 //export default authService;

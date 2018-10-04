@@ -214,11 +214,11 @@ export class PlayMatch extends React.Component {
     }
 
     if (one) {
-      game.player1score = parseInt(one);
+      game.player1score = parseInt(one, 10);
     }
 
     if (two) {
-      game.player2score = parseInt(two);
+      game.player2score = parseInt(two, 10);
     }
 
     this.setState({game: game});

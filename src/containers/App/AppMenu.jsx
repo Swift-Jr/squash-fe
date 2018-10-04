@@ -2,6 +2,8 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import {PlayMatch} from '../PlayMatch';
+
 import {iconMenu} from './images';
 
 export class AppMenu extends React.Component {
@@ -46,7 +48,13 @@ export class AppMenu extends React.Component {
           <Link to="/scorecard" onClick={this.handleLinkClick}>Scorecard</Link>
         </li>
       </ul>
-      <img src={iconMenu} onClick={() => this.toggleMenu()} alt="Menu Toggle"/>
+      <img src={iconMenu} onClick={() => this.toggleMenu()} alt="Menu Toggle"/> {
+        visible
+          ? <div className={`fixedBottom play-match reverseVisible`}>
+              <PlayMatch onClose={() => this.toggleMenu()}></PlayMatch>
+            </div>
+          : null
+      }
     </nav>)
   }
 }

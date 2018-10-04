@@ -1,4 +1,5 @@
 @import "../../shared.less";
+@import '../../index.less';
 
 .welcome {
   text-align: center;
@@ -12,4 +13,40 @@
 .fixedBottom {
   padding-bottom: 20px;
   z-index: 500;
+}
+
+ul.settingMenu {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow: hidden;
+
+  &.open {
+    max-height: 500px;
+    transition: all @menu-speed ease-in;
+    opacity: 1;
+  }
+
+  &.hide {
+    transition: all @menu-speed ease-out;
+    max-height: 0;
+    opacity: 0.2;
+  }
+
+  li {
+    padding: 0;
+    margin: 0 0 20px;
+    text-align: center;
+    list-style: none;
+
+    a {
+      text-transform: uppercase;
+      font-family: @font-body;
+      color: @almostwhite;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 300;
+      line-height: 27px;
+    }
+  }
 }

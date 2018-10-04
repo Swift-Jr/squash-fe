@@ -10,13 +10,14 @@ import AppHeader from './AppHeader';
 import AppMenu from './AppMenu';
 import DefaultWelcome from './DefaultWelcome';
 
+import {Account} from '../Account';
 import {Login} from '../Login';
 import {MyLeagues} from '../MyLeagues';
 import {HeadToHead} from '../HeadToHead';
 import {Scorecard} from '../Scorecard';
-import {PlayMatch} from '../PlayMatch';
 import {NotFound} from '../NotFound';
 import {ViewLeague} from '../ViewLeague';
+import {MyLeaguesClubs} from '../MyLeaguesClubs';
 
 //import {Authenticator} from './services/Authenticator';
 
@@ -25,18 +26,11 @@ export class App extends React.Component {
     super(props);
     this.state = {
       menuIsVisible: false,
+      settingsMenuIsVisible: false,
       authState: null
     }
 
-    this.menuToggled = this.menuToggled.bind(this);
-    this.getMenuState = this.getMenuState.bind(this);
-    this.handleAuthChange = this.handleAuthChange.bind(this);
-
     authService.registerAuthChange(this.handleAuthChange);
-  }
-
-  getUsername() {
-    return "Rob";
   }
 
   getClubname() {
@@ -51,49 +45,81 @@ export class App extends React.Component {
     return authService.getClubs().length > 0 || authService.getLeagues().length > 0;
   }
 
-  menuToggled(state) {
+  menuToggled = (state) => {
     if (!authService.check()) {
       state = false;
     }
     this.setState({menuIsVisible: state});
   }
 
-  getMenuState() {
+  settingsMenuToggled = (state) => {
+    if (!authService.check()) {
+      state = false;
+    }
+    this.setState({menuIsVisible: state, settingsMenuIsVisible: state});
+  }
+
+  getMenuState = () => {
     return this.state.menuIsVisible
       ? 'menuIsVisible'
       : 'menuIsNotVisible';
   }
 
-  handleAuthChange(state) {
+  getSettingsMenuState = () => {
+    return this.state.settingsMenuIsVisible
+      ? 'settingsMenuIsVisible'
+      : 'settingsMenuIsNotVisible';
+  }
+
+  handleAuthChange = (state) => {
     //this.menuToggled(false);
     this.setState({
       authState: state/*, menuIsVisible: true*/
     });
   }
 
+  getContentPadding = () => {
+    var style = {};
+    if (this.state.menuIsVisible) {
+      style = {
+        paddingTop: '211px'
+      }
+    }
+
+    if (this.state.settingsMenuIsVisible) {
+      style = {
+        paddingTop: '307px'
+      }
+    }
+
+    return style;
+  }
+
   render() {
-    return (<div className={`container ${this.getMenuState()}`}>
+    return (<div className={`container ${this.getMenuState()} ${this.getSettingsMenuState()}`}>
       {
         this.isLoggedIn()
           ? <div className="fixedTop">
-              <AppHeader username={this.getUsername()} clubname={this.getClubname()}></AppHeader>
+              <AppHeader visible={this.state.settingsMenuIsVisible} onToggle={this.settingsMenuToggled} clubname={this.getClubname()}></AppHeader>
               <AppMenu visible={this.state.menuIsVisible} onToggle={this.menuToggled}></AppMenu>
             </div>
           : null
       }
 
-      <div className="fader">
+      <div className="fader" style={this.getContentPadding()}>
         {
           this.isLoggedIn() && !this.isMemberOfSomething()
             ? <DefaultWelcome></DefaultWelcome>
             : <Switch>
+                <Route path="/login/:func?" component={Login}/>
+                <Route path="/account/:action?/:inviteId?" component={Account}/>
                 <ProtectedRoute exact={true} path="/" component={MyLeagues}/>
                 <ProtectedRoute path="/myleagues" component={MyLeagues}/>
+                <ProtectedRoute path="/leagueclublist" component={MyLeaguesClubs}/>
                 <ProtectedRoute path="/league/:id" component={ViewLeague}/>
                 <ProtectedRoute path="/headtohead" component={HeadToHead}/>
                 <ProtectedRoute path="/scorecard/:id?" component={Scorecard}/>
                 <ProtectedRoute path="/" component={NotFound}/>
-                <Route path="/login" component={Login}/>
               </Switch>
         }
       </div>

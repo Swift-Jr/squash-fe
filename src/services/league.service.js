@@ -1,165 +1,150 @@
-var usersLeagues = [
-  {
-    id: 1,
-    name: "Tuesdays Nines",
-    results: []
-  }, {
-    id: 2,
-    name: "Tuesday 11s",
-    results: [
-      {
-        player: {
-          id: 1,
-          name: "Rob"
-        },
-        place: 1,
-        played: 12,
-        won: 10,
-        pointsWon: 30,
-        pointsLost: 5,
-        score: 56
-      }, {
-        player: {
-          id: 2,
-          name: "Gavin"
-        },
-        place: 2,
-        played: 12,
-        won: 10,
-        pointsWon: 30,
-        pointsLost: 5,
-        score: 56
-      }, {
-        player: {
-          id: 3,
-          name: "Perry"
-        },
-        place: 3,
-        played: 12,
-        won: 10,
-        pointsWon: 30,
-        pointsLost: 5,
-        score: 56
-      }, {
-        player: {
-          id: 4,
-          name: "Tom"
-        },
-        place: 4,
-        played: 12,
-        won: 10,
-        pointsWon: 30,
-        pointsLost: 5,
-        score: 56
-      }, {
-        player: {
-          id: 5,
-          name: "Brent"
-        },
-        place: 5,
-        played: 12,
-        won: 10,
-        pointsWon: 30,
-        pointsLost: 5,
-        score: 56
-      }
-    ]
-  },{
-    id: 3,
-    name: "Wednesday 5s",
-    results: [
-      {
-        player: {
-          id: 1,
-          name: "Rob"
-        },
-        place: 1,
-        played: 12,
-        won: 5,
-        pointsWon: 15,
-        pointsLost: 3,
-        score: 24
-      }, {
-        player: {
-          id: 2,
-          name: "Gavin"
-        },
-        place: 2,
-        played: 12,
-        won: 10,
-        pointsWon: 30,
-        pointsLost: 5,
-        score: 56
-      }
-    ]
-  }
-];
+import { Model } from 'react-axiom';
+import {userService, UserModel} from './';
 
-function getUsersLeagues() {
-  return usersLeagues;
+export class LeagueModel extends Model {
+  static defaultState() {
+    return {
+      id: null,
+      shortName: null,
+      name: null,
+      results: [new LeagueResult()]
+    };
+  }
+}
+
+class LeagueResult extends Model {
+  static defaultState() {
+    return {
+      player: new UserModel(),
+      place: null,
+      played: null,
+      won: null,
+      pointsWon: null,
+      pointsLost: null,
+      score: null
+    };
+  }
+}
+
+function getUsersLeagues(userId) {
+  const sampleLeagues = [
+    {
+      id: 1,
+      name: "Tuesdays Nines",
+      shortName: "Tues 9s",
+      results: []
+    }, {
+      id: 2,
+      name: "Tuesday 11s",
+      shortName: "Tues 11s",
+      results: [
+        new LeagueResult({
+          player: userService.getUserById(1),
+          place: 1,
+          played: 12,
+          won: 10,
+          pointsWon: 30,
+          pointsLost: 5,
+          score: 56
+        }), new LeagueResult({
+          player: userService.getUserById(2),
+          place: 2,
+          played: 12,
+          won: 10,
+          pointsWon: 30,
+          pointsLost: 5,
+          score: 56
+        }), new LeagueResult({
+          player: userService.getUserById(3),
+          place: 3,
+          played: 12,
+          won: 10,
+          pointsWon: 30,
+          pointsLost: 5,
+          score: 56
+        }), new LeagueResult({
+          player: userService.getUserById(4),
+          place: 4,
+          played: 12,
+          won: 10,
+          pointsWon: 30,
+          pointsLost: 5,
+          score: 56
+        }), new LeagueResult({
+          player: userService.getUserById(5),
+          place: 5,
+          played: 12,
+          won: 10,
+          pointsWon: 30,
+          pointsLost: 5,
+          score: 56
+        })
+      ]
+    },{
+      id: 3,
+      name: "Wednesday 5s",
+      shortName: "Weds 5s",
+      results: [
+        new LeagueResult({
+          player: userService.getUserById(1),
+          place: 1,
+          played: 12,
+          won: 5,
+          pointsWon: 15,
+          pointsLost: 3,
+          score: 24
+        }), new LeagueResult({
+          player: userService.getUserById(2),
+          place: 2,
+          played: 12,
+          won: 10,
+          pointsWon: 30,
+          pointsLost: 5,
+          score: 56
+        })
+      ]
+    }
+  ];
+
+  return sampleLeagues.map(league => new LeagueModel(league));
 }
 
 function getLeagueById(id) {
-  return usersLeagues.filter((league)=> league.id === parseInt(id))[0];
+  return getUsersLeagues().filter((league)=> league.getId() === parseInt(id, 10))[0];
 }
 
-function getLeagueGames(leagueid) {
-  //TODO: Move getting user details to a user service
-  const game = {
-    id:1,
-    date: '2018-10-02T00:00:00.000',
-    player1: {
-      id:1,
-      firstname:'Rob',
-      lastname:'Guard'
-    },
-    player2: {
-      id:2,
-      firstname:'Gavin',
-      lastname:'Brooks'
-    },
-    player1Score: 9,
-    player2Score: 11
+function getUserScorecard(userId, leagues){
+  var gamesPlayed = 0,
+    gamesWon = 0,
+    gamesLost = 0,
+    pointsWon = 0,
+    pointsLost = 0;
+
+  leagues.forEach((league) => {
+    const result = league.getResults().filter((result) => result.getPlayer().getUserId() === parseInt(userId, 10))[0];
+
+    if (result) {
+      gamesPlayed += result.getPlayed();
+      gamesWon += result.getWon();
+      gamesLost += result.getPlayed() - result.getWon();
+      pointsWon += result.getPointsWon();
+      pointsLost += result.getPointsLost();
+    }
+  });
+
+  const scores = {
+    gamesPlayed: gamesPlayed,
+    gamesWon: gamesWon,
+    gamesLost: gamesLost,
+    pointsWon: pointsWon,
+    pointsLost: pointsLost
   };
 
-  return [
-    game,game,game,game,game
-  ];
-}
-
-function getUsersGames(userid) {
-  //TODO: Move getting user details to a user service
-  const game = {
-    id:1,
-    date: '2018-10-02T00:00:00.000',
-    league: {
-      id: 1,
-      shortName: "Tues Nines",
-      name: "Tuesdays Nines",
-      results: []
-    },
-    player1: {
-      id:1,
-      firstname:'Rob',
-      lastname:'Guard'
-    },
-    player2: {
-      id:2,
-      firstname:'Gavin',
-      lastname:'Brooks'
-    },
-    player1Score: 9,
-    player2Score: 11
-  };
-
-  return [
-    game,game,game,game,game
-  ];
+  return scores;
 }
 
 export const leagueService = {
   getUsersLeagues,
-  getUsersGames,
   getLeagueById,
-  getLeagueGames
+  getUserScorecard
 };
