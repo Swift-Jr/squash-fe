@@ -1,11 +1,14 @@
 import React from 'react';
-import {logoSmall} from '../App/images';
+import {connect} from 'react-redux';
+import {withRouter} from "react-router";
 
-import {userService, authService} from '../../services';
+import {user, alerts} from '../../services';
 
 import {InputText} from '../../components/Inputs';
 
-export class Account extends React.Component {
+import {logoSmall} from '../App/images';
+
+export class AccountPage extends React.Component {
   constructor(props) {
     super(props);
     switch (props.match.params.action) {
@@ -16,21 +19,37 @@ export class Account extends React.Component {
         };
         break;
       case 'invite':
-        const invite = userService.getInvite(props.match.params.inviteId);
+        const invite = user
+          .service
+          .getInvite(props.match.params.actionId);
         this.state = {
           action: props.match.params.action,
           invite: invite,
           email: invite.email
         };
         break;
+      case 'recover':
+        const token = props.match.params.actionId;
+        if (user.service.recoveryTokenIsValid(token)) {
+          this.state = {
+            action: props.match.params.action,
+            token: token
+          };
+        }
+        break;
       default:
-        props.history.push('/');
+        props
+          .history
+          .push('/');
     }
   }
 
   handleSignin = (e) => {
     e.preventDefault();
-    this.props.history.push('/login');
+    this
+      .props
+      .history
+      .push('/login');
   }
 
   handleInputChange = (e) => {
@@ -41,35 +60,37 @@ export class Account extends React.Component {
 
   handleCreate = (e) => {
     e.preventDefault();
+    const {dispatch} = this.props;
 
     const {firstname, lastname, email, password} = this.state;
-    const user = {
+    const data = {
       firstname: firstname,
       lastname: lastname,
       email: email,
       password: password
     };
 
-    if (userService.createUser(user)) {
-      if (authService.login(user.email, user.password)) {
-        this.props.history.push('/');
-      }
-    }
-    console.log(this.state);
+    dispatch(user.service.register(data));
   }
 
   handleRecover = (e) => {
     e.preventDefault();
-
+    const {dispatch} = this.props;
     const {email} = this.state;
 
-    if (userService.requestRecoverAccount(email)) {
-      this.setState({recoverySent: true});
-    }
+    dispatch(user.service.requestRecoverAccount(email));
+  }
+
+  handleRecoverPassword = (e) => {
+    e.preventDefault();
+    const {dispatch} = this.props;
+    const {password, token} = this.state;
+
+    dispatch(user.service.completeRecoverAccount(token, password));
   }
 
   render = () => {
-    const {recoverySent} = this.state;
+    const {recoverySent, recoverRequest} = this.props.user;
 
     switch (this.state.action) {
       case 'create':
@@ -83,9 +104,9 @@ export class Account extends React.Component {
                 : null
             }
             <InputText value={this.state.email} name="email" placeholder="E-mail" onChange={this.handleInputChange}/>
-            <InputText name="firstname" placeholder="Firstname" onChange={this.handleInputChange}/>
-            <InputText name="lastname" placeholder="Lastname" onChange={this.handleInputChange}/>
-            <InputText name="password" placeholder="Password" type="password" onChange={this.handleInputChange}/>
+            <InputText value={this.state.firstname} name="firstname" placeholder="Firstname" onChange={this.handleInputChange}/>
+            <InputText value={this.state.lastname} name="lastname" placeholder="Lastname" onChange={this.handleInputChange}/>
+            <InputText value={this.state.password} name="password" placeholder="Password" type="password" onChange={this.handleInputChange} autoComplete="new-password"/>
 
             <div className="fixedBottom">
               <button className="small" onClick={this.handleSignin}>Already have an account?</button>
@@ -110,10 +131,33 @@ export class Account extends React.Component {
 
                   <div className="fixedBottom">
                     <button className="small" onClick={this.handleSignin}>Already have an account?</button>
-                    <button className="large" onClick={this.handleRecover}>Recover Account</button>
+                    <button className="large" onClick={this.handleRecover}>{
+                        user.loggingIn
+                          ? <i className="fas fa-spinner fa-spin"></i>
+                          : <span>Recover Account</span>
+                      }</button>
                   </div>
                 </form>
           }
+        </div>
+        break;
+      case 'recover':
+        return <div>
+          <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/>
+          <form>
+            <p>Choose a new password</p>
+
+            <InputText value={this.state.password} name="password" placeholder="Password" type="password" onChange={this.handleInputChange} autoComplete="new-password"/>
+
+            <div className="fixedBottom">
+              <button className="small" onClick={this.handleSignin}>Back to login</button>
+              <button className="large" onClick={this.handleRecoverPassword}>{
+                  user.loading
+                    ? <i className="fas fa-spinner fa-spin"></i>
+                    : <span>Reset Password</span>
+                }</button>
+            </div>
+          </form>
         </div>
         break;
       default:
@@ -121,3 +165,13 @@ export class Account extends React.Component {
     }
   }
 }
+
+function mapStateToProps(state) {
+  const {user} = state;
+  return {user};
+}
+
+const connectedAccountPage = withRouter(connect(mapStateToProps)(AccountPage));
+export {
+  connectedAccountPage as Account
+};

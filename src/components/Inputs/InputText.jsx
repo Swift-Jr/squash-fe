@@ -9,6 +9,8 @@ export const InputText = (props) => {
     : null;
   const inputName = props.name || 'input' + Math.rand();
   const value = props.value || '';
+  const error = props.error || '';
+  const autoComplete = props.autoComplete || 'on';
 
   return (<div className={styles.inputContainer}>
     {
@@ -16,7 +18,16 @@ export const InputText = (props) => {
         ? <label>{props.label}</label>
         : null
     }
-    <input value={value} className={className} name={inputName} type={inputType} placeholder={props.placeholder} onChange={props.onChange}/>
+    {
+      value
+        ? <input value={value} className={className} name={inputName} type={inputType} placeholder={props.placeholder} onChange={props.onChange} autoComplete={autoComplete}/>
+        : <input className={className} name={inputName} type={inputType} placeholder={props.placeholder} onChange={props.onChange} autoComplete={autoComplete}/>
+    }
+    {
+      error
+        ? <p className={styles.error}>{error}</p>
+        : null
+    }
   </div>);
 }
 

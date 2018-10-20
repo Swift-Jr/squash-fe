@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "font-awesome": "^4.7.0",
     "i": "^0.3.6",
@@ -16,7 +17,9 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts-cssmodules": "^1.1.10",
-    "redux": "^4.0.0"
+    "react-toastify": "^4.4.0",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "build-css": "node-less-chokidar src/ -o src/",
