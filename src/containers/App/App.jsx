@@ -1,14 +1,19 @@
 import React from 'react';
 import {Route, Switch} from 'react-router-dom';
+import {withRouter} from "react-router";
+
+import {connect} from 'react-redux';
 
 import PropTypes from 'prop-types';
 import {ProtectedRoute} from '../../system'
 
 import {authService} from '../../services';
+import {alerts} from '../../services';
 
 import AppHeader from './AppHeader';
 import AppMenu from './AppMenu';
 import DefaultWelcome from './DefaultWelcome';
+import AlertDisplay from './AlertDisplay';
 
 import {Account} from '../Account';
 import {Login} from '../Login';
@@ -21,7 +26,7 @@ import {MyLeaguesClubs} from '../MyLeaguesClubs';
 
 //import {Authenticator} from './services/Authenticator';
 
-export class App extends React.Component {
+export class AppWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,16 +38,26 @@ export class App extends React.Component {
     authService.registerAuthChange(this.handleAuthChange);
   }
 
+  componentDidUpdate = () => {
+    this
+      .props
+      .dispatch(alerts.actions.clear());
+  }
+
   getClubname() {
     return "Jam Club";
   }
 
-  isLoggedIn() {
+  isLoggedIn = () => {
     return authService.check();
   }
 
   isMemberOfSomething() {
-    return authService.getClubs().length > 0 || authService.getLeagues().length > 0;
+    return authService
+      .getClubs()
+      .length > 0 || authService
+      .getLeagues()
+      .length > 0;
   }
 
   menuToggled = (state) => {
@@ -96,7 +111,10 @@ export class App extends React.Component {
   }
 
   render() {
+    const {alerts} = this.props;
+
     return (<div className={`container ${this.getMenuState()} ${this.getSettingsMenuState()}`}>
+      <AlertDisplay alerts={alerts}></AlertDisplay>
       {
         this.isLoggedIn()
           ? <div className="fixedTop">
@@ -112,7 +130,7 @@ export class App extends React.Component {
             ? <DefaultWelcome></DefaultWelcome>
             : <Switch>
                 <Route path="/login/:func?" component={Login}/>
-                <Route path="/account/:action?/:inviteId?" component={Account}/>
+                <Route path="/account/:action?/:actionId?" component={Account}/>
                 <ProtectedRoute exact={true} path="/" component={MyLeagues}/>
                 <ProtectedRoute path="/myleagues" component={MyLeagues}/>
                 <ProtectedRoute path="/leagueclublist" component={MyLeaguesClubs}/>
@@ -128,7 +146,7 @@ export class App extends React.Component {
   }
 }
 
-App.propTypes = {
+AppWrapper.propTypes = {
   menuIsVisible: PropTypes.bool,
 
   getUsername: PropTypes.func,
@@ -137,9 +155,17 @@ App.propTypes = {
   getMenuState: PropTypes.func
 }
 
-App.defaultProps = {
+AppWrapper.defaultProps = {
   menuIsVisible: false,
   showJoinClubOrLeague: 0
 }
 
-export default App;
+function mapStateToProps(state) {
+  const {alerts, user} = state;
+  return {alerts, user};
+}
+
+const connectedApp = withRouter(connect(mapStateToProps)(AppWrapper));
+export {
+  connectedApp as App
+};

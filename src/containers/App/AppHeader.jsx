@@ -29,7 +29,9 @@ export class AppHeader extends React.Component {
 
   render = () => {
     const {clubname} = this.props;
-    const username = userService.getCurrentUser().getFirstname();
+    const username = userService
+      .getCurrentUser()
+      .getFirstname();
     const menuState = this.state.visible
       ? styles.open
       : styles.hide;

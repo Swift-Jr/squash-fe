@@ -237,3 +237,26 @@ button {
     opacity: 1;
   }
 }
+
+.Toastify {
+  .Toastify__toast-container {
+    .Toastify__toast {
+      .Toastify__toast-body {}
+
+      .Toastify__close-button {}
+
+      &.Toastify__toast--error {
+        background-color: @bloodred;
+      }
+
+      &.Toastify__toast--success {
+        background-color: @limeyellow;
+        color: @darkblue;
+
+        .Toastify__close-button {
+          color: @darkblue;
+        }
+      }
+    }
+  }
+}
