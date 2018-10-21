@@ -51,14 +51,16 @@ export class UserModel extends Model {
   }
 }
 
-function getCurrentUser(){
+function getCurrentUser() {
   //return getUserById(authService.getUserId());
 
   return new UserModel({
     id: 1,
-    firstname: 'Rob',
-    lastname: 'Guard'
+    firstname: "Rob",
+    lastname: "Guard"
   });
+}
+
 function getUserProfile() {
   return async dispatch => {
     return await api()
@@ -82,8 +84,6 @@ function getUserProfile() {
   };
 }
 
-function getUserById(id){
-  switch(id){
 function getUserById(id) {
   switch (id) {
     case 1:
