@@ -8,6 +8,8 @@ import {InputText} from '../../components/Inputs';
 
 import {logoSmall} from '../App/images';
 
+import CreateInvite from './CreateInvite';
+
 export class AccountPage extends React.Component {
   constructor(props) {
     super(props);
@@ -91,53 +93,30 @@ export class AccountPage extends React.Component {
 
   render = () => {
     const {recoverySent} = this.props.user;
+    const {action} = this.state;
+    const {handleInputChange, handleCreate, handleSignin} = this;
 
     switch (this.state.action) {
       case 'create':
       case 'invite':
+        return <CreateInvite action={action} state={this.state} handleInputChange={handleInputChange} handleSignin={handleSignin} handleCreate={handleCreate}></CreateInvite>
+
+      case 'forgot':
         return <div>
           <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/>
-          <form onSubmit={this.handleLogin}>
-            {
-              this.state.action === 'invite'
-                ? <p>Enter some details to accept your invite!</p>
-                : null
-            }
-            <InputText value={this.state.email} name="email" placeholder="E-mail" onChange={this.handleInputChange}/>
-            <InputText value={this.state.firstname} name="firstname" placeholder="Firstname" onChange={this.handleInputChange}/>
-            <InputText value={this.state.lastname} name="lastname" placeholder="Lastname" onChange={this.handleInputChange}/>
-            <InputText value={this.state.password} name="password" placeholder="Password" type="password" onChange={this.handleInputChange} autoComplete="new-password"/>
+          <form>
+            <p>Lost your password huh? Drop your email to get a new one</p>
+            <InputText name="email" placeholder="E-mail" onChange={this.handleInputChange}/>
 
             <div className="fixedBottom">
               <button className="small" onClick={this.handleSignin}>Already have an account?</button>
-              <button className="large" onClick={this.handleCreate}>Create Account</button>
+              <button className="large" onClick={this.handleRecover}>{
+                  user.loggingIn
+                    ? <i className="fas fa-spinner fa-spin"></i>
+                    : <span>Recover Account</span>
+                }</button>
             </div>
           </form>
-        </div>
-      case 'forgot':
-        return <div>
-          <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/> {
-            recoverySent
-              ? <div>
-                  <p>We've sent you a recovery e-mail. Please check your inbox!</p>
-                  <div className="fixedBottom">
-                    <button className="large" onClick={this.handleSignin}>Login</button>
-                  </div>
-                </div>
-              : <form onSubmit={this.handleLogin}>
-                  <p>To recover your account, enter your e-mai and we'll send you a password reset link.</p>
-                  <InputText name="email" placeholder="E-mail" onChange={this.handleInputChange}/>
-
-                  <div className="fixedBottom">
-                    <button className="small" onClick={this.handleSignin}>Already have an account?</button>
-                    <button className="large" onClick={this.handleRecover}>{
-                        user.loggingIn
-                          ? <i className="fas fa-spinner fa-spin"></i>
-                          : <span>Recover Account</span>
-                      }</button>
-                  </div>
-                </form>
-          }
         </div>
       case 'recover':
         return <div>
