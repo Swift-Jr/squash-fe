@@ -1,5 +1,7 @@
 import React from 'react';
 import CountUp from 'react-countup';
+import {withRouter} from "react-router";
+import {connect} from 'react-redux'
 
 import {userService, leagueService} from '../../services';
 
@@ -9,12 +11,23 @@ import {Scoreboard} from '../../components/Scoreboard';
 
 import styles from './styles.module.css';
 
-export class HeadToHead extends React.Component {
+export class HeadToHeadComponent extends React.Component {
   constructor(props) {
     super(props);
 
-    var p1Id = userService.getCurrentUser().getUserId();
-    var p2Id = userService.getCurrentUser().getGames()[0].getOtherUser(p1Id).getUserId();
+    var p1Id = userService
+      .getCurrentUser()
+      .getUserId();
+
+    var p2Id = null;
+
+    if (userService.getCurrentUser().getGames()[0]) {
+      p2Id = userService
+        .getCurrentUser()
+        .getGames()[0]
+        .getOtherUser(p1Id)
+        .getUserId();
+    }
 
     this.state = {
       player1Id: p1Id,
@@ -60,7 +73,9 @@ export class HeadToHead extends React.Component {
 
   getPlayedGames = () => {
     const {player1Id, player2Id, leagueId} = this.state;
-    const games = userService.getUserById(player1Id).getGames(leagueId, player2Id);
+    const games = userService
+      .getUserById(player1Id)
+      .getGames(leagueId, player2Id);
 
     return games;
   }
@@ -68,29 +83,35 @@ export class HeadToHead extends React.Component {
   getPlayers = (key) => {
     const leagues = (this.state.leagueId > 0)
       ? [leagueService.getLeagueById(this.state.leagueId)]
-      : userService.getCurrentUser().getLeagues();
+      : userService
+        .getCurrentUser()
+        .getLeagues();
 
     var players = [];
     leagues.forEach((league) => {
-      league.getResults().forEach((result) => {
-        players = [
-          ...players,
-          ...[result.getPlayer()]
-        ];
-      });
+      league
+        .getResults()
+        .forEach((result) => {
+          players = [
+            ...players,
+            ...[result.getPlayer()]
+          ];
+        });
     });
 
     var foundPlayerIds = [];
-    const options = players.filter((player) => {
-      if (foundPlayerIds[player.getUserId()]) {
-        return null;
-      } else {
-        foundPlayerIds[player.getUserId()] = player;
-        return true;
-      }
-    }).map((player) => {
-      return {value: player.getUserId(), option: player.getFirstname()}
-    });
+    const options = players
+      .filter((player) => {
+        if (foundPlayerIds[player.getUserId()]) {
+          return null;
+        } else {
+          foundPlayerIds[player.getUserId()] = player;
+          return true;
+        }
+      })
+      .map((player) => {
+        return {value: player.getUserId(), option: player.getFirstname()}
+      });
 
     return options;
   }
@@ -171,4 +192,14 @@ export class HeadToHead extends React.Component {
   }
 }
 
-export default HeadToHead;
+//export default HeadToHead;
+
+function mapStateToProps(state) {
+  const {user} = state;
+  return {user};
+}
+
+const connectedHeadToHead = withRouter(connect(mapStateToProps)(HeadToHeadComponent));
+export {
+  connectedHeadToHead as HeadToHead
+};
