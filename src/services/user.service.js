@@ -72,7 +72,7 @@ function getUserProfile() {
 		return await api()
 			.get('/me/')
 			.then(response => {
-				if (response.status == 200) {
+				if (response.status === 200) {
 					const action = user.actions.getUserProfile(response.data.user);
 					dispatch(action);
 					return action.payload;
@@ -93,35 +93,31 @@ function getUserById(id) {
 	switch (id) {
 		case 1:
 			return getCurrentUser();
-			break;
+
 		case 2:
 			return new UserModel({
 				id: 2,
 				firstname: 'Gavin',
 				lastname: 'Brooks'
 			});
-			break;
 		case 3:
 			return new UserModel({
 				id: 3,
 				firstname: 'Perry',
 				lastname: 'Charrington'
 			});
-			break;
 		case 4:
 			return new UserModel({
 				id: 4,
 				firstname: 'Tom',
 				lastname: 'Elliot'
 			});
-			break;
 		case 5:
 			return new UserModel({
 				id: 5,
 				firstname: 'Brent',
 				lastname: 'Mayger'
 			});
-			break;
 		default:
 			return getCurrentUser();
 	}
@@ -262,7 +258,7 @@ async function recoveryTokenIsValid(token) {
 	await axios
 		.post(`${process.env.REACT_APP_API_URL}/users/complete_recover`, {token})
 		.then(response => {
-			if (response.data.isValid == true) {
+			if (response.data.isValid === true) {
 				isValid = true;
 			} else {
 				history.push('/login');

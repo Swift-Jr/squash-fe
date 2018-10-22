@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from "react-router";
 
-import {user, alerts} from '../../services';
+import {user} from '../../services';
 
 import {InputText} from '../../components/Inputs';
 
@@ -90,7 +90,7 @@ export class AccountPage extends React.Component {
   }
 
   render = () => {
-    const {recoverySent, recoverRequest} = this.props.user;
+    const {recoverySent} = this.props.user;
 
     switch (this.state.action) {
       case 'create':
@@ -114,7 +114,6 @@ export class AccountPage extends React.Component {
             </div>
           </form>
         </div>
-        break;
       case 'forgot':
         return <div>
           <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/> {
@@ -140,7 +139,6 @@ export class AccountPage extends React.Component {
                 </form>
           }
         </div>
-        break;
       case 'recover':
         return <div>
           <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/>
@@ -159,7 +157,6 @@ export class AccountPage extends React.Component {
             </div>
           </form>
         </div>
-        break;
       default:
         return null;
     }

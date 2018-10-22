@@ -22,7 +22,7 @@ export class HeadToHeadComponent extends React.Component {
     var p2Id = null;
 
     if (userService.getCurrentUser().getGames()[0]) {
-      let p2Id = userService
+      p2Id = userService
         .getCurrentUser()
         .getGames()[0]
         .getOtherUser(p1Id)
