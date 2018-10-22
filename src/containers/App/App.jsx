@@ -8,12 +8,13 @@ import PropTypes from 'prop-types';
 import {ProtectedRoute} from '../../system'
 
 import {authService} from '../../services';
-import {alerts} from '../../services';
+import {alerts, user} from '../../services';
 
 import AppHeader from './AppHeader';
 import AppMenu from './AppMenu';
 import DefaultWelcome from './DefaultWelcome';
 import AlertDisplay from './AlertDisplay';
+import Loading from './Loading';
 
 import {Account} from '../Account';
 import {Login} from '../Login';
@@ -36,6 +37,11 @@ export class AppWrapper extends React.Component {
     }
 
     authService.registerAuthChange(this.handleAuthChange);
+
+    if (!props.user.profile && this.isLoggedIn()) {
+      props.dispatch(user.service.getUserProfile());
+    }
+
   }
 
   componentDidUpdate = () => {
@@ -112,6 +118,10 @@ export class AppWrapper extends React.Component {
 
   render() {
     const {alerts} = this.props;
+
+    if (!this.props.user.profile && this.isLoggedIn()) {
+      return (<Loading></Loading>);
+    }
 
     return (<div className={`container ${this.getMenuState()} ${this.getSettingsMenuState()}`}>
       <AlertDisplay alerts={alerts}></AlertDisplay>
