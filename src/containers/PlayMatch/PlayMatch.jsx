@@ -1,25 +1,15 @@
 import React from 'react';
+import {connect} from 'react-redux';
 
+import {InputButton} from '../../components/Inputs';
 import {FullModal} from '../../components/FullModal';
+import {clubService, leagueService} from '../../services';
 //import {InputText, InputSelect} from '../../components/Inputs';
 
 import styles from './styles.module.css';
 
 export const SelectALeague = (props) => {
-  const leagueOptions = [
-    {
-      id: 1,
-      name: 'Tuesday Nines'
-    }, {
-      id: 2,
-      name: 'Tuesday 11s'
-    }, {
-      id: 3,
-      name: 'Rob + Perry Superleague'
-    }
-  ];
-
-  const {action} = props;
+  const {action, leagueOptions} = props;
 
   return (<div>
     <h4>Select a League</h4>
@@ -33,37 +23,24 @@ export const LeagueOptions = (props) => {
   const {options} = props;
   const {action} = props;
 
-  return options.map((option) => <li onClick={() => action(option)}>{option.name}</li>);
+  return options.map((option) => <li onClick={() => action(option)}>{option.getName()}</li>);
 }
 
 export const LeagueDisplay = (props) => {
   return <div>
     <h4>League</h4>
     <ul className={styles.leagueList}>
-      <li>{props.league.name}</li>
+      <li>{
+          props
+            .league
+            .getName()
+        }</li>
     </ul>
   </div>
 }
 
 export const SelectPlayers = (props) => {
-  const playerList = [
-    {
-      id: 1,
-      name: 'Rob'
-    }, {
-      id: 2,
-      name: 'Perry'
-    }, {
-      id: 3,
-      name: 'Gavin'
-    }, {
-      id: 4,
-      name: 'Nobby'
-    }, {
-      id: 5,
-      name: 'Brent'
-    }
-  ];
+  const {playerList} = props;
 
   const {action, game} = props;
   const {player1, player2} = game;
@@ -90,22 +67,22 @@ export const PlayerList = (props) => {
 
   return players.map((player) => {
 
-    const playerClass = selected && player && selected.id === player.id
+    const playerClass = selected && player && selected.getId() === player.getId()
       ? styles.selected
       : styles.notselected;
 
-    return selected === null && (!disable || disable.id !== player.id)
-      ? <li onClick={() => action(player)}>{player.name}</li>
-      : <li className={playerClass}>{player.name}</li>;
+    return selected === null && (!disable || disable.getId() !== player.getId())
+      ? <li onClick={() => action(player)}>{player.getFirstname()}</li>
+      : <li className={playerClass}>{player.getFirstname()}</li>;
   });
 }
 
 export const PlayerDisplay = (props) => {
   const {player1, player2} = props;
   return <div className={`row ${styles.spacer}`}>
-    <div className={`col-xs-5 ${styles.player} ${styles.one}`}>{player1.name}</div>
+    <div className={`col-xs-5 ${styles.player} ${styles.one}`}>{player1.getFirstname()}</div>
     <div className={`col-xs-2 ${styles.vs}`}>vs.</div>
-    <div className={`col-xs-5 ${styles.player} ${styles.two}`}>{player2.name}</div>
+    <div className={`col-xs-5 ${styles.player} ${styles.two}`}>{player2.getFirstname()}</div>
   </div>
 }
 
@@ -125,45 +102,39 @@ export const GameDisplay = (props) => {
       </div>
     </div>
     <div className="fixedBottom">
-      <button className="large" onClick={() => action()} disabled={!game.player1score && !game.player2score}>Save Score</button>
+      <InputButton className="large" onClick={() => action()} disabled={!game.player1score && !game.player2score} isLoading={props.isLoading}>Save Score</InputButton>
     </div>
   </div>
 }
 
 export const ScoreOptions = (props) => {
-  return props.options.map((option) => <option>{option}</option>);
+  return props
+    .options
+    .map((option) => <option>{option}</option>);
 }
 
-export class PlayMatch extends React.Component {
+export class PlayMatchComponent extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       visible: props.visible || false,
       game: {
         league: null,
         player1: null,
         player2: null
-      }
+      },
+      saved: false
     }
-
-    this.handleOnOpen = this.handleOnOpen.bind(this);
-    this.handleOnClose = this.handleOnClose.bind(this);
-    this.handleSelectLeague = this.handleSelectLeague.bind(this);
-    this.handleSelectPlayer = this.handleSelectPlayer.bind(this);
-    this.handleStartGame = this.handleStartGame.bind(this);
-    this.handleSetScore = this.handleSetScore.bind(this);
-    this.handleSaveGame = this.handleSaveGame.bind(this);
-
-    this.getBodyContent = this.getBodyContent.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state !== nextProps) {
-      this.setState(nextProps);
+    if (nextProps.league.gameSaved) {
+      this.setState({saved: true});
     }
   }
 
-  handleOnClose() {
+  handleOnClose = () => {
     const {onClose} = this.state;
     this.setState({
       game: {
@@ -175,20 +146,20 @@ export class PlayMatch extends React.Component {
     }, () => onClose && onClose(this.state.visible));
   }
 
-  handleOnOpen() {
+  handleOnOpen = () => {
     const {onOpen} = this.state;
     this.setState({
       visible: true
     }, () => onOpen && onOpen(this.state.visible));
   }
 
-  handleSelectLeague(league) {
+  handleSelectLeague = (league) => {
     const {game} = this.state;
     game.league = league;
     this.setState({game: game});
   }
 
-  handleSelectPlayer(player) {
+  handleSelectPlayer = (player) => {
     const {game} = this.state;
     game.player1 === null
       ? game.player1 = player
@@ -196,13 +167,13 @@ export class PlayMatch extends React.Component {
     this.setState({game: game});
   }
 
-  handleStartGame() {
+  handleStartGame = () => {
     const {game} = this.state;
     game.started = (game.player1 !== null && game.player2 !== null);
     this.setState({game: game});
   }
 
-  handleSetScore(one, two) {
+  handleSetScore = (one, two) => {
     const {game} = this.state;
 
     if (!game.player1score) {
@@ -224,15 +195,20 @@ export class PlayMatch extends React.Component {
     this.setState({game: game});
   }
 
-  handleSaveGame(score) {
+  handleSaveGame = (score) => {
     const {game} = this.state;
     if (game.player1score || game.player2score) {
-      console.log(game);
-      this.setState({saved: true});
+      this
+        .props
+        .dispatch(leagueService.actions.saveGame(game));
     }
   }
 
-  getBodyContent() {
+  isLoading = () => {
+    return this.props.league.submitted;
+  }
+
+  getBodyContent = () => {
     const {game} = this.state;
 
     return <div>
@@ -244,19 +220,31 @@ export class PlayMatch extends React.Component {
                 this.state.game.started
                   ? <div>
                       <PlayerDisplay player1={game.player1} player2={game.player2}></PlayerDisplay>
-                      <GameDisplay action={this.handleSaveGame} setScore={this.handleSetScore} game={game}></GameDisplay>
+                      <GameDisplay action={this.handleSaveGame} setScore={this.handleSetScore} game={game} isLoading={this.isLoading()}></GameDisplay>
                     </div>
                   : <div>
-                      <SelectPlayers action={this.handleSelectPlayer} game={game}></SelectPlayers>
+                      <SelectPlayers action={this.handleSelectPlayer} game={game} playerList={this.getPlayers()}></SelectPlayers>
                       <div className="fixedBottom">
                         <button className="large" disabled={this.state.game.player2 === null} onClick={this.handleStartGame}>Match Time</button>
                       </div>
                     </div>
               }
             </div>
-          : <SelectALeague action={this.handleSelectLeague}></SelectALeague>
+          : <SelectALeague action={this.handleSelectLeague} leagueOptions={this.getLeagues()}></SelectALeague>
       }
     </div>;
+  }
+
+  getLeagues = () => {
+    return clubService
+      .getUserClubs()[0]
+      .getLeagues();
+  }
+
+  getPlayers = () => {
+    return clubService
+      .getUserClubs()[0]
+      .getMembers();
   }
 
   render() {
@@ -271,4 +259,12 @@ export class PlayMatch extends React.Component {
   }
 }
 
-export default PlayMatch;
+function mapStateToProps(state) {
+  const {league} = state;
+  return {league};
+}
+
+const connectedPlayMatchComponent = connect(mapStateToProps)(PlayMatchComponent);
+export {
+  connectedPlayMatchComponent as PlayMatch
+};

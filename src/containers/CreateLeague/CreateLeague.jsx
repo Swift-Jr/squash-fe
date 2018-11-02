@@ -1,12 +1,16 @@
 import React from 'react';
+import {withRouter} from "react-router";
+import {connect} from 'react-redux';
 
 import {FullModal} from '../../components/FullModal';
 import {InputText, InputSelect} from '../../components/Inputs';
 
 import styles from './styles.module.css';
 
+import {leagueService} from '../../services';
+
 export const TopContent = (props) => {
-  return (<InputText label="Name" placeholder="League Name"/>);
+  return (<InputText name="leagueName" value={props.value} onChange={props.onChange} label="Name" placeholder="League Name" autoComplete="off"/>);
 }
 
 export const BodyContent = (props) => {
@@ -39,17 +43,18 @@ export const BodyContent = (props) => {
   ];
 
   return (<div className={styles.bottomContent}>
-    <InputSelect darkStyle={true} label="Sport" placeholder="Select a Sport" options={sportOptions}/>
+    {/*<InputSelect darkStyle={true} label="Sport" placeholder="Select a Sport" options={sportOptions}/>
     <InputSelect darkStyle={true} label="Club Association" placeholder="Select an option" options={clubOptions}/>
-    <InputSelect darkStyle={true} label="Invite only league?" placeholder="Select an option" options={inviteOptions}/>
-    <InputText darkStyle={true} label="Short Name" placeholder="Max 10 characters"/>
+    <InputSelect darkStyle={true} label="Invite only league?" placeholder="Select an option" options={inviteOptions}/> */
+    }
+    <InputText name="shortLeagueName" value={props.value} onChange={props.onChange} darkStyle={true} label="Short Name" placeholder="Max 10 characters" maxLength="10" autoComplete="off"/>
     <div className="fixedBottom">
-      <button className="large">Create League</button>
+      <button className="large" onClick={props.onSubmit}>Create League</button>
     </div>
   </div>);
 }
 
-export class CreateLeague extends React.Component {
+export class CreateLeagueComponent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -60,11 +65,13 @@ export class CreateLeague extends React.Component {
       buttonTitle: props.buttonTitle || 'Create a league'
     }
 
-    this.handleOnOpen = this.handleOnOpen.bind(this);
-    this.handleOnClose = this.handleOnClose.bind(this);
+    this.handleOnOpen = this
+      .handleOnOpen
+      .bind(this);
+    this.handleOnClose = this
+      .handleOnClose
+      .bind(this);
 
-    this.getHeadContent = this.getHeadContent.bind(this);
-    this.getBodyContent = this.getBodyContent.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -83,23 +90,54 @@ export class CreateLeague extends React.Component {
   handleOnOpen() {
     const {onOpen} = this.state;
     this.setState({
-      visible: true
+      visible: true,
+      shortLeagueName: null,
+      leagueName: null
     }, () => onOpen && onOpen(this.state.visible));
   }
 
-  getHeadContent() {
-    return <TopContent></TopContent>;
+  handleSubmit = () => {
+    this
+      .props
+      .dispatch(leagueService.actions.create(this.state.leagueName, this.state.shortLeagueName));
   }
 
-  getBodyContent() {
-    return <BodyContent></BodyContent>;
+  handleInputChange = (e) => {
+    const {name, value} = e.target;
+    this.setState({[name]: value});
+
+    if (name === "leagueName") {
+      let shortName = value.substring(0, 8);
+
+      if (value.split(' ').length > 1) {
+        shortName = '';
+        value
+          .split(' ')
+          .map(value => shortName = shortName + ' ' + value.substring(0, 4));
+        shortName = shortName.trim();
+      }
+
+      this.setState({shortLeagueName: shortName});
+    }
+  }
+
+  getHeadContent = () => {
+    return <TopContent onChange={this.handleInputChange} value={this.state.leagueName}></TopContent>;
+  }
+
+  getBodyContent = () => {
+    return <BodyContent onSubmit={this.handleSubmit} onChange={this.handleInputChange} value={this.state.shortLeagueName}></BodyContent>;
+  }
+
+  isVisible = () => {
+    return this.props.league.submitted || this.props.league.created === false || this.state.visible;
   }
 
   render() {
     return (<div>
       <button className={this.state.buttonClass} onClick={this.handleOnOpen}>{this.state.buttonTitle}</button>
       {
-        this.state.visible
+        this.isVisible()
           ? <FullModal onClose={this.handleOnClose} headContent={this.getHeadContent()} bodyContent={this.getBodyContent()}></FullModal>
           : null
       }
@@ -107,4 +145,12 @@ export class CreateLeague extends React.Component {
   }
 }
 
-export default CreateLeague;
+function mapStateToProps(state) {
+  const {league} = state;
+  return {league};
+}
+
+const connectedCreateLeagueComponent = withRouter(connect(mapStateToProps)(CreateLeagueComponent));
+export {
+  connectedCreateLeagueComponent as CreateLeague
+};

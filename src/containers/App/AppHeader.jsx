@@ -1,17 +1,22 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {withRouter} from "react-router";
+import {connect} from 'react-redux';
+
+import {InvitePlayers} from '../InvitePlayers';
 
 import {iconSettings, logoSmall} from './images';
 
-import {userService} from '../../services';
+import {userService, authService} from '../../services';
 
 import styles from './styles.module.css';
 
-export class AppHeader extends React.Component {
+export class AppHeaderComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: props.visible || false
+      visible: props.visible || false,
+      inviteOpened: false
     }
   }
 
@@ -25,6 +30,18 @@ export class AppHeader extends React.Component {
   handleLinkClick = (e) => {
     this.setState({visible: false});
     this.toggleMenu();
+  }
+
+  handleSignOut = (e) => {
+    this.handleLinkClick(e);
+    setTimeout(() => this.props.dispatch(authService.logout()), 1000);
+  }
+
+  handleInvite = (e) => {
+    this.handleLinkClick(e);
+    e.preventDefault();
+    this.setState({inviteOpened: true});
+    return false;
   }
 
   render = () => {
@@ -44,30 +61,25 @@ export class AppHeader extends React.Component {
       </div>
       <ul className={`${styles.settingMenu} ${menuState}`}>
         <li>
-          <Link to="/" onClick={this.handleLinkClick}>Find a League</Link>
-        </li>
-        <li>
-          <Link to="/" onClick={this.handleLinkClick}>Find a Club</Link>
-        </li>
-        <li>
           <Link to="/" onClick={this.handleLinkClick}>Create a League</Link>
         </li>
         <li>
-          <Link to="/" onClick={this.handleLinkClick}>Create a Club</Link>
-        </li>
-        <li>
-          <Link to="/" onClick={this.handleLinkClick}>Invite</Link>
+          <Link to="/" onClick={this.handleInvite}>Invite</Link>
         </li>
         <li>
           <Link to="/" onClick={this.handleLinkClick}>Profile</Link>
         </li>
         <li>
-          <Link to="/login/out" onClick={this.handleLinkClick}>Sign Out</Link>
+          <Link to="/login/out" onClick={this.handleSignOut}>Sign Out</Link>
         </li>
       </ul>
       <img className="app-logo" src={logoSmall} alt="Application Logo"/>
+      <InvitePlayers visible={this.state.inviteOpened} noButton={true}></InvitePlayers>
     </header>
   }
 }
 
-export default AppHeader;
+const connectedAppHeader = withRouter(connect()(AppHeaderComponent));
+export {
+  connectedAppHeader as AppHeader
+};

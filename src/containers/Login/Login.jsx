@@ -87,8 +87,8 @@ export class LoginPage extends React.Component {
     return <div>
       <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/>
       <form className={styles.loginForm} onSubmit={this.handleLogin}>
-        <InputText error={userInputError} name="email" placeholder="Email" onChange={this.onInputChange}/>
-        <InputText error={passInputError} name="password" placeholder="Password" type="password" onChange={this.onInputChange} autoComplete="current-password"/>
+        <InputText value={this.state.email} error={userInputError} name="email" placeholder="Email" onChange={this.onInputChange}/>
+        <InputText value={this.state.password} error={passInputError} name="password" placeholder="Password" type="password" onChange={this.onInputChange} autoComplete="current-password"/>
         <button className={`small ${styles.forgotPassword}`} onClick={this.handleForgot}>Forgot Password</button>
         <div className="fixedBottom">
           <button className="small" onClick={this.handleCreate}>Create Account</button>

@@ -12,8 +12,6 @@ import registerServiceWorker from './system/registerServiceWorker';
 
 import './index.css';
 
-console.log(store);
-
 ReactDOM.render(<Provider store={store}>
   <Router history={history}>
     <App/>

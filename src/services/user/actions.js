@@ -84,9 +84,9 @@ const logoutFailure = error => ({
   payload: {error}
 });
 
-const getUserProfile = user => ({
+const getUserProfile = profile => ({
   type: types.RETREIVE_PROFILE,
-  payload: {user}
+  payload: {...profile}
 });
 
 export const userActions = {

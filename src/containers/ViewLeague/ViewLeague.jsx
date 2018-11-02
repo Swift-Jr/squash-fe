@@ -23,11 +23,18 @@ export class ViewLeague extends React.Component {
   }
 
   getLeagueName = () => {
-    return this.getLeague().getName();
+    let league = this.getLeague();
+    if (league) {
+      return this
+        .getLeague()
+        .getName();
+    }
+    return null;
   }
 
   getLeagueGames = () => {
-    return gameService.getLeagueGames(this.getLeague().getId());
+    return [];
+    //return gameService.getLeagueGames(this.getLeague().getId());
   }
 
   render = () => {

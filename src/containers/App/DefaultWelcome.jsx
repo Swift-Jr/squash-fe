@@ -1,33 +1,53 @@
 import React from 'react';
+import {withRouter} from "react-router";
 
-import {JoinLeagueClub} from '../JoinLeagueClub';
+import {connect} from 'react-redux';
 import {CreateClub} from '../CreateClub';
 import {CreateLeague} from '../CreateLeague';
+import {InvitePlayers} from '../InvitePlayers';
+
+import {clubService} from '../../services';
 
 import styles from './styles.module.css';
 
-class DefaultWelcome extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = props;
-
-    this.handleCreateType = this.handleCreateType.bind(this);
-    this.handleClubClose = this.handleClubClose.bind(this);
-  }
-
-  handleCreateType(type) {
-    if (type === 1) {
-      this.setState({createClub: true});
-    } else {
-      this.setState({createLeague: true});
-    }
-  }
-
-  handleClubClose() {
+class DefaultWelcomeComponent extends React.Component {
+  handleClubClose = () => {
     this.setState({createClub: false});
   }
 
-  render() {
+  handleLeagueClose = () => {
+    this.setState({createLeague: false});
+  }
+
+  createClubIsVisible = () => {
+    return this.club
+      ? true
+      : false;
+  }
+
+  createLeagueIsVisible = () => {
+    return this.createLeague;
+  }
+
+  userHasLeagues = () => {
+    const usersClubs = clubService.getUserClubs();
+
+    const clubsWithLeagues = usersClubs.filter(clubToCheck => {
+      return clubToCheck
+        .getLeagues()
+        .length > 0;
+    });
+
+    return clubsWithLeagues.length > 0;
+  }
+
+  userHasClubs = () => {
+    return clubService
+      .getUserClubs()
+      .length > 0;
+  }
+
+  render = () => {
     return (<div className={styles.welcome}>
       <h1>Welcome</h1>
       <p>
@@ -35,23 +55,49 @@ class DefaultWelcome extends React.Component {
         <strong>
           to beat.</strong>
       </p>
-      <p>If you’re ready to beat someone, you’ll need to join a league first.</p>
-      <JoinLeagueClub createType={this.handleCreateType} buttonClass="large" buttonTitle="Join a League" clubOrLeague={2}></JoinLeagueClub>
-      <p>If you’re a member of a club, join to get access to their private leagues.</p>
-      <JoinLeagueClub createType={this.handleCreateType} buttonClass="large" buttonTitle="Join a Club" clubOrLeague={1}></JoinLeagueClub>
-      <div className={`fixedBottom ${styles.fixedBottom}`}>
-        <p>
-          Want your own club or league?
-        </p>
-        <div className="col-xs-6">
-          <CreateClub visible={this.state.createClub} onClose={this.handleClubClose} buttonClass="small" buttonTitle="Create a club"></CreateClub>
-        </div>
-        <div className="col-xs-6">
-          <CreateLeague visible={this.state.createLeague} buttonClass="small" buttonTitle="Create a league"></CreateLeague>
-        </div>
-      </div>
+      {
+        !this.userHasClubs()
+          ? <div className={styles.noClubs}>
+              <i class="far fa-hand-peace fa-6x"></i>
+              <p>If you’re ready to beat someone, ask your friends to invite you or create your own club.</p>
+              <CreateClub buttonClass="large" buttonTitle="Create a club"></CreateClub>
+            </div>
+          : null
+      }
+      {
+        this.userHasClubs() && !this.userHasLeagues()
+          ? <div>
+              <p>Great! You've created&nbsp;
+                <b>
+                  {
+                    clubService
+                      .getUserClubs()[0]
+                      .getName()
+                  }</b>. Now let's add a League!</p>
+              <CreateLeague buttonTitle="Create a league"></CreateLeague>
+            </div>
+          : null
+      }
+      {
+        this.userHasClubs() && this.userHasLeagues()
+          ? <div>
+              <p>Finally, invite some friends to battre</p>
+              <InvitePlayers></InvitePlayers>
+            </div>
+          : null
+      }
     </div>)
   }
 }
 
-export default DefaultWelcome;
+//export default DefaultWelcomeComponent;
+
+function mapStateToProps(state) {
+  const {user} = state;
+  return {user};
+}
+
+const connectedDefaultWelcomeComponent = withRouter(connect(mapStateToProps)(DefaultWelcomeComponent));
+export {
+  connectedDefaultWelcomeComponent as DefaultWelcome
+};

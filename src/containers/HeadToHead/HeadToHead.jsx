@@ -38,12 +38,11 @@ export class HeadToHeadComponent extends React.Component {
   }
 
   getLeagues() {
-    const user = userService.getCurrentUser();
-
-    const leagues = user.getLeagues();
-    const leagueList = leagues.map((league) => {
-      return {value: league.getId(), option: league.getShortName()};
-    });
+    const leagueList = leagueService
+      .getUsersLeagues()
+      .map((league) => {
+        return {value: league.getId(), option: league.getShortname()};
+      });
 
     return [
       {
@@ -83,9 +82,7 @@ export class HeadToHeadComponent extends React.Component {
   getPlayers = (key) => {
     const leagues = (this.state.leagueId > 0)
       ? [leagueService.getLeagueById(this.state.leagueId)]
-      : userService
-        .getCurrentUser()
-        .getLeagues();
+      : leagueService.getUsersLeagues();
 
     var players = [];
     leagues.forEach((league) => {
