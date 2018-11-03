@@ -44,6 +44,10 @@ export class AppHeaderComponent extends React.Component {
     return false;
   }
 
+  handleInviteClose = (e) => {
+    this.setState({inviteOpened: false});
+  }
+
   render = () => {
     const {clubname} = this.props;
     const username = userService
@@ -74,7 +78,7 @@ export class AppHeaderComponent extends React.Component {
         </li>
       </ul>
       <img className="app-logo" src={logoSmall} alt="Application Logo"/>
-      <InvitePlayers visible={this.state.inviteOpened} noButton={true}></InvitePlayers>
+      <InvitePlayers visible={this.state.inviteOpened} noButton={true} onClose={this.handleInviteClose}></InvitePlayers>
     </header>
   }
 }

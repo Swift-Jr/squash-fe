@@ -2,13 +2,13 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import Moment from 'react-moment';
 
-import {authService} from '../../services';
+import {userService} from '../../services';
 
 import styles from './styles.module.css';
 
 export const GameHistory = (props) => {
   const {games, showLeague} = props;
-  const userId = parseInt(props.userContext || authService.getUserId(), 10);
+  const userId = parseInt(props.userContext || userService.getCurrentUser().getUserId(), 10);
   return <table className={styles.gameTable}>
     <thead>
       <tr>
@@ -56,7 +56,13 @@ export const GameHistoryRows = (props) => {
       {
         showLeague
           ? <td>
-              <Link to={`/league/${game.getLeague().getId()}`}>{game.getLeague().getShortName()}</Link>
+              <Link to={`/league/${game
+                  .getLeague()
+                  .getId()}`}>{
+                  game
+                    .getLeague()
+                    .getShortname()
+                }</Link>
             </td>
           : null
       }
@@ -77,18 +83,34 @@ export const GameHistoryRows = (props) => {
               </Link>
             : <div>
                 <span className={styles.lightText}>
-                  <Link to={`/scorecard/${game.getPlayer1().getUserId()}`}>{
-                      game.getPlayer1().getUserId() === authService.getUserId()
-                        ? 'Me'
-                        : game.getPlayer1().getFirstname()
+                  <Link to={`/scorecard/${game
+                      .getPlayer1()
+                      .getUserId()}`}>{
+                      game
+                        .getPlayer1()
+                        .getUserId() === userService
+                        .getCurrentUser()
+                        .getUserId()
+                          ? 'Me'
+                          : game
+                            .getPlayer1()
+                            .getFirstname()
                     }</Link>
                 </span>
                 &nbsp;v&nbsp;
                 <span className={styles.lightText}>
-                  <Link to={`/scorecard/${game.getPlayer2().getUserId()}`}>{
-                      game.getPlayer2().getUserId() === authService.getUserId()
-                        ? 'Me'
-                        : game.getPlayer2().getFirstname()
+                  <Link to={`/scorecard/${game
+                      .getPlayer2()
+                      .getUserId()}`}>{
+                      game
+                        .getPlayer2()
+                        .getUserId() === userService
+                        .getCurrentUser()
+                        .getUserId()
+                          ? 'Me'
+                          : game
+                            .getPlayer2()
+                            .getFirstname()
                     }</Link>
                 </span>
               </div>

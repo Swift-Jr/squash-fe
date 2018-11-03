@@ -84,34 +84,16 @@ function getLeagues(clubId) {
     });
 }
 
-function saveGame(game) {
-  const newGame = {
-    league: game.league.getId(),
-    player1: game.player1.getId(),
-    player2: game.player2.getId(),
-    player1score: game.player1score,
-    player2score: game.player2score
-  };
-
-  return api()
-    .post("/league/save_game/", newGame)
-    .then(response => {
-      if (response.status == 202 && response.data.league) {
-        //TODO:Could store games locally to be saved when offline
-        return response.data.league;
-      } else if (!responseHandler(response)) {
-        throw new Error(
-          "Yikes! Ran into an unknown problem trying to create that."
-        );
-      }
-    });
-}
-
 function getUsersLeagues(clubId) {
   let leagues = [];
 
   if (store && store.getState().league.list) {
     const {list} = store.getState().league;
+
+    if (clubId === undefined) {
+      clubId = clubService.getCurrentClub().getId();
+    }
+
     if (clubId) {
       leagues = list.filter(league => league.club_id === clubId);
     } else {
@@ -124,7 +106,7 @@ function getUsersLeagues(clubId) {
         if (
           listUpdated === false ||
           moment(listUpdated)
-            .add(30, "seconds")
+            .add(5, "seconds")
             .isBefore(/* now */)
         ) {
           store.dispatch(leagueService.actions.getLeagues(clubId));
@@ -177,7 +159,6 @@ function getUserScorecard(userId, leagues) {
 
 export const leaguesService = {
   create,
-  saveGame,
   getUsersLeagues,
   getLeagueById,
   getUserScorecard,

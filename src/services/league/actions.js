@@ -1,5 +1,6 @@
 import React from "react";
 import {leagueService} from "./";
+import {userService} from "../user";
 import {alerts} from "../alerts";
 import {store} from "../../system/store";
 
@@ -82,47 +83,7 @@ function getLeagues(clubId) {
   }
 }
 
-function saveGame(game) {
-  return dispatch => {
-    dispatch(request(game));
-
-    leagueService
-      .saveGame(game)
-      .then(updatedLeague => {
-        dispatch(success(updatedLeague));
-        dispatch(alerts.actions.good('Game saved'));
-      })
-      .catch(error => {
-        if (!responseHandler(error)) {
-          dispatch(failure(error));
-        }
-      });
-  };
-
-  function request(game) {
-    return {type: leagueService.types.CREATE_GAME_REQUEST, payload: {
-        game
-      }};
-  }
-
-  function success(updatedLeague) {
-    return {
-      type: leagueService.types.CREATE_GAME_SUCCESS,
-      payload: {
-        league: updatedLeague
-      }
-    };
-  }
-
-  function failure(error) {
-    return {type: leagueService.types.CREATE_GAME_FAILURE, payload: {
-        error
-      }};
-  }
-}
-
 export const leagueActions = {
   create,
-  saveGame,
   getLeagues
 };

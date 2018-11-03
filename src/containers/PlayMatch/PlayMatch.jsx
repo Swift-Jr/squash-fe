@@ -29,7 +29,7 @@ export const LeagueOptions = (props) => {
 export const LeagueDisplay = (props) => {
   return <div>
     <h4>League</h4>
-    <ul className={styles.leagueList}>
+    <ul className={styles.leagueList} onClick={props.onClick}>
       <li>{
           props
             .league
@@ -129,7 +129,7 @@ export class PlayMatchComponent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.league.gameSaved) {
+    if (nextProps.games.createGame.created) {
       this.setState({saved: true});
     }
   }
@@ -173,6 +173,16 @@ export class PlayMatchComponent extends React.Component {
     this.setState({game: game});
   }
 
+  handleReset = () => {
+    this.setState({
+      game: {
+        league: null,
+        player1: null,
+        player2: null
+      }
+    });
+  }
+
   handleSetScore = (one, two) => {
     const {game} = this.state;
 
@@ -205,7 +215,7 @@ export class PlayMatchComponent extends React.Component {
   }
 
   isLoading = () => {
-    return this.props.league.submitted;
+    return this.props.league.createGame.submitted;
   }
 
   getBodyContent = () => {
@@ -215,7 +225,7 @@ export class PlayMatchComponent extends React.Component {
       {
         this.state.game.league
           ? <div>
-              <LeagueDisplay league={game.league}></LeagueDisplay>
+              <LeagueDisplay league={game.league} onClick={this.handleReset}></LeagueDisplay>
               {
                 this.state.game.started
                   ? <div>
@@ -260,8 +270,8 @@ export class PlayMatchComponent extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const {league} = state;
-  return {league};
+  const {league, games} = state;
+  return {league, games};
 }
 
 const connectedPlayMatchComponent = connect(mapStateToProps)(PlayMatchComponent);

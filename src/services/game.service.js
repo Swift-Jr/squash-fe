@@ -2,26 +2,6 @@ import {Model} from "react-axiom";
 import {userService, UserModel, leagueService} from "./";
 import {LeagueModel} from "./league/service";
 
-class GameModel extends Model {
-  static defaultState() {
-    return {
-      id: null,
-      date: null,
-      league: new LeagueModel(),
-      player1: new UserModel(),
-      player2: new UserModel(),
-      player1Score: 0,
-      player2Score: 0
-    };
-  }
-
-  getOtherUser(userId) {
-    return this.getPlayer1().getUserId() === parseInt(userId, 10)
-      ? this.getPlayer2()
-      : this.getPlayer1();
-  }
-}
-
 function getLeagueGames(leagueId) {
   return [
     new GameModel({
@@ -116,7 +96,7 @@ function getUsersGames(userId, leagueId) {
   return leagueFilteredGames;
 }
 
-export const gameService = {
+export const oldGameService = {
   getLeagueGames,
   getUsersGames
 };

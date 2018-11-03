@@ -8,12 +8,6 @@ const initialState = {
     created: false,
     league: null,
     error: null
-  },
-  createGame: {
-    submitted: false,
-    created: false,
-    game: null,
-    error: null
   }
 };
 
@@ -47,33 +41,6 @@ export const leagueReducer = (state = initialState, action = null) => {
           submitted: false,
           created: false,
           league: payload.name,
-          error: payload.error
-        }
-      };
-    case types.CREATE_GAME_REQUEST:
-      return {
-        ...state,
-        createGame: {
-          submitted: true,
-          created: false
-        }
-      };
-    case types.CREATE_GAME_SUCCESS:
-      return {
-        ...state,
-        createGame: {
-          submitted: false,
-          created: true,
-          game: payload.game
-        }
-      };
-    case types.CREATE_GAME_FAILURE:
-      return {
-        ...state,
-        createGame: {
-          submitted: false,
-          created: false,
-          game: payload.game,
           error: payload.error
         }
       };

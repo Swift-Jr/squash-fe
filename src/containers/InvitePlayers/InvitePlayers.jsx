@@ -143,7 +143,7 @@ export class InvitePlayersComponent extends React.Component {
   }
 
   isVisible = () => {
-    return this.props.invites.error || (this.props.invites.submitted && this.props.invites.created === false) || this.state.visible;
+    return this.props.invites.error || (this.props.invites.submitted && this.props.invites.created === false) || this.state.visible || this.props.visible;
   }
 
   render() {
