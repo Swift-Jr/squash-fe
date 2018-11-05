@@ -106,37 +106,17 @@ function getUserProfile() {
 }
 
 function getUserById(id) {
-  switch (id) {
-    case 1:
-      return getCurrentUser();
+  let club = clubService.getCurrentClub();
 
-    case 2:
-      return new UserModel({
-        id: 2,
-        firstname: "Gavin",
-        lastname: "Brooks"
-      });
-    case 3:
-      return new UserModel({
-        id: 3,
-        firstname: "Perry",
-        lastname: "Charrington"
-      });
-    case 4:
-      return new UserModel({
-        id: 4,
-        firstname: "Tom",
-        lastname: "Elliot"
-      });
-    case 5:
-      return new UserModel({
-        id: 5,
-        firstname: "Brent",
-        lastname: "Mayger"
-      });
-    default:
-      return getCurrentUser();
+  let user = club
+    .getMembers()
+    .filter(member => member.getUserId() == parseInt(id));
+
+  if (user.length > 0) {
+    return user[0];
   }
+
+  return new UserModel();
 }
 
 export const register = data => {

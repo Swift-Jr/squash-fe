@@ -29,7 +29,7 @@ function saveGame(game) {
   return dispatch => {
     dispatch(request(game));
 
-    gameService
+    return gameService
       .saveGame(game)
       .then(updatedLeague => {
         let message = "Game saved!";
@@ -75,28 +75,29 @@ function saveGame(game) {
   }
 }
 
-function getAllGames(leagueId) {
+function getAllGames(leagueId = null) {
   return dispatch => {
 
-    //dispatch(request(leagueId));
+    dispatch(request(leagueId));
 
-    gameService
+    return gameService
       .getAllGames(leagueId)
       .then(matches => {
         dispatch(success(leagueId, matches));
+        return matches
       })
       .catch(error => {
         if (!responseHandler(error)) {
-          //dispatch(failure(error));
+          dispatch(failure(leagueId, error));
         }
       });
   };
 
-  /*function request(clubId) {
-    return {type: inviteService.types.FETCH_LEAGUES_REQUEST, payload: {
-        clubId
+  function request(leagueId) {
+    return {type: gameService.types.FETCH_GAMES_REQUEST, payload: {
+        leagueId
       }};
-  }*/
+  }
 
   function success(leagueId, matches) {
     return {
@@ -108,11 +109,15 @@ function getAllGames(leagueId) {
     };
   }
 
-  /*function failure(error) {
-    return {type: inviteService.types.FETCH_LEAGUES_FAILURE, payload: {
+  function failure(leagueId, error) {
+    return {
+      type: gameService.types.FETCH_GAMES_FAILURE,
+      payload: {
+        leagueId,
         error
-      }};
-  }*/
+      }
+    };
+  }
 }
 
 export const gamesActions = {

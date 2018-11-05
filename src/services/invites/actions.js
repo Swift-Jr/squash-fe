@@ -8,13 +8,14 @@ function create(invites, club_id) {
   return dispatch => {
     dispatch(request(invites, club_id));
 
-    inviteService
+    return inviteService
       .create(invites, club_id)
-      .then((response) => {
-        dispatch(success(response.data.invites, club_id));
+      .then((data) => {
+        dispatch(success(data.invites, club_id));
         dispatch(alerts.actions.good(() => (<div>
-          <b>{response.data.sent}</b>&nbsp;invites are on their way!
+          <b>{data.sent}</b>&nbsp;invites are on their way!
         </div>)));
+        return data;
       })
       .catch(error => {
         if (!responseHandler(error)) {

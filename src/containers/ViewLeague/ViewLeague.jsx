@@ -31,9 +31,9 @@ export class ViewLeagueComponent extends React.Component {
   }
 
   getLeagueGames = () => {
-    let league = this.getLeague();
+    let league = this.getLeagueId();
     if (league) {
-      return gameService.getLeagueGames(league.getId());
+      return gameService.getLeagueGames(league);
     }
     return [];
   }

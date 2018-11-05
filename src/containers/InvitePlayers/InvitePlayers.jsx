@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 //import 'moment-timezone';
 
 import {FullModal} from '../../components/FullModal';
-import {InputText} from '../../components/Inputs';
+import {InputText, InputButton} from '../../components/Inputs';
 
 import {inviteService, clubService} from '../../services';
 
@@ -24,7 +24,7 @@ export const BodyContent = (props) => {
       }
     </ul>
     <div className="fixedBottom">
-      <button className="large" onClick={props.onSubmit} disabled={props.loading || props.invites.length == 0}>Send Invites</button>
+      <InputButton className="large" onClick={props.onSubmit} disabled={props.loading || props.invites.length == 0} isLoading={props.loading}>Send Invites</InputButton>
     </div>
   </div>);
 }
@@ -37,7 +37,8 @@ export class InvitePlayersComponent extends React.Component {
       buttonTitle: props.buttonTitle || 'Invite Players',
       pendingInvites: [],
       emailValid: false,
-      email: null
+      email: null,
+      closeModal: false
     }
 
     this.handleOnOpen = this
@@ -62,7 +63,7 @@ export class InvitePlayersComponent extends React.Component {
   }
 
   handleOnClose() {
-    const {onClose} = this.state;
+    const {onClose} = this.props;
     this.setState({
       visible: false
     }, () => onClose && onClose(this.state.visible));
@@ -81,9 +82,11 @@ export class InvitePlayersComponent extends React.Component {
     const club_id = clubService
       .getUserClubs()[0]
       .getId();
+
     this
       .props
-      .dispatch(inviteService.actions.create(this.state.pendingInvites, club_id));
+      .dispatch(inviteService.actions.create(this.state.pendingInvites, club_id))
+      .then(data => this.setState({closeModal: true}));
   }
 
   onChangeEmail = e => {
@@ -139,11 +142,11 @@ export class InvitePlayersComponent extends React.Component {
   }
 
   getBodyContent = () => {
-    return <BodyContent removeInvite={this.removeInvite} invites={this.state.pendingInvites} onSubmit={this.handleSubmit} loading={this.props.invites.submitted}></BodyContent>;
+    return <BodyContent removeInvite={this.removeInvite} invites={this.state.pendingInvites} onSubmit={this.handleSubmit} loading={this.props.invites.request.submitted}></BodyContent>;
   }
 
   isVisible = () => {
-    return this.props.invites.error || (this.props.invites.submitted && this.props.invites.created === false) || this.state.visible || this.props.visible;
+    return this.props.invites.request.error || (this.props.invites.request.submitted && this.props.invites.request.created === false) || this.state.visible;
   }
 
   render() {
@@ -155,7 +158,7 @@ export class InvitePlayersComponent extends React.Component {
       }
       {
         this.isVisible()
-          ? <FullModal onClose={this.handleOnClose} headContent={this.getHeadContent()} bodyContent={this.getBodyContent()}></FullModal>
+          ? <FullModal onClose={this.handleOnClose} headContent={this.getHeadContent()} bodyContent={this.getBodyContent()} close={this.state.closeModal}></FullModal>
           : null
       }
     </div>);

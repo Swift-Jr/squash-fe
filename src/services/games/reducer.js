@@ -25,7 +25,7 @@ export const gamesReducer = (state = initialState, action = null) => {
         }
       };
     case types.CREATE_GAME_SUCCESS:
-      let list = state.list[payload.leagueId];
+      let list = state.list[payload.leagueId] || [];
       list.push(payload.game);
 
       return {
@@ -37,7 +37,10 @@ export const gamesReducer = (state = initialState, action = null) => {
         },
         list: {
           ...state.list,
-          [payload.leagueId]: list
+          [payload.leagueId]: {
+            ...state.list[payload.leagueId],
+            list
+          }
         }
       };
     case types.CREATE_GAME_FAILURE:
@@ -50,6 +53,29 @@ export const gamesReducer = (state = initialState, action = null) => {
           error: payload.error
         }
       };
+    case types.FETCH_GAMES_REQUEST:
+      return {
+        ...state,
+        list: {
+          ...state.list,
+          [payload.leagueId]: {
+            ...(state.list[payload.leagueId] || {list: []}),
+            listUpdated: true
+          }
+        }
+      };
+    case types.FETCH_GAMES_FAILURE:
+      return {
+        ...state,
+        list: {
+          ...state.list,
+          [payload.leagueId]: {
+            ...state.list[payload.leagueId],
+            listUpdated: false,
+            error: payload.error
+          }
+        }
+      };
     case types.FETCH_GAMES_SUCCESS:
       /*let leagueGames = state.list[payload.leagueId] || [];
       leagueGames.concat(payload.matches);*/
@@ -58,9 +84,11 @@ export const gamesReducer = (state = initialState, action = null) => {
         ...state,
         list: {
           ...state.list,
-          [payload.leagueId]: payload.matches
-        },
-        listUpdated: new Date()
+          [payload.leagueId]: {
+            list: payload.matches,
+            listUpdated: new Date()
+          }
+        }
       };
     default:
       break;

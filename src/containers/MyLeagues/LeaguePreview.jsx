@@ -22,7 +22,13 @@ export const LeaguePreview = (props) => {
 
   return <div>
     <h2>
-      <Link to={`/league/${league.getId()}`}>{league.getName()}</Link>
+      {
+        league
+          .getResults()
+          .length > 0
+            ? <Link to={`/league/${league.getId()}`}>{league.getName()}</Link>
+            : league.getName()
+      }
     </h2>
     {
       !noGames && !notPlayed

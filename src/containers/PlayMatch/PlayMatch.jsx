@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 
 import {InputButton} from '../../components/Inputs';
 import {FullModal} from '../../components/FullModal';
-import {clubService, leagueService} from '../../services';
+import {clubService, leagueService, gameService} from '../../services';
 //import {InputText, InputSelect} from '../../components/Inputs';
 
 import styles from './styles.module.css';
@@ -210,12 +210,12 @@ export class PlayMatchComponent extends React.Component {
     if (game.player1score || game.player2score) {
       this
         .props
-        .dispatch(leagueService.actions.saveGame(game));
+        .dispatch(gameService.actions.saveGame(game));
     }
   }
 
   isLoading = () => {
-    return this.props.league.createGame.submitted;
+    return this.props.games.createGame.submitted;
   }
 
   getBodyContent = () => {

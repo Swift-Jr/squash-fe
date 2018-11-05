@@ -40,11 +40,15 @@ export class LeagueResult extends Model {
     return {
       player: new UserModel(),
       place: null,
-      played: null,
+      matchesPlayed: null,
+      matchesLost: null,
+      matchesWon: null,
       won: null,
       pointsWon: null,
       pointsLost: null,
-      score: null
+      scoreDiff: null,
+      scoreMargin: null,
+      scorePoints: null
     };
   }
 
@@ -138,9 +142,9 @@ function getUserScorecard(userId, leagues) {
       )[0];
 
     if (result) {
-      gamesPlayed += result.getPlayed();
-      gamesWon += result.getWon();
-      gamesLost += result.getPlayed() - result.getWon();
+      gamesPlayed += result.getMatchesPlayed();
+      gamesWon += result.getMatchesWon();
+      gamesLost += result.getMatchesLost();
       pointsWon += result.getPointsWon();
       pointsLost += result.getPointsLost();
     }

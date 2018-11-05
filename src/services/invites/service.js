@@ -12,7 +12,7 @@ function create(invites, club_id) {
     .post("/invites/create/", {invites, club_id})
     .then(response => {
       if (response.status == 202) {
-        return response;
+        return response.data;
       } else if (!responseHandler(response)) {
         throw new Error(
           "Yikes! Ran into an unknown problem trying to create that."

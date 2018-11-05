@@ -3,11 +3,12 @@ import CountUp from 'react-countup';
 import {withRouter} from "react-router";
 import {connect} from 'react-redux'
 
-import {userService, leagueService} from '../../services';
+import {userService, leagueService, gameService} from '../../services';
 
 import {InputSelect} from '../../components/Inputs';
 import {GameHistory} from '../../components/GameHistory';
 import {Scoreboard} from '../../components/Scoreboard';
+import {Loading} from '../App/Loading';
 
 import styles from './styles.module.css';
 
@@ -21,10 +22,9 @@ export class HeadToHeadComponent extends React.Component {
 
     var p2Id = null;
 
-    if (userService.getCurrentUser().getGames()[0]) {
-      p2Id = userService
-        .getCurrentUser()
-        .getGames()[0]
+    if (gameService.getLeagueGames('*')[0]) {
+      p2Id = gameService
+        .getLeagueGames('*')[0]
         .getOtherUser(p1Id)
         .getUserId();
     }
@@ -37,9 +37,21 @@ export class HeadToHeadComponent extends React.Component {
 
   }
 
+  componentWillReceiveProps = (props) => {
+    if (!this.state.player2Id && gameService.getLeagueGames('*')[0]) {
+      let p2Id = gameService
+        .getLeagueGames('*')[0]
+        .getOtherUser(this.state.player1Id)
+        .getUserId();
+
+      this.setState({player2Id: p2Id})
+    }
+  }
+
   getLeagues() {
     const leagueList = leagueService
       .getUsersLeagues()
+      .filter(league => league.getResults().length)
       .map((league) => {
         return {value: league.getId(), option: league.getShortname()};
       });
@@ -72,9 +84,11 @@ export class HeadToHeadComponent extends React.Component {
 
   getPlayedGames = () => {
     const {player1Id, player2Id, leagueId} = this.state;
-    const games = userService
-      .getUserById(player1Id)
-      .getGames(leagueId, player2Id);
+    let games = gameService.getLeagueGames(leagueId || '*')
+
+    games = games.filter(match => {
+      return (match.getPlayer1().getUserId() === player1Id && match.getPlayer2().getUserId() === player2Id) || (match.getPlayer1().getUserId() === player2Id && match.getPlayer2().getUserId() === player1Id)
+    });
 
     return games;
   }
@@ -150,6 +164,12 @@ export class HeadToHeadComponent extends React.Component {
     return scores;
   }
 
+  isLoading = () => {
+    return this
+      .getPlayers()
+      .length === 0 || !this.state.player2Id;
+  }
+
   render() {
     const {
       gamesPlayed,
@@ -163,28 +183,34 @@ export class HeadToHeadComponent extends React.Component {
 
     return (<div>
       <h1>Head to Head</h1>
-      <div className="row">
-        <div className="col-xs-4">
-          <h4 className="light">P1</h4>
-          <span className={styles.displayPicker}><InputSelect placeholder="All Leagues" options={this.getPlayers(1)} onChange={this.player1Change} selected={this.state.player1Id}/></span>
-        </div>
-        <div className="col-xs-4">
-          <h4 className="light">League</h4>
-          <span className={styles.displayPicker}><InputSelect placeholder="All Leagues" options={this.getLeagues()} onChange={this.leagueChange}/></span>
-        </div>
-        <div className="col-xs-4">
-          <h4 className="light">P2</h4>
-          <span className={styles.displayPicker}><InputSelect placeholder="All Leagues" options={this.getPlayers(2)} onChange={this.player2Change} selected={this.state.player2Id}/></span>
-        </div>
-      </div>
-      <p className={styles.gamesPlayed}>
-        <CountUp end={gamesPlayed || 0} duration={2}></CountUp>
-      </p>
-      <h3 className="light">Games Played</h3>
-      <Scoreboard colorChange={true} centreName="Wins" forPoints={p1gamesWon || 0} againstPoints={p2gamesWon || 0}></Scoreboard>
-      <Scoreboard colorChange={true} centreName="Points Won" forPoints={p1pointsWon || 0} againstPoints={p2pointsWon || 0}></Scoreboard>
-      <Scoreboard colorChange={true} colorInvert={true} centreName="Points Lost" forPoints={p1pointsLost || 0} againstPoints={p2pointsLost || 0}></Scoreboard>
-      <GameHistory games={this.getPlayedGames()}></GameHistory>
+      {
+        this.isLoading()
+          ? <Loading></Loading>
+          : <div>
+              <div className="row">
+                <div className="col-xs-4">
+                  <h4 className="light">P1</h4>
+                  <span className={styles.displayPicker}><InputSelect placeholder="All Leagues" options={this.getPlayers(1)} onChange={this.player1Change} selected={this.state.player1Id}/></span>
+                </div>
+                <div className="col-xs-4">
+                  <h4 className="light">League</h4>
+                  <span className={styles.displayPicker}><InputSelect placeholder="All Leagues" options={this.getLeagues()} onChange={this.leagueChange}/></span>
+                </div>
+                <div className="col-xs-4">
+                  <h4 className="light">P2</h4>
+                  <span className={styles.displayPicker}><InputSelect placeholder="All Leagues" options={this.getPlayers(2)} onChange={this.player2Change} selected={this.state.player2Id}/></span>
+                </div>
+              </div>
+              <p className={styles.gamesPlayed}>
+                <CountUp end={gamesPlayed || 0} duration={2}></CountUp>
+              </p>
+              <h3 className="light">Games Played</h3>
+              <Scoreboard colorChange={true} centreName="Wins" forPoints={p1gamesWon || 0} againstPoints={p2gamesWon || 0}></Scoreboard>
+              <Scoreboard colorChange={true} centreName="Points Won" forPoints={p1pointsWon || 0} againstPoints={p2pointsWon || 0}></Scoreboard>
+              <Scoreboard colorChange={true} colorInvert={true} centreName="Points Lost" forPoints={p1pointsLost || 0} againstPoints={p2pointsLost || 0}></Scoreboard>
+              <GameHistory games={this.getPlayedGames()}></GameHistory>
+            </div>
+      }
     </div>)
   }
 }
@@ -192,8 +218,8 @@ export class HeadToHeadComponent extends React.Component {
 //export default HeadToHead;
 
 function mapStateToProps(state) {
-  const {user} = state;
-  return {user};
+  const {user, games, league} = state;
+  return {user, games, league};
 }
 
 const connectedHeadToHead = withRouter(connect(mapStateToProps)(HeadToHeadComponent));

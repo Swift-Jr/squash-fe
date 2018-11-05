@@ -52,7 +52,7 @@ function saveGame(game) {
   };
 
   return api()
-    .post("/league/save_game/", newGame)
+    .post("/game/save_game/", newGame)
     .then(response => {
       if (response.status == 202 && response.data.league) {
         //TODO:Could store games locally to be saved when offline
@@ -65,7 +65,7 @@ function saveGame(game) {
     });
 }
 
-function getAllGames(leagueId) {
+function getAllGames(leagueId = null) {
   return api()
     .get("/game/all/" + leagueId)
     .then(response => {
@@ -76,25 +76,42 @@ function getAllGames(leagueId) {
     });
 }
 
-function getLeagueGames(leagueId) {
+function getLeagueGames(leagueId = null) {
   let games = [];
-  if (store && store.getState().games.list) {
-    const list = store.getState().games.list[leagueId] || [];
-    if (leagueId) {
-      games = list.filter(game => game.league_id === leagueId);
-    } else {
-      games = list;
-    }
-    if (games.length === 0) {
-      let {listUpdated} = store.getState().games;
 
-      if (
-        listUpdated === false ||
-        moment(listUpdated)
-          .add(5, "seconds")
-          .isBefore(/* now */)
-      ) {
-        store.dispatch(gameService.actions.getAllGames(leagueId));
+  if (leagueId === "*") {
+    let allGames = leagueService
+      .getUsersLeagues()
+      .map(league => gameService.getLeagueGames(league.getId()));
+    games = [];
+    allGames.map(leagueGames => (games = games.concat(leagueGames)));
+    games = games.sort((a, b) => {
+      if (Object.keys(a).length === 0 || Object.keys(b).length === 0)
+        return false;
+      return moment(a.getDate()).isBefore(b.getDate()) ? 1 : -1;
+    });
+    return games;
+  } else {
+    if (store && store.getState().games.list) {
+      const list = store.getState().games.list[leagueId] || {
+        list: [],
+        listUpdated: false
+      };
+      if (leagueId) {
+        games = list.list.filter(game => game.league_id === leagueId);
+      } else {
+        games = list.list;
+      }
+      if (games.length === 0) {
+        if (
+          list.listUpdated !== true &&
+          (list.listUpdated === false ||
+            moment(list.listUpdated)
+              .add(5, "seconds")
+              .isBefore(/* now */))
+        ) {
+          store.dispatch(gameService.actions.getAllGames(leagueId));
+        }
       }
     }
   }

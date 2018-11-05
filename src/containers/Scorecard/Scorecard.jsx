@@ -1,4 +1,6 @@
 import React from 'react';
+import {connect} from 'react-redux';
+
 import CountUp from 'react-countup';
 
 import {leagueService, gameService} from '../../services';
@@ -10,11 +12,13 @@ import {Scoreboard} from '../../components/Scoreboard';
 
 import styles from './styles.module.css';
 
-export class Scorecard extends React.Component {
+export class ScorecardComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userid: parseInt(this.props.match.params.id, 10) || authService.getUserId()
+      userid: parseInt(this.props.match.params.id, 10) || userService
+        .getCurrentUser()
+        .getUserId()
     }
 
     setTimeout(() => this.getUsersScores(), 200);
@@ -23,17 +27,21 @@ export class Scorecard extends React.Component {
   componentWillReceiveProps = (nextProps) => {
     if (this.state.userid !== parseInt(nextProps.match.params.id, 10)) {
       this.setState({
-        userid: parseInt(nextProps.match.params.id, 10) || authService.getUserId()
+        userid: parseInt(nextProps.match.params.id, 10) || userService
+          .getCurrentUser()
+          .getUserId()
       });
 
     }
   }
 
   getLeagues = () => {
-    const leagues = leagueService.getUsersLeagues(this.state.userid);
-    const leagueList = leagues.map((league) => {
-      return {value: league.getId(), option: league.getName()};
-    });
+    const leagues = leagueService.getUsersLeagues();
+    const leagueList = leagues
+      .filter(league => league.getResults().filter(result => result.getPlayer().getUserId() == this.state.userid).length > 0)
+      .map((league) => {
+        return {value: league.getId(), option: league.getName()};
+      });
 
     return [
       {
@@ -44,7 +52,7 @@ export class Scorecard extends React.Component {
   }
 
   getUsersScores = () => {
-    const leagues = leagueService.getUsersLeagues(this.state.userid);
+    const leagues = leagueService.getUsersLeagues();
     const filteredLeagues = this.state.leagueId
       ? leagues.filter((league) => league.getId() === this.state.leagueId)
       : leagues;
@@ -55,13 +63,25 @@ export class Scorecard extends React.Component {
   }
 
   getUsersGames = () => {
-    return gameService.getUsersGames(this.state.userid);
+    let {userid, leagueId} = this.state;
+
+    let queryLeagueId = leagueId || '*';
+
+    return gameService
+      .getLeagueGames(queryLeagueId)
+      .filter(match => match.getPlayer1().getUserId() == userid || match.getPlayer2().getUserId() == userid);
   }
 
   selectMyOrName = () => {
-    return authService.getUserId() === this.state.userid
-      ? 'My'
-      : userService.getUserById(this.state.userid).getFirstname() + "'s";
+    return userService
+      .getCurrentUser()
+      .getUserId() === this
+      .state
+      .userid
+        ? 'My'
+        : userService
+          .getUserById(this.state.userid)
+          .getFirstname() + "'s";
   }
 
   leagueChange = (e) => {
@@ -88,4 +108,12 @@ export class Scorecard extends React.Component {
   }
 }
 
-export default Scorecard;
+function mapStateToProps(state) {
+  const {league, games} = state;
+  return {league, games};
+}
+
+const connectedScorecardComponent = connect(mapStateToProps)(ScorecardComponent);
+export {
+  connectedScorecardComponent as Scorecard
+};
