@@ -22,7 +22,9 @@ export const InputSelect = (props) => {
 }
 
 export const SelectOptions = (props) => {
-  return props.options.map((option) => <option value={option.value} selected={props.default}>{option.option}</option>);
+  return props
+    .options
+    .map((option) => <option key={option.value} value={option.value} selected={props.default}>{option.option}</option>);
 }
 
 export default InputSelect;

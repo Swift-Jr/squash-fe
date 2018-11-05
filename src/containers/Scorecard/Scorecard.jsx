@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import CountUp from 'react-countup';
 
 import {leagueService, gameService} from '../../services';
-import {authService, userService} from '../../services';
+import {userService} from '../../services';
 
 import {InputSelect} from '../../components/Inputs';
 import {GameHistory} from '../../components/GameHistory';
@@ -38,7 +38,7 @@ export class ScorecardComponent extends React.Component {
   getLeagues = () => {
     const leagues = leagueService.getUsersLeagues();
     const leagueList = leagues
-      .filter(league => league.getResults().filter(result => result.getPlayer().getUserId() == this.state.userid).length > 0)
+      .filter(league => league.getResults().filter(result => result.getPlayer().getUserId() === this.state.userid).length > 0)
       .map((league) => {
         return {value: league.getId(), option: league.getName()};
       });
@@ -69,7 +69,7 @@ export class ScorecardComponent extends React.Component {
 
     return gameService
       .getLeagueGames(queryLeagueId)
-      .filter(match => match.getPlayer1().getUserId() == userid || match.getPlayer2().getUserId() == userid);
+      .filter(match => match.getPlayer1().getUserId() === userid || match.getPlayer2().getUserId() === userid);
   }
 
   selectMyOrName = () => {

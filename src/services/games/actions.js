@@ -1,8 +1,6 @@
-import React from "react";
 import {gameService} from "./";
 import {userService} from "../";
 import {alerts} from "../alerts";
-import {store} from "../../system/store";
 
 import responseHandler from "../../system/responseHandler";
 

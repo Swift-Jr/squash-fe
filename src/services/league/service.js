@@ -3,7 +3,7 @@ import {store} from "../../system/store";
 import moment from "moment";
 import responseHandler from "../../system/responseHandler";
 
-import {alerts, clubService, userService, leagueService} from "../../services";
+import {clubService, leagueService} from "../../services";
 
 import {Model} from "react-axiom";
 import {UserModel} from "../user.service";
@@ -67,7 +67,7 @@ function create(name, shortname) {
   return api()
     .post("/league/create/", newLeague)
     .then(response => {
-      if (response.status == 202 && response.data.league) {
+      if (response.status === 202 && response.data.league) {
         return response.data.league;
       } else if (!responseHandler(response)) {
         throw new Error(
@@ -81,7 +81,7 @@ function getLeagues(clubId) {
   return api()
     .get("/me/leagues/" + clubId)
     .then(response => {
-      if (response.status == 200 && response.data.leagues) {
+      if (response.status === 200 && response.data.leagues) {
         return response.data.leagues;
       }
       return [];

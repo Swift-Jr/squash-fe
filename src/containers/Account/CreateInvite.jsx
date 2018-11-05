@@ -10,7 +10,7 @@ export const CreateInvite = props => (<div>
         ? <p>Enter some details to accept your invite!</p>
         : null
     }
-    <InputText disabled={props.state.invite && props.state.invite.email === props.state.invite.email} value={props.state.email} name="email" placeholder="E-mail" onChange={props.handleInputChange}/>
+    <InputText disabled={props.state.invite && props.state.email === props.state.invite.email} value={props.state.email} name="email" placeholder="E-mail" onChange={props.handleInputChange}/>
     <InputText value={props.state.firstname} name="firstname" placeholder="Firstname" onChange={props.handleInputChange}/>
     <InputText value={props.state.lastname} name="lastname" placeholder="Lastname" onChange={props.handleInputChange}/>
     <InputText value={props.state.password} name="password" placeholder="Password" type="password" onChange={props.handleInputChange} autoComplete="new-password"/>

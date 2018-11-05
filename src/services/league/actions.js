@@ -1,8 +1,6 @@
 import React from "react";
 import {leagueService} from "./";
-import {userService} from "../user";
 import {alerts} from "../alerts";
-import {store} from "../../system/store";
 
 import responseHandler from "../../system/responseHandler";
 

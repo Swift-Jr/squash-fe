@@ -1,9 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {Link} from 'react-router-dom';
-
-import {userService, clubService, inviteService} from '../../services';
+import {clubService, inviteService} from '../../services';
 
 import {LeagueRepeater} from './LeagueRepeater';
 import {PlayMatch} from '../PlayMatch';

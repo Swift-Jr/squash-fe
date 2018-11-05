@@ -52,7 +52,7 @@ export const GameHistoryRows = (props) => {
       ? styles.currentUserHighlight
       : null);
 
-    return <tr className={`${userStyle} ${rowStyle}`}>
+    return <tr key={game.getId()} className={`${userStyle} ${rowStyle}`}>
       {
         showLeague
           ? <td>

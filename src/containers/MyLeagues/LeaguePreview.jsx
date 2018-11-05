@@ -1,10 +1,9 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
-import {userService, clubService} from '../../services';
+import {userService} from '../../services';
 
 import {LeagueTable} from '../../components/LeagueTable';
-import {PlayMatch} from '../PlayMatch';
 
 import styles from './styles.module.css';
 
@@ -17,7 +16,7 @@ export const LeaguePreview = (props) => {
 
   const notPlayed = league
     .getResults()
-    .filter(result => result.getPlayer().getUserId() == userService.getCurrentUser().getUserId())
+    .filter(result => result.getPlayer().getUserId() === userService.getCurrentUser().getUserId())
     .length === 0;
 
   return <div>

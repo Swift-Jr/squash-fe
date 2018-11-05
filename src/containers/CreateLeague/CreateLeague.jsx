@@ -3,7 +3,7 @@ import {withRouter} from "react-router";
 import {connect} from 'react-redux';
 
 import {FullModal} from '../../components/FullModal';
-import {InputText, InputSelect} from '../../components/Inputs';
+import {InputText} from '../../components/Inputs';
 
 import styles from './styles.module.css';
 
@@ -14,39 +14,8 @@ export const TopContent = (props) => {
 }
 
 export const BodyContent = (props) => {
-  const sportOptions = [
-    {
-      value: 1,
-      option: 'Squash'
-    }
-  ];
-
-  const clubOptions = [
-    {
-      value: null,
-      option: 'No Club',
-      default: true
-    }, {
-      value: null,
-      option: 'Your club'
-    }
-  ];
-
-  const inviteOptions = [
-    {
-      value: 1,
-      option: 'Anyone can Join'
-    }, {
-      value: 0,
-      option: 'Requires Invite to Join'
-    }
-  ];
 
   return (<div className={styles.bottomContent}>
-    {/*<InputSelect darkStyle={true} label="Sport" placeholder="Select a Sport" options={sportOptions}/>
-    <InputSelect darkStyle={true} label="Club Association" placeholder="Select an option" options={clubOptions}/>
-    <InputSelect darkStyle={true} label="Invite only league?" placeholder="Select an option" options={inviteOptions}/> */
-    }
     <InputText name="shortLeagueName" value={props.value} onChange={props.onChange} darkStyle={true} label="Short Name" placeholder="Max 10 characters" maxLength="10" autoComplete="off"/>
     <div className="fixedBottom">
       <button className="large" onClick={props.onSubmit}>Create League</button>

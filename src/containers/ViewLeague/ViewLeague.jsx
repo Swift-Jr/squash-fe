@@ -13,7 +13,7 @@ import {PlayMatch} from '../PlayMatch';
 
 export class ViewLeagueComponent extends React.Component {
   getLeagueId = () => {
-    return parseInt(this.props.match.params.id);
+    return parseInt(this.props.match.params.id, 10);
   }
 
   getLeague = () => {

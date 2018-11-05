@@ -3,8 +3,6 @@ import {Link} from 'react-router-dom';
 import {withRouter} from "react-router";
 import {connect} from 'react-redux';
 
-import {InvitePlayers} from '../InvitePlayers';
-
 import {iconSettings, logoSmall} from './images';
 
 import {userService, authService, inviteService} from '../../services';

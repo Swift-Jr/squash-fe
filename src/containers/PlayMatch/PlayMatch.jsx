@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 
 import {InputButton} from '../../components/Inputs';
 import {FullModal} from '../../components/FullModal';
-import {clubService, leagueService, gameService} from '../../services';
+import {clubService, gameService} from '../../services';
 //import {InputText, InputSelect} from '../../components/Inputs';
 
 import styles from './styles.module.css';

@@ -24,7 +24,7 @@ export const BodyContent = (props) => {
       }
     </ul>
     <div className="fixedBottom">
-      <InputButton className="large" onClick={props.onSubmit} disabled={props.loading || props.invites.length == 0} isLoading={props.loading}>Send Invites</InputButton>
+      <InputButton className="large" onClick={props.onSubmit} disabled={props.loading || props.invites.length === 0} isLoading={props.loading}>Send Invites</InputButton>
     </div>
   </div>);
 }
@@ -105,7 +105,7 @@ export class InvitePlayersComponent extends React.Component {
     let emailExists = this
       .state
       .pendingInvites
-      .filter(invite => invite == this.state.email)
+      .filter(invite => invite === this.state.email)
       .length;
 
     if (emailExists) 
@@ -124,7 +124,7 @@ export class InvitePlayersComponent extends React.Component {
     this.setState((state) => {
       state.pendingInvites = state
         .pendingInvites
-        .filter(invite => invite != removed);
+        .filter(invite => invite !== removed);
 
       return state;
     })
