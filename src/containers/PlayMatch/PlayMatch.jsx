@@ -23,7 +23,7 @@ export const LeagueOptions = (props) => {
   const {options} = props;
   const {action} = props;
 
-  return options.map((option) => <li onClick={() => action(option)}>{option.getName()}</li>);
+  return options.map((option) => <li key={option.getId()} onClick={() => action(option)}>{option.getName()}</li>);
 }
 
 export const LeagueDisplay = (props) => {
@@ -72,8 +72,8 @@ export const PlayerList = (props) => {
       : styles.notselected;
 
     return selected === null && (!disable || disable.getId() !== player.getId())
-      ? <li onClick={() => action(player)}>{player.getFirstname()}</li>
-      : <li className={playerClass}>{player.getFirstname()}</li>;
+      ? <li key={player.getId()} onClick={() => action(player)}>{player.getFirstname()}</li>
+      : <li key={player.getId()} className={playerClass}>{player.getFirstname()}</li>;
   });
 }
 
@@ -110,7 +110,7 @@ export const GameDisplay = (props) => {
 export const ScoreOptions = (props) => {
   return props
     .options
-    .map((option) => <option>{option}</option>);
+    .map((option) => <option key={option}>{option}</option>);
 }
 
 export class PlayMatchComponent extends React.Component {
@@ -149,7 +149,8 @@ export class PlayMatchComponent extends React.Component {
   handleOnOpen = () => {
     const {onOpen} = this.state;
     this.setState({
-      visible: true
+      visible: true,
+      saved: false
     }, () => onOpen && onOpen(this.state.visible));
   }
 

@@ -118,7 +118,11 @@ function getUsersLeagues(clubId) {
       }
     }
   }
-  return leagues.map(league => new LeagueModel(league));
+  return leagues
+    .map(league => new LeagueModel(league))
+    .sort(
+      (a, b) => (!a.getLastGame() || a.getLastGame() < b.getLastGame() ? 1 : -1)
+    );
 }
 
 function getLeagueById(id) {
