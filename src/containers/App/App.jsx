@@ -25,6 +25,8 @@ import {NotFound} from '../NotFound';
 import {ViewLeague} from '../ViewLeague';
 import {MyLeaguesClubs} from '../MyLeaguesClubs';
 
+import {InvitePlayers} from '../InvitePlayers';
+
 //import {Authenticator} from './services/Authenticator';
 
 export class AppWrapper extends React.Component {
@@ -159,6 +161,8 @@ export class AppWrapper extends React.Component {
               </Switch>
         }
       </div>
+
+      <InvitePlayers noButton={true}></InvitePlayers>
 
     </div>)
   }

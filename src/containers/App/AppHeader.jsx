@@ -7,7 +7,7 @@ import {InvitePlayers} from '../InvitePlayers';
 
 import {iconSettings, logoSmall} from './images';
 
-import {userService, authService} from '../../services';
+import {userService, authService, inviteService} from '../../services';
 
 import styles from './styles.module.css';
 
@@ -15,8 +15,7 @@ export class AppHeaderComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: props.visible || false,
-      inviteOpened: false
+      visible: props.visible || false
     }
   }
 
@@ -40,12 +39,10 @@ export class AppHeaderComponent extends React.Component {
   handleInvite = (e) => {
     this.handleLinkClick(e);
     e.preventDefault();
-    this.setState({inviteOpened: true});
+    this
+      .props
+      .dispatch(inviteService.actions.open());
     return false;
-  }
-
-  handleInviteClose = (e) => {
-    this.setState({inviteOpened: false});
   }
 
   render = () => {
@@ -78,7 +75,6 @@ export class AppHeaderComponent extends React.Component {
         </li>
       </ul>
       <img className="app-logo" src={logoSmall} alt="Application Logo"/>
-      <InvitePlayers visible={this.state.inviteOpened} noButton={true} onClose={this.handleInviteClose}></InvitePlayers>
     </header>
   }
 }

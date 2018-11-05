@@ -9,6 +9,9 @@ const initialState = {
     invites: [],
     club_id: null,
     error: false
+  },
+  modal: {
+    open: false
   }
 };
 
@@ -17,6 +20,13 @@ export const invitesReducer = (state = initialState, action = null) => {
   const {types} = inviteService;
 
   switch (type) {
+    case types.OPEN_INVITE:
+      return {
+        ...state,
+        modal: {
+          open: true
+        }
+      };
     case types.CREATE_INVITE_REQUEST:
       return {
         ...state,
@@ -35,6 +45,9 @@ export const invitesReducer = (state = initialState, action = null) => {
           created: true,
           invites: payload.invites,
           club_id: payload.club_id
+        },
+        modal: {
+          open: false
         }
       };
     case types.CREATE_INVITE_FAILURE:

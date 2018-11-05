@@ -32,7 +32,7 @@ export class InvitePlayersComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: props.visible || false,
+      visible: props.visible || props.modal.open,
       buttonClass: props.buttonClass || 'large',
       buttonTitle: props.buttonTitle || 'Invite Players',
       pendingInvites: [],
@@ -57,8 +57,16 @@ export class InvitePlayersComponent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state !== nextProps) {
+    /*if (this.state !== nextProps) {
       this.setState(nextProps);
+    }*/
+
+    if (!nextProps.modal.open && this.state.visible) {
+      this.setState({closeModal: true})
+    }
+
+    if (nextProps.modal.open && !this.state.visible) {
+      this.handleOnOpen(); //this.setState({closeModal: true})
     }
   }
 
@@ -167,7 +175,7 @@ export class InvitePlayersComponent extends React.Component {
 
 function mapStateToProps(state) {
   const {invites} = state;
-  return {invites};
+  return {invites, modal: invites.modal};
 }
 
 const connectedInvitePlayersComponent = withRouter(connect(mapStateToProps)(InvitePlayersComponent));
