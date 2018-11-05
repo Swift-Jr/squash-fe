@@ -9,6 +9,7 @@ import {userService} from '../../services';
 import {InputSelect} from '../../components/Inputs';
 import {GameHistory} from '../../components/GameHistory';
 import {Scoreboard} from '../../components/Scoreboard';
+import {Loading} from '../App/Loading';
 
 import styles from './styles.module.css';
 
@@ -90,21 +91,32 @@ export class ScorecardComponent extends React.Component {
     });
   }
 
+  isLoading = () => {
+    return this
+      .getUsersGames()
+      .length === 0
+  }
+
   render = () => {
     const {gamesPlayed, gamesWon, gamesLost, pointsWon, pointsLost} = this.getUsersScores();
 
-    return (<div>
+    return <div>
       <h1>{this.selectMyOrName()}&nbsp;Scorecard</h1>
-      <h4 className="light">League</h4>
-      <span className={styles.displayPicker}><InputSelect placeholder="All Leagues" options={this.getLeagues()} onChange={this.leagueChange}/></span>
-      <p className={styles.gamesPlayed}>
-        <CountUp end={gamesPlayed || 0} duration={2}></CountUp>
-      </p>
-      <h3 className="light">Games Played</h3>
-      <Scoreboard forName="won" againstName="lost" forPoints={gamesWon || 0} againstPoints={gamesLost || 0}></Scoreboard>
-      <Scoreboard forName="for" againstName="against" forPoints={pointsWon || 0} againstPoints={pointsLost || 0}></Scoreboard>
-      <GameHistory games={this.getUsersGames()} showLeague={true} userContext={this.state.userid}></GameHistory>
-    </div>)
+      {
+        this.isLoading()
+          ? <Loading></Loading>
+          : <div>
+              <h4 className="light">League</h4>
+              <span className={styles.displayPicker}><InputSelect placeholder="All Leagues" options={this.getLeagues()} onChange={this.leagueChange}/></span>
+              <p className={styles.gamesPlayed}>
+                <CountUp end={gamesPlayed || 0} duration={2}></CountUp>
+              </p>
+              <h3 className="light">Games Played</h3>
+              <Scoreboard forName="won" againstName="lost" forPoints={gamesWon || 0} againstPoints={gamesLost || 0}></Scoreboard>
+              <Scoreboard forName="for" againstName="against" forPoints={pointsWon || 0} againstPoints={pointsLost || 0}></Scoreboard>
+              <GameHistory games={this.getUsersGames()} showLeague={true} userContext={this.state.userid}></GameHistory>
+            </div>
+      }</div>;
   }
 }
 
