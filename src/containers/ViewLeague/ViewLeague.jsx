@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 
 import {leagueService} from '../../services';
 import {gameService} from '../../services';
@@ -10,24 +11,31 @@ import {PlayMatch} from '../PlayMatch';
 
 //import styles from './styles.module.css';
 
-export class ViewLeague extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      leagueId: this.props.match.params.id
-    }
+export class ViewLeagueComponent extends React.Component {
+  getLeagueId = () => {
+    return parseInt(this.props.match.params.id);
   }
 
   getLeague = () => {
-    return leagueService.getLeagueById(this.state.leagueId);
+    return leagueService.getLeagueById(this.getLeagueId());
   }
 
   getLeagueName = () => {
-    return this.getLeague().getName();
+    let league = this.getLeague();
+    if (league) {
+      return this
+        .getLeague()
+        .getName();
+    }
+    return null;
   }
 
   getLeagueGames = () => {
-    return gameService.getLeagueGames(this.getLeague().getId());
+    let league = this.getLeagueId();
+    if (league) {
+      return gameService.getLeagueGames(league);
+    }
+    return [];
   }
 
   render = () => {
@@ -42,4 +50,12 @@ export class ViewLeague extends React.Component {
   }
 }
 
-export default ViewLeague;
+function mapStateToProps(state) {
+  const {league, games} = state;
+  return {league, games};
+}
+
+const connectedViewLeagueComponent = connect(mapStateToProps)(ViewLeagueComponent);
+export {
+  connectedViewLeagueComponent as ViewLeague
+};

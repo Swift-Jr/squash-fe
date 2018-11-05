@@ -3,6 +3,13 @@
 .inputContainer {
   margin-bottom: 19px;
   text-align: left;
+
+  &.invalidInput {
+    input {
+      border-bottom: 1px solid @errorred;
+      padding-bottom: 1px;
+    }
+  }
 }
 
 label {
@@ -16,6 +23,7 @@ label {
 
 input[type="text"],
 input[type="password"],
+input[type="email"],
 select {
   //width: (100% - 20px);
   width: stretch;
@@ -29,18 +37,19 @@ select {
   outline: none;
   opacity: 0.8;
   transition: all 500ms;
-  margin-bottom: 1px;
+  padding-bottom: 1px;
 
   &:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px @darkblue inset;
     outline: 0;
     -webkit-text-fill-color: @almostwhite !important;
     border-bottom: 1px solid @limeyellow;
+    padding-bottom: 1px;
   }
 
   &:focus {
     border-bottom: 2px solid @limeyellow;
-    margin-bottom: 0;
+    padding-bottom: 0;
     opacity: 1;
   }
 
@@ -48,6 +57,8 @@ select {
     border-bottom-color: @darkblue;
   }
 }
+
+button.button {}
 
 .error {
   text-transform: uppercase;

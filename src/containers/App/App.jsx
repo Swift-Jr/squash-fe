@@ -8,11 +8,11 @@ import PropTypes from 'prop-types';
 import {ProtectedRoute} from '../../system'
 
 import {authService} from '../../services';
-import {alerts, user} from '../../services';
+import {alerts, user, clubService} from '../../services';
 
-import AppHeader from './AppHeader';
+import {AppHeader} from './AppHeader';
 import AppMenu from './AppMenu';
-import DefaultWelcome from './DefaultWelcome';
+import {DefaultWelcome} from './DefaultWelcome';
 import AlertDisplay from './AlertDisplay';
 import Loading from './Loading';
 
@@ -51,19 +51,23 @@ export class AppWrapper extends React.Component {
   }
 
   getClubname() {
-    return "Jam Club";
+    if (clubService.getUserClubs().length > 0) {
+      return clubService
+        .getUserClubs()[0]
+        .getName();
+    } else {
+      return null;
+    }
   }
 
   isLoggedIn = () => {
     return authService.check();
   }
 
-  isMemberOfSomething() {
-    return authService
-      .getClubs()
-      .length > 0 || authService
-      .getLeagues()
-      .length > 0;
+  isMemberOfSomething = () => {
+    return user
+      .service
+      .userHasClubs();
   }
 
   menuToggled = (state) => {
@@ -129,7 +133,11 @@ export class AppWrapper extends React.Component {
         this.isLoggedIn()
           ? <div className="fixedTop">
               <AppHeader visible={this.state.settingsMenuIsVisible} onToggle={this.settingsMenuToggled} clubname={this.getClubname()}></AppHeader>
-              <AppMenu visible={this.state.menuIsVisible} onToggle={this.menuToggled}></AppMenu>
+              {
+                this.isMemberOfSomething()
+                  ? <AppMenu visible={this.state.menuIsVisible} onToggle={this.menuToggled}></AppMenu>
+                  : null
+              }
             </div>
           : null
       }
@@ -137,7 +145,7 @@ export class AppWrapper extends React.Component {
       <div className="fader" style={this.getContentPadding()}>
         {
           this.isLoggedIn() && !this.isMemberOfSomething()
-            ? <DefaultWelcome></DefaultWelcome>
+            ? <DefaultWelcome club={this.props.club}></DefaultWelcome>
             : <Switch>
                 <Route path="/login/:func?" component={Login}/>
                 <Route path="/account/:action?/:actionId?" component={Account}/>

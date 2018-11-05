@@ -1,4 +1,5 @@
-import InputText from './InputText';
-import InputSelect from './InputSelect';
+import InputText from "./InputText";
+import InputSelect from "./InputSelect";
+import InputButton from "./InputButton";
 
-export {InputText, InputSelect};
+export {InputText, InputSelect, InputButton};

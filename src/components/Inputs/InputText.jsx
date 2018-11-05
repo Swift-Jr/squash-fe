@@ -2,33 +2,89 @@ import React from 'react';
 
 import styles from './styles.module.css';
 
-export const InputText = (props) => {
-  const inputType = props.type || 'text';
-  const className = props.darkStyle
-    ? styles.dark
-    : null;
-  const inputName = props.name || 'input' + Math.rand();
-  const value = props.value || '';
-  const error = props.error || '';
-  const autoComplete = props.autoComplete || 'on';
+export class InputText extends React.Component {
+  constructor(props) {
+    super(props);
 
-  return (<div className={styles.inputContainer}>
-    {
-      props.label
-        ? <label>{props.label}</label>
-        : null
+    this.state = {
+      validationError: false
     }
-    {
-      value
-        ? <input value={value} className={className} name={inputName} type={inputType} placeholder={props.placeholder} onChange={props.onChange} autoComplete={autoComplete}/>
-        : <input className={className} name={inputName} type={inputType} placeholder={props.placeholder} onChange={props.onChange} autoComplete={autoComplete}/>
+  }
+
+  validateInput = (event) => {
+    let message = null;
+
+    if (!event.currentTarget.validity.valid) {
+      message = event.currentTarget.validationMessage
     }
-    {
-      error
-        ? <p className={styles.error}>{error}</p>
-        : null
+
+    this.setState({
+      validationError: message
+    }, () => this.checkIfValid());
+  }
+
+  validateOnChange = (event) => {
+    if (!this.getError()) {
+      let eventToPass = {
+        ...event
+      };
+
+      clearTimeout(this.timer);
+
+      this.timer = setTimeout(() => this.validateInput(eventToPass), 750);
+    } else {
+      this.validateInput(event);
     }
-  </div>);
+  }
+
+  getError = () => {
+    return this.props.error || this.state.validationError || false;
+  }
+
+  checkIfValid = () => {
+    this.props.isValid && this
+      .props
+      .isValid(!this.getError());
+  }
+
+  render = () => {
+    let inputProps = {
+      type: this.props.type || 'text',
+      name: this.props.name || null,
+      autoComplete: this.props.autoComplete || 'on',
+      disabled: this.props.disabled || false,
+      value: this.props.value || null,
+      placeholder: this.props.placeholder || null,
+      className: this.props.darkStyle
+        ? styles.dark
+        : null,
+      onChange: this.props.onChange,
+      onBlur: this.validateInput,
+      onKeyDown: this.validateOnChange
+    };
+
+    if (this.props.maxLength) {
+      inputProps.maxLength = this.props.maxLength;
+    }
+
+    return <div className={`${styles
+        .inputContainer} ${this
+        .getError()
+          ? styles.invalidInput
+          : null}`}>
+      {
+        this.props.label
+          ? <label>{this.props.label}</label>
+          : null
+      }
+      {React.createElement('input', inputProps)}
+      {
+        this.getError()
+          ? <p className={styles.error}>{this.getError()}</p>
+          : null
+      }
+    </div>
+  };
 }
 
 export default InputText;

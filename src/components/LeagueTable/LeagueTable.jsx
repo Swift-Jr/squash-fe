@@ -1,13 +1,16 @@
 import React from 'react';
 
 import {Link} from 'react-router-dom';
-import {authService} from '../../services';
+import {authService, userService} from '../../services';
 
 import styles from './styles.module.css';
 
 export const LeagueTable = (props) => {
   const {league, header, preview} = props;
 
+  if (!league) 
+    return null;
+  
   return <div>
     <table>
       {
@@ -39,7 +42,7 @@ export const LeagueTableRows = (props) => {
   if (preview) {
     var i;
     for (i = 0; i < rows.length; i++) {
-      if (rows[i].getPlayer().getUserId() === authService.getUserId()) {
+      if (rows[i].getPlayer().getUserId() === userService.getCurrentUser().getUserId()) {
         break;
       }
     }
@@ -76,31 +79,42 @@ export const LeagueTableRows = (props) => {
 
   return leagueRows.map((row) => {
     const pointDiff = row.getPointsWon() - row.getPointsLost();
-    const isUserScore = authService.getUserId() === row.getPlayer().getUserId();
+    const isUserScore = userService
+      .getCurrentUser()
+      .getUserId() === row
+      .getPlayer()
+      .getUserId();
 
     counter++;
     const rowStyle = counter % 2 === 0
       ? styles.stripedRow
       : null;
 
+    /*<td>{
+          pointDiff > 0
+            ? '+'
+            : null
+        }{pointDiff}/{row.getScoreDiff()}</td>*/
     return (<tr className={`${rowStyle} ${isUserScore
         ? styles.currentUserHighlight
         : null}`}>
       <td className={styles.bold}>{
           isUserScore
             ? numberToPlace(row.getPlace())
-            : <Link to={`/scorecard/${row.getPlayer().getUserId()}`}>{row.getPlayer().getFirstname()}</Link>
+            : <Link to={`/scorecard/${row
+                  .getPlayer()
+                  .getUserId()}`}>{
+                  row
+                    .getPlayer()
+                    .getFirstname()
+                }</Link>
         }</td>
-      <td>{row.getPlayed()}</td>
-      <td>{row.getWon()}</td>
+      <td>{row.getMatchesPlayed()}</td>
+      <td>{row.getMatchesWon()}</td>
       <td>{row.getPointsWon()}</td>
       <td>{row.getPointsLost()}</td>
-      <td>{
-          pointDiff > 0
-            ? '+'
-            : '-'
-        }{pointDiff}</td>
-      <td className={styles.bold}>{row.getScore()}</td>
+      <td>{row.getScoreDiff()}</td>
+      <td className={styles.bold}>{row.getScorePoints()}</td>
     </tr>);
   })
 }

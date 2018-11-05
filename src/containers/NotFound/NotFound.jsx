@@ -1,10 +1,12 @@
 import React from 'react';
 
+import styles from './styles.module.css';
+
 export class NotFound extends React.Component {
   render() {
-    return (<div>
-      <i className="fas fa-4x fa-unlink"></i>
-      <p>Uh oh! Somethings gone wrong here...</p>
+    return (<div className={styles.missing}>
+      <i className="fas fa-robot fa-6x"></i>
+      <p>Ahh fork! Thats not supposed to happen.</p>
     </div>)
   }
 }

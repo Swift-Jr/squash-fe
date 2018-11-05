@@ -3,11 +3,14 @@ import {dispatch} from "./store";
 import {authService} from "../services/auth.service";
 
 const responseHandler = response => {
-  if (response.stack) {
+  if (response.stack && !response.response) {
     console.log(response.message);
     console.log(response.stack);
     return false;
+  } else {
+    response = response.response;
   }
+
   if (response.message) {
     response = {
       ...response.response,
@@ -71,7 +74,7 @@ const responseHandler = response => {
       }
       return false;
     default:
-      return response.data;
+      return response;
   }
 };
 

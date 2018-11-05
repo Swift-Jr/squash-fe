@@ -1,11 +1,20 @@
 import {userActions} from "./actions";
 import {userReducer} from "./reducer";
 import {userTypes} from "./types";
-import {userService} from "../";
+import {userService as usersService} from "../";
 
 export const user = {
   actions: userActions,
   reducer: userReducer,
   types: userTypes,
-  service: userService
+  service: usersService
 };
+
+export const userService = {
+  ...usersService,
+  actions: userActions,
+  reducer: userReducer,
+  types: userTypes
+};
+
+export default userService;

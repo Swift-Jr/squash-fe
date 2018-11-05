@@ -1,0 +1,15 @@
+// dump Join Club/League
+
+//User creates their own club
+
+adds leagues
+todo:update welcome UI for creating not joining
+
+user would create a club, and then add some leagues
+todo: update flow to support 2 step sign on
+
+OR joins from an invite (todo:support accept invite via logged in or not)
+
+todo:backend needs to return a list of clubs and leagues with /me
+
+todo:frontend needs to cache user on local storage, and load from

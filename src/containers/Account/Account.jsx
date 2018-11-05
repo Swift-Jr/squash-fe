@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from "react-router";
 
-import {user} from '../../services';
+import {user, inviteService} from '../../services';
 
 import {InputText} from '../../components/Inputs';
 
@@ -21,14 +21,14 @@ export class AccountPage extends React.Component {
         };
         break;
       case 'invite':
-        const invite = user
-          .service
-          .getInvite(props.match.params.actionId);
+        inviteService
+          .getInvite(props.match.params.actionId)
+          .then((invite) => {
+            this.setState({action: props.match.params.action, invite, email: invite.email})
+          });
         this.state = {
-          action: props.match.params.action,
-          invite: invite,
-          email: invite.email
-        };
+          action: 'create'
+        }
         break;
       case 'recover':
         const token = props.match.params.actionId;
@@ -65,11 +65,15 @@ export class AccountPage extends React.Component {
     const {dispatch} = this.props;
 
     const {firstname, lastname, email, password} = this.state;
+    const token = this.state.invite
+      ? this.state.invite.token
+      : null;
     const data = {
       firstname: firstname,
       lastname: lastname,
       email: email,
-      password: password
+      password: password,
+      token: token
     };
 
     dispatch(user.service.register(data));
@@ -92,7 +96,6 @@ export class AccountPage extends React.Component {
   }
 
   render = () => {
-    const {recoverySent} = this.props.user;
     const {action} = this.state;
     const {handleInputChange, handleCreate, handleSignin} = this;
 

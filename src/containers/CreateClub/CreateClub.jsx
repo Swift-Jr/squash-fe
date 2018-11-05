@@ -1,37 +1,34 @@
 import React from 'react';
-
+import {withRouter} from "react-router";
+import {connect} from 'react-redux';
 //import Moment from 'react-moment';
 //import 'moment-timezone';
 
 import {FullModal} from '../../components/FullModal';
-import {InputText, InputSelect} from '../../components/Inputs';
+import {InputText} from '../../components/Inputs';
 
-import styles from './styles.module.css'; // eslint-disable-line no-unused-vars
+import {clubService} from '../../services';
 
-export const TopContent = (props) => {
-  return (<InputText label="Name" placeholder="Club Name"/>);
-}
+import styles from './styles.module.css';
 
 export const BodyContent = (props) => {
-  const selectOptions = [
-    {
-      value: 1,
-      option: 'Anyone can Join'
-    }, {
-      value: 0,
-      option: 'Requires Invite to Join'
-    }
-  ];
-
   return (<div>
-    <InputSelect darkStyle={true} label="Invite only club?" placeholder="Select an option" options={selectOptions}/>
+    <ul className={styles.clubSteps}>
+      <li>
+        <span>1</span>Create a Club</li>
+      <li>
+        <span>2</span>Setup a League</li>
+      <li>
+        <span>3</span>Invite your friends</li>
+      <li>
+        <span>4</span>Play!</li>
+    </ul>
     <div className="fixedBottom">
-      <button className="large">Create Club</button>
+      <button className="large" onClick={props.onSubmit} disabled={props.loading}>Create Club</button>
     </div>
   </div>);
 }
-
-export class CreateClub extends React.Component {
+export class CreateClubComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -41,11 +38,19 @@ export class CreateClub extends React.Component {
       buttonTitle: props.buttonTitle || 'Create a club'
     }
 
-    this.handleOnOpen = this.handleOnOpen.bind(this);
-    this.handleOnClose = this.handleOnClose.bind(this);
+    this.handleOnOpen = this
+      .handleOnOpen
+      .bind(this);
+    this.handleOnClose = this
+      .handleOnClose
+      .bind(this);
 
-    this.getHeadContent = this.getHeadContent.bind(this);
-    this.getBodyContent = this.getBodyContent.bind(this);
+    this.getHeadContent = this
+      .getHeadContent
+      .bind(this);
+    this.getBodyContent = this
+      .getBodyContent
+      .bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -64,23 +69,38 @@ export class CreateClub extends React.Component {
   handleOnOpen() {
     const {onOpen} = this.state;
     this.setState({
-      visible: true
+      visible: true,
+      clubname: null
     }, () => onOpen && onOpen(this.state.visible));
   }
 
-  getHeadContent() {
-    return <TopContent></TopContent>;
+  handleSubmit = () => {
+    this
+      .props
+      .dispatch(clubService.actions.create(this.state.clubname));
   }
 
-  getBodyContent() {
-    return <BodyContent></BodyContent>;
+  onChangeName = e => {
+    this.setState({clubname: e.target.value});
+  }
+
+  getHeadContent = () => {
+    return <InputText value={this.state.clubname} label="Name" placeholder="Club Name" onChange={this.onChangeName} autoComplete="off"/>;
+  }
+
+  getBodyContent = () => {
+    return <BodyContent onSubmit={this.handleSubmit} loading={this.props.club.submitted}></BodyContent>;
+  }
+
+  isVisible = () => {
+    return this.props.club.submitted || this.props.club.created === false || this.state.visible;
   }
 
   render() {
     return (<div>
       <button className={this.state.buttonClass} onClick={this.handleOnOpen}>{this.state.buttonTitle}</button>
       {
-        this.state.visible
+        this.isVisible()
           ? <FullModal onClose={this.handleOnClose} headContent={this.getHeadContent()} bodyContent={this.getBodyContent()}></FullModal>
           : null
       }
@@ -88,4 +108,12 @@ export class CreateClub extends React.Component {
   }
 }
 
-export default CreateClub;
+function mapStateToProps(state) {
+  const {club} = state;
+  return {club};
+}
+
+const connectedCreateClubComponent = withRouter(connect(mapStateToProps)(CreateClubComponent));
+export {
+  connectedCreateClubComponent as CreateClub
+};
