@@ -50,7 +50,6 @@ export class ClubComponent extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const {club} = state;
   return {club: clubService.getCurrentClub()};
 }
 
