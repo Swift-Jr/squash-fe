@@ -8,6 +8,7 @@ import {LeagueTable} from '../../components/LeagueTable';
 import {GameHistory} from '../../components/GameHistory';
 
 import {PlayMatch} from '../PlayMatch';
+import {Loading} from '../App/Loading';
 
 //import styles from './styles.module.css';
 
@@ -38,11 +39,21 @@ export class ViewLeagueComponent extends React.Component {
     return [];
   }
 
+  isLoading = () => {
+    return !this.getLeague();
+  }
+
   render = () => {
     return (<div className="fixedPaddingBottom">
       <h1>{this.getLeagueName()}</h1>
-      <LeagueTable league={this.getLeague()} header={true}></LeagueTable>
-      <GameHistory games={this.getLeagueGames()}></GameHistory>
+      {
+        this.isLoading()
+          ? <Loading></Loading>
+          : <div>
+              <LeagueTable league={this.getLeague()} header={true}></LeagueTable>
+              <GameHistory games={this.getLeagueGames()}></GameHistory>
+            </div>
+      }
       <div className="fixedBottom play-match">
         <PlayMatch></PlayMatch>
       </div>
