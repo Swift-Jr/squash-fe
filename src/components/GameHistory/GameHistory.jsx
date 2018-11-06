@@ -8,6 +8,7 @@ import styles from './styles.module.css';
 
 export const GameHistory = (props) => {
   const {games, showLeague} = props;
+
   const userId = parseInt(props.userContext || userService.getCurrentUser().getUserId(), 10);
   return <table className={styles.gameTable}>
     <thead>
@@ -28,7 +29,7 @@ export const GameHistory = (props) => {
       </tr>
     </thead>
     <tbody className={styles.bold}>
-      <GameHistoryRows games={games} showLeague={showLeague} userId={userId}></GameHistoryRows>
+      <GameHistoryRows games={games.slice(0, props.listSize)} showLeague={showLeague} userId={userId}></GameHistoryRows>
     </tbody>
   </table>
 }
