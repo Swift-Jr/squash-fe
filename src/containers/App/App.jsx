@@ -19,6 +19,7 @@ import Loading from './Loading';
 import {Account} from '../Account';
 import {Login} from '../Login';
 import {MyLeagues} from '../MyLeagues';
+import {Club} from '../Club';
 import {HeadToHead} from '../HeadToHead';
 import {Scorecard} from '../Scorecard';
 import {NotFound} from '../NotFound';
@@ -154,6 +155,7 @@ export class AppWrapper extends React.Component {
                 <Route path="/account/:action?/:actionId?" component={Account}/>
                 <ProtectedRoute exact={true} path="/" component={MyLeagues}/>
                 <ProtectedRoute path="/myleagues" component={MyLeagues}/>
+                <ProtectedRoute path="/club" component={Club}/>
                 <ProtectedRoute path="/leagueclublist" component={MyLeaguesClubs}/>
                 <ProtectedRoute path="/league/:id" component={ViewLeague}/>
                 <ProtectedRoute path="/headtohead" component={HeadToHead}/>

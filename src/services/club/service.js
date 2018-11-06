@@ -2,7 +2,7 @@ import api from "../../system/api";
 import {store} from "../../system/store";
 import responseHandler from "../../system/responseHandler";
 
-import {leagueService} from "../../services";
+import {leagueService, inviteService} from "../../services";
 
 import {Model} from "react-axiom";
 import {UserModel} from "../user.service";
@@ -24,6 +24,13 @@ export class ClubModel extends Model {
 
   getMembers() {
     return this.state.members.map(member => new UserModel(member));
+  }
+
+  getInvites() {
+    if (!this.state.invites) {
+      this.state.invites = inviteService.getPendingInvites(this.state.id);
+    }
+    return this.state.invites;
   }
 
   hasPlayers() {

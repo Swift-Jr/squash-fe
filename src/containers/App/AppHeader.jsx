@@ -54,7 +54,11 @@ export class AppHeaderComponent extends React.Component {
 
     return <header className="row">
       <div id="topBar">
-        <p className="name col-xs-10">{username}<span>{clubname}</span>
+        <p className="name col-xs-10">
+          <Link to="/profile">{username}</Link>
+          <span>
+            <Link to="/club">{clubname}</Link>
+          </span>
         </p>
         <p className="settings col-xs-2"><img src={iconSettings} alt="Settings Menu" onClick={this.toggleMenu}/></p>
       </div>
@@ -66,7 +70,7 @@ export class AppHeaderComponent extends React.Component {
           <Link to="/" onClick={this.handleInvite}>Invite</Link>
         </li>
         <li>
-          <Link to="/" onClick={this.handleLinkClick}>Profile</Link>
+          <Link to="/profile" onClick={this.handleLinkClick}>Profile</Link>
         </li>
         <li>
           <Link to="/login/out" onClick={this.handleSignOut}>Sign Out</Link>
