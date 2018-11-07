@@ -17,7 +17,7 @@ export const BodyContent = (props) => {
       {
         props
           .invites
-          .map(invite => <li>{invite}<span>
+          .map(invite => <li key={invite}>{invite}<span>
               <i className="far fa-trash-alt fa-1x" onClick={() => props.removeInvite(invite)}></i>
             </span>
           </li>)
@@ -82,6 +82,7 @@ export class InvitePlayersComponent extends React.Component {
     this.setState({
       visible: true,
       email: null,
+      closeModal: false,
       pendingInvites: []
     }, () => onOpen && onOpen(this.state.visible));
   }
@@ -109,14 +110,14 @@ export class InvitePlayersComponent extends React.Component {
       .length;
 
     if (emailExists) 
-      return this.setState({email: null});
+      return this.setState({email: ''});
     
     this.setState({
       pendingInvites: this
         .state
         .pendingInvites
         .concat([this.state.email]),
-      email: null
+      email: ''
     })
   }
 

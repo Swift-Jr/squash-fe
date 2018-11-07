@@ -25,6 +25,10 @@ export const invitesReducer = (state = initialState, action = null) => {
         ...state,
         modal: {
           open: true
+        },
+        request: {
+          submitted: false,
+          created: false
         }
       };
     case types.CREATE_INVITE_REQUEST:
@@ -39,7 +43,7 @@ export const invitesReducer = (state = initialState, action = null) => {
       };
     case types.CREATE_INVITE_SUCCESS:
       return {
-        list: state.list.concat(payload.invites),
+        list: payload.invites ? state.list.concat(payload.invites) : state.list,
         request: {
           submitted: false,
           created: true,

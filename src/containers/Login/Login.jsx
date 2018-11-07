@@ -1,8 +1,9 @@
 import React from 'react';
+import GoogleLogin from 'react-google-login';
 
 import {connect} from 'react-redux';
 
-import {authService} from '../../services';
+import {authService, alerts} from '../../services';
 import {InputText} from '../../components/Inputs';
 
 import {logoSmall} from '../App/images';
@@ -38,6 +39,17 @@ export class LoginPage extends React.Component {
       password: null
     }
 
+  }
+
+  googleLoginSuccess = (data) => {
+    const {dispatch} = this.props;
+
+    dispatch(authService.googleLogin(data));
+  }
+
+  googleLoginFailure = (data) => {
+    const {dispatch} = this.props;
+    dispatch(alerts.actions.bad('Hmm... Google login failed!'));
   }
 
   handleLogin = (e) => {
@@ -86,6 +98,13 @@ export class LoginPage extends React.Component {
 
     return <div>
       <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/>
+      <div className={styles.googleLogin}>
+        <GoogleLogin clientId="474168737882-6eb001ad86fc66ktc0dkvhopsedfc203.apps.googleusercontent.com" isSignedIn={true} onSuccess={this.googleLoginSuccess} onFailure={this.googleLoginFailure}>
+          <i className="fab fa-google"></i>
+          <span>Sign in with Google</span>
+        </GoogleLogin>
+        <span className={styles.or}>or</span>
+      </div>
       <form className={styles.loginForm} onSubmit={this.handleLogin}>
         <InputText value={this.state.email} error={userInputError} name="email" placeholder="Email" onChange={this.onInputChange}/>
         <InputText value={this.state.password} error={passInputError} name="password" placeholder="Password" type="password" onChange={this.onInputChange} autoComplete="current-password"/>

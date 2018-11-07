@@ -3,6 +3,8 @@ import {Link} from 'react-router-dom';
 import {withRouter} from "react-router";
 import {connect} from 'react-redux';
 
+import {GoogleLogout} from 'react-google-login';
+
 import {iconSettings, logoSmall} from './images';
 
 import {userService, authService, inviteService} from '../../services';
@@ -30,8 +32,13 @@ export class AppHeaderComponent extends React.Component {
   }
 
   handleSignOut = (e) => {
-    this.handleLinkClick(e);
+    this.handleLinkClick();
     setTimeout(() => this.props.dispatch(authService.logout()), 1000);
+  }
+
+  handleNull = (e) => {
+    this.handleLinkClick(e);
+    e.preventDefault();
   }
 
   handleInvite = (e) => {
@@ -73,7 +80,10 @@ export class AppHeaderComponent extends React.Component {
           <Link to="/profile" onClick={this.handleLinkClick}>Profile</Link>
         </li>
         <li>
-          <Link to="/login/out" onClick={this.handleSignOut}>Sign Out</Link>
+          <GoogleLogout style={{}}>
+            <Link to="/login/out" onClick={this.handleSignOut}>Sign Out
+            </Link>
+          </GoogleLogout>
         </li>
       </ul>
       <img className="app-logo" src={logoSmall} alt="Application Logo"/>
@@ -81,7 +91,12 @@ export class AppHeaderComponent extends React.Component {
   }
 }
 
-const connectedAppHeader = withRouter(connect()(AppHeaderComponent));
+function mapStateToProps(state) {
+  const {user} = state;
+  return {isGoogle: user.isGoogle};
+}
+
+const connectedAppHeader = withRouter(connect(mapStateToProps)(AppHeaderComponent));
 export {
   connectedAppHeader as AppHeader
 };

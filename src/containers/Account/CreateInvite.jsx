@@ -1,10 +1,21 @@
 import React from 'react';
+import GoogleLogin from 'react-google-login';
+
 import {logoSmall} from '../App/images';
 import {InputText} from '../../components/Inputs';
 
+import styles from './styles.module.css';
+
 export const CreateInvite = props => (<div>
-  <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/>
+  <img className="appLogoExternal shorter" src={logoSmall} alt="Application Logo"/>
   <form>
+    <div className={styles.googleLogin}>
+      <GoogleLogin clientId="474168737882-6eb001ad86fc66ktc0dkvhopsedfc203.apps.googleusercontent.com" isSignedIn={true} onSuccess={props.googleLoginSuccess} onFailure={props.googleLoginFailure}>
+        <i className="fab fa-google"></i>
+        <span>Register with Google</span>
+      </GoogleLogin>
+      <span className={styles.or}>or</span>
+    </div>
     {
       props.action === 'invite'
         ? <p>Enter some details to accept your invite!</p>

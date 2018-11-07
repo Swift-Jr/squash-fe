@@ -7,8 +7,13 @@ export class InputText extends React.Component {
     super(props);
 
     this.state = {
-      validationError: false
+      validationError: false,
+      value: props.value || undefined
     }
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({value: nextProps.value});
   }
 
   validateInput = (event) => {
@@ -53,7 +58,7 @@ export class InputText extends React.Component {
       name: this.props.name || null,
       autoComplete: this.props.autoComplete || 'on',
       disabled: this.props.disabled || false,
-      value: this.props.value || null,
+      value: this.state.value,
       placeholder: this.props.placeholder || null,
       className: this.props.darkStyle
         ? styles.dark

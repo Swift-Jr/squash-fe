@@ -69,9 +69,54 @@ export const login = (email, password, forward = "/myleagues") => {
   };
 };
 
+export const googleLogin = (googleData, invite, forward = "/myleagues") => {
+  return async dispatch => {
+    dispatch(user.actions.loginRequest({}));
+
+    if (googleData.tokenObj.id_token) {
+      await axios
+        .post(`${process.env.REACT_APP_API_URL}/users/googleauthenticate`, {
+          token: googleData.tokenObj.id_token,
+          invite
+        })
+        .then(response => {
+          const {token, google_id} = response.data;
+          const userData = response.data.user;
+          if (response.status === 202 && token) {
+            registerAuthChangeFn && registerAuthChangeFn(true);
+            localStorage.setItem("token", token);
+            history.push("/");
+            dispatch(user.actions.loginSuccess(userData, token, google_id));
+          } else if (response.data.error) {
+            dispatch(
+              user.actions.loginFailure(googleData, response.data.error)
+            );
+            dispatch(
+              alerts.actions.bad(response.data.error, {
+                toastId: "@app/user/login/failed"
+              })
+            );
+          } else {
+            responseHandler(response);
+            dispatch(
+              user.actions.loginFailure(googleData, "An unknown error occurred")
+            );
+          }
+        })
+        .catch(error => {
+          responseHandler(error);
+          dispatch(user.actions.loginFailure(googleData, error.toString()));
+        });
+    } else {
+      dispatch(user.actions.loginFailure());
+    }
+  };
+};
+
 export const authService = {
   check,
   login,
+  googleLogin,
   logout,
   registerAuthChange
 };
