@@ -21,7 +21,7 @@ export const api = () => {
     },
     transformResponse: [
       response => {
-        if (response.staus && response.staus === 401) {
+        if (response && response.status === 401) {
           dispatch(
             alerts.actions.bad("Looks like you're no longer logged in", {
               toastId: "@app/api/general/unauthorised"

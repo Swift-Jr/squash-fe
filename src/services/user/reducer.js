@@ -72,42 +72,38 @@ export const userReducer = (state = initialState, action = null) => {
       };
     case types.RETREIVE_PROFILE:
       return {
-        profile: payload.user
+        profile: payload.user,
+        request: {
+          submitted: false,
+          updated: false
+        }
       };
-
-    /*case clubService.types.CREATE_CLUB_SUCCESS:
-      let newStateWithClub = state;
-      newStateWithClub.profile.clubs[payload.club.id] = payload.club;
-      return newStateWithClub;
-
-    case leagueService.types.CREATE_LEAGUE_SUCCESS:
-      let newStateWithLeague = state;
-      newStateWithLeague.clubs = newStateWithLeague.clubs.map(mapClub => {
-        if (mapClub.id === payload.league.club_id) {
-          mapClub.leagues.push(payload.league);
+    case types.UPDATE_PROFILE_FAILURE:
+      return {
+        ...state,
+        request: {
+          submitted: false,
+          updated: false,
+          error: payload.error
         }
-        return mapClub;
-      });
-
-      return newStateWithLeague;
-
-    case leagueService.types.CREATE_GAME_SUCCESS:
-      let newStateWithUpdatedLeague = state;
-      newStateWithUpdatedLeague.clubs = newStateWithUpdatedLeague.clubs.map(
-        mapClub => {
-          if (mapClub.id === payload.league.club_id) {
-            mapClub.leagues = mapClub.leagues.map(mapLeague => {
-              if (mapLeague.id === payload.league.id) {
-                return payload.league;
-              }
-              return mapLeague;
-            });
-          }
-          return mapClub;
+      };
+    case types.UPDATE_PROFILE_REQUEST:
+      return {
+        ...state,
+        request: {
+          submitted: true,
+          updated: false
         }
-      );
-
-      return newStateWithUpdatedLeague;*/
+      };
+    case types.UPDATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        profile: payload.profile,
+        request: {
+          submitted: false,
+          updated: true
+        }
+      };
     default:
       break;
   }

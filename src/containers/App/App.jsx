@@ -22,6 +22,7 @@ import {MyLeagues} from '../MyLeagues';
 import {Club} from '../Club';
 import {HeadToHead} from '../HeadToHead';
 import {Scorecard} from '../Scorecard';
+import {Profile} from '../Profile';
 import {NotFound} from '../NotFound';
 import {ViewLeague} from '../ViewLeague';
 import {MyLeaguesClubs} from '../MyLeaguesClubs';
@@ -160,6 +161,7 @@ export class AppWrapper extends React.Component {
                 <ProtectedRoute path="/league/:id" component={ViewLeague}/>
                 <ProtectedRoute path="/headtohead" component={HeadToHead}/>
                 <ProtectedRoute path="/results" component={Results}/>
+                <ProtectedRoute path="/profile" component={Profile}/>
                 <ProtectedRoute path="/scorecard/:id?" component={Scorecard}/>
                 <ProtectedRoute path="/" component={NotFound}/>
               </Switch>

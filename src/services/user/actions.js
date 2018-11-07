@@ -1,6 +1,9 @@
+import React from "react";
+
 import {userTypes as types} from "./types";
 
-import {user} from "../user";
+import {userService, alerts} from "../";
+import responseHandler from "../../system/responseHandler";
 
 const loginRequest = user => ({
   type: types.LOGIN_REQUEST,
@@ -9,7 +12,7 @@ const loginRequest = user => ({
 
 const loginSuccess = (userData, token, google_id) => {
   return dispatch => {
-    dispatch(user.service.getUserProfile());
+    dispatch(userService.getUserProfile());
     return {
       type: types.LOGIN_SUCCESS,
       payload: {user: userData, token, google_id}
@@ -89,6 +92,54 @@ const getUserProfile = profile => ({
   payload: {...profile}
 });
 
+function updateProfile(profile) {
+  return dispatch => {
+    dispatch(request(profile));
+
+    return userService
+      .updateProfile(profile)
+      .then(data => {
+        dispatch(success(data.profile));
+        dispatch(
+          alerts.actions.good(() => <div>Your profile has been updated!</div>)
+        );
+        return data;
+      })
+      .catch(error => {
+        if (!responseHandler(error)) {
+          dispatch(failure(error));
+        }
+      });
+  };
+
+  function request(profile) {
+    return {
+      type: types.UPDATE_PROFILE_REQUEST,
+      payload: {
+        profile
+      }
+    };
+  }
+
+  function success(invites, club_id) {
+    return {
+      type: types.UPDATE_PROFILE_SUCCESS,
+      payload: {
+        profile
+      }
+    };
+  }
+
+  function failure(error) {
+    return {
+      type: types.UPDATE_PROFILE_FAILURE,
+      payload: {
+        error
+      }
+    };
+  }
+}
+
 export const userActions = {
   loginRequest,
   loginSuccess,
@@ -105,5 +156,6 @@ export const userActions = {
   completeRecoverRequest,
   completeRecoverSuccess,
   completeRecoverFailure,
-  getUserProfile
+  getUserProfile,
+  updateProfile
 };

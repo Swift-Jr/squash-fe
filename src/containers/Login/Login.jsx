@@ -36,7 +36,8 @@ export class LoginPage extends React.Component {
 
     this.state = {
       email: null,
-      password: null
+      password: null,
+      showLogin: false
     }
 
   }
@@ -84,6 +85,17 @@ export class LoginPage extends React.Component {
     });
   }
 
+  showLoginForm = () => {
+    this.setState({showLogin: true})
+  }
+
+  googleLogin = () => {
+    return <GoogleLogin clientId="474168737882-6eb001ad86fc66ktc0dkvhopsedfc203.apps.googleusercontent.com" isSignedIn={true} onSuccess={this.googleLoginSuccess} onFailure={this.googleLoginFailure} style={{}} className={styles.googleLoginButton}>
+      <i className="fab fa-google"></i>
+      <span>Sign in with Google</span>
+    </GoogleLogin>
+  }
+
   render = () => {
     const {user} = this.props;
     const {email, password} = this.state;
@@ -96,28 +108,36 @@ export class LoginPage extends React.Component {
       ? 'Password is required'
       : null;
 
+    const paddingStyle = !this.state.showLogin
+      ? 'fixedBottom'
+      : '';
+
     return <div>
-      <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/>
-      <div className={styles.googleLogin}>
-        <GoogleLogin clientId="474168737882-6eb001ad86fc66ktc0dkvhopsedfc203.apps.googleusercontent.com" isSignedIn={true} onSuccess={this.googleLoginSuccess} onFailure={this.googleLoginFailure}>
-          <i className="fab fa-google"></i>
-          <span>Sign in with Google</span>
-        </GoogleLogin>
-        <span className={styles.or}>or</span>
-      </div>
-      <form className={styles.loginForm} onSubmit={this.handleLogin}>
-        <InputText value={this.state.email} error={userInputError} name="email" placeholder="Email" onChange={this.onInputChange}/>
-        <InputText value={this.state.password} error={passInputError} name="password" placeholder="Password" type="password" onChange={this.onInputChange} autoComplete="current-password"/>
-        <button className={`small ${styles.forgotPassword}`} onClick={this.handleForgot}>Forgot Password</button>
-        <div className="fixedBottom">
-          <button className="small" onClick={this.handleCreate}>Create Account</button>
-          <button className="large" onClick={this.handleLogin} disabled={user.loggingIn}>{
-              user.loggingIn
-                ? <i className="fas fa-spinner fa-spin"></i>
-                : <span>Sign In</span>
-            }</button>
-        </div>
-      </form>
+      <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/> {
+        !this.state.showLogin && <div className={paddingStyle}>
+            <div className={styles.googleLogin}>
+              {this.googleLogin()}
+              <span className={styles.or}>or</span>
+            </div>
+            <button onClick={this.showLoginForm} className="large">Sign in with e-mail</button>
+          </div>
+      }
+      {
+        this.state.showLogin && <form className={styles.loginForm} onSubmit={this.handleLogin}>
+            <InputText value={this.state.email} error={userInputError} name="email" placeholder="Email" onChange={this.onInputChange}/>
+            <InputText value={this.state.password} error={passInputError} name="password" placeholder="Password" type="password" onChange={this.onInputChange} autoComplete="current-password"/>
+            <button className={`small ${styles.forgotPassword}`} onClick={this.handleForgot}>Forgot Password</button>
+            <div className="fixedBottom">
+              {this.googleLogin()}
+              <button className="small" onClick={this.handleCreate}>Create Account</button>
+              <button className="large" onClick={this.handleLogin} disabled={user.loggingIn}>{
+                  user.loggingIn
+                    ? <i className="fas fa-spinner fa-spin"></i>
+                    : <span>Sign In</span>
+                }</button>
+            </div>
+          </form>
+      }
     </div>
   }
 }

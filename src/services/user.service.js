@@ -105,6 +105,20 @@ function getUserProfile() {
   };
 }
 
+function updateProfile(profile) {
+  return api()
+    .post("/me/update/", {profile})
+    .then(response => {
+      if (response.status === 202) {
+        return response.data;
+      } else if (!responseHandler(response)) {
+        throw new Error(
+          "Yikes! Ran into an unknown problem updating your profile."
+        );
+      }
+    });
+}
+
 function getUserById(id) {
   let club = clubService.getCurrentClub();
 
@@ -278,5 +292,6 @@ export const userService = {
   getUserProfile,
   userHasClubs,
   userHasLeagues,
-  userHasPlayers
+  userHasPlayers,
+  updateProfile
 };
