@@ -2,16 +2,16 @@ import axios from "axios";
 import moment from "moment";
 import history from "../../system/history";
 import api from "../../system/api";
-import {store, dispatch} from "../../system/store";
+import {store} from "../../system/store";
 import responseHandler from "../../system/responseHandler";
 
-import {alerts, inviteService} from "../../services";
+import {inviteService} from "../../services";
 
 function create(invites, club_id) {
   return api()
     .post("/invites/create/", {invites, club_id})
     .then(response => {
-      if (response.status == 202) {
+      if (response.status === 202) {
         return response.data;
       } else if (!responseHandler(response)) {
         throw new Error(
@@ -44,7 +44,7 @@ function getAllInvites() {
   return api()
     .get("/invites/all/")
     .then(response => {
-      if (response.status == 200 && response.data.invites) {
+      if (response.status === 200 && response.data.invites) {
         return response.data.invites;
       }
       return [];

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Link} from 'react-router-dom';
-import {authService, userService} from '../../services';
+import {userService} from '../../services';
 
 import styles from './styles.module.css';
 
@@ -78,7 +78,6 @@ export const LeagueTableRows = (props) => {
   var counter = 0;
 
   return leagueRows.map((row) => {
-    const pointDiff = row.getPointsWon() - row.getPointsLost();
     const isUserScore = userService
       .getCurrentUser()
       .getUserId() === row
@@ -90,12 +89,7 @@ export const LeagueTableRows = (props) => {
       ? styles.stripedRow
       : null;
 
-    /*<td>{
-          pointDiff > 0
-            ? '+'
-            : null
-        }{pointDiff}/{row.getScoreDiff()}</td>*/
-    return (<tr className={`${rowStyle} ${isUserScore
+    return (<tr key={row.getPlace()} className={`${rowStyle} ${isUserScore
         ? styles.currentUserHighlight
         : null}`}>
       <td className={styles.bold}>{

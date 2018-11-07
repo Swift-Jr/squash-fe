@@ -19,11 +19,15 @@ import Loading from './Loading';
 import {Account} from '../Account';
 import {Login} from '../Login';
 import {MyLeagues} from '../MyLeagues';
+import {Club} from '../Club';
 import {HeadToHead} from '../HeadToHead';
 import {Scorecard} from '../Scorecard';
 import {NotFound} from '../NotFound';
 import {ViewLeague} from '../ViewLeague';
 import {MyLeaguesClubs} from '../MyLeaguesClubs';
+import {Results} from '../Results';
+
+import {InvitePlayers} from '../InvitePlayers';
 
 //import {Authenticator} from './services/Authenticator';
 
@@ -151,14 +155,18 @@ export class AppWrapper extends React.Component {
                 <Route path="/account/:action?/:actionId?" component={Account}/>
                 <ProtectedRoute exact={true} path="/" component={MyLeagues}/>
                 <ProtectedRoute path="/myleagues" component={MyLeagues}/>
+                <ProtectedRoute path="/club" component={Club}/>
                 <ProtectedRoute path="/leagueclublist" component={MyLeaguesClubs}/>
                 <ProtectedRoute path="/league/:id" component={ViewLeague}/>
                 <ProtectedRoute path="/headtohead" component={HeadToHead}/>
+                <ProtectedRoute path="/results" component={Results}/>
                 <ProtectedRoute path="/scorecard/:id?" component={Scorecard}/>
                 <ProtectedRoute path="/" component={NotFound}/>
               </Switch>
         }
       </div>
+
+      <InvitePlayers noButton={true}></InvitePlayers>
 
     </div>)
   }

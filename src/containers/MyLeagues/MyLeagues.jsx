@@ -1,15 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {Link} from 'react-router-dom';
-
-import {userService, clubService, inviteService} from '../../services';
+import {clubService, inviteService} from '../../services';
 
 import {LeagueRepeater} from './LeagueRepeater';
 import {PlayMatch} from '../PlayMatch';
 import {Loading} from '../App/Loading';
 import {CreateLeague} from '../CreateLeague';
-import {InvitePlayers} from '../InvitePlayers';
 
 import styles from './styles.module.css';
 
@@ -37,6 +34,12 @@ export class MyLeaguesComponent extends React.Component {
       .getCurrentClub()
       .getId();
     return inviteService.getPendingInvites(clubId);
+  }
+
+  openInvites = () => {
+    this
+      .props
+      .dispatch(inviteService.actions.open());
   }
 
   render() {
@@ -70,7 +73,7 @@ export class MyLeaguesComponent extends React.Component {
           ? <div className={styles.noLeagues}>
               <i className="far fa-sad-cry fa-6x"></i>
               <p>Sad times! You've got no one to play with. Time to get some friends involed!</p>
-              <InvitePlayers></InvitePlayers>
+              <button className="large" onClick={this.openInvites}>Invite Players</button>
               <PendingInvites invites={this.clubPendingInvites()}></PendingInvites>
             </div>
           : null
@@ -85,9 +88,8 @@ export const PendingInvites = (props) => {
         ? <ul>{
               props
                 .invites
-                .map(invite =>< li > {
-                  invite.email
-                }</li>)
+                .map(invite => <li key={invite.token}>
+                  {invite.email}</li>)
             }</ul>
         : <p>No pending invites</p>
     }</div>)

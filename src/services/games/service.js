@@ -1,12 +1,10 @@
-import axios from "axios";
 import {Model} from "react-axiom";
 import moment from "moment";
-import history from "../../system/history";
 import api from "../../system/api";
-import {store, dispatch} from "../../system/store";
+import {store} from "../../system/store";
 import responseHandler from "../../system/responseHandler";
 
-import {alerts, gameService, leagueService} from "../../services";
+import {gameService, leagueService} from "../../services";
 import {UserModel} from "../../services/user.service";
 import {LeagueModel} from "../../services/league/service";
 
@@ -54,7 +52,7 @@ function saveGame(game) {
   return api()
     .post("/game/save_game/", newGame)
     .then(response => {
-      if (response.status == 202 && response.data.league) {
+      if (response.status === 202 && response.data.league) {
         //TODO:Could store games locally to be saved when offline
         return response.data.league;
       } else if (!responseHandler(response)) {
@@ -69,7 +67,7 @@ function getAllGames(leagueId = null) {
   return api()
     .get("/game/all/" + leagueId)
     .then(response => {
-      if (response.status == 200 && response.data.matches) {
+      if (response.status === 200 && response.data.matches) {
         return response.data.matches;
       }
       return [];

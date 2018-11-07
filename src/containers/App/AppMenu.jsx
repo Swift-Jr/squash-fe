@@ -13,7 +13,9 @@ export class AppMenu extends React.Component {
       visible: props.visible || false
     }
 
-    this.handleLinkClick = this.handleLinkClick.bind(this);
+    this.handleLinkClick = this
+      .handleLinkClick
+      .bind(this);
   }
 
   toggleMenu() {

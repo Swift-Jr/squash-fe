@@ -1,5 +1,4 @@
 import {userTypes as types} from "./types";
-import {clubService, leagueService} from "../";
 
 const user = {};
 const initialState = user ? {authenticated: true, user} : {};

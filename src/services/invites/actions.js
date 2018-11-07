@@ -51,6 +51,10 @@ function create(invites, club_id) {
   }
 }
 
+function open() {
+  return {type: inviteService.types.OPEN_INVITE, payload: {}}
+}
+
 function getAllInvites() {
   return dispatch => {
 
@@ -89,5 +93,6 @@ function getAllInvites() {
 
 export const invitesActions = {
   create,
-  getAllInvites
+  getAllInvites,
+  open
 };

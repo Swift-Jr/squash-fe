@@ -25,7 +25,9 @@ export const gamesReducer = (state = initialState, action = null) => {
         }
       };
     case types.CREATE_GAME_SUCCESS:
-      let list = state.list[payload.leagueId] || [];
+      let list = state.list[payload.leagueId]
+        ? state.list[payload.leagueId].list
+        : [];
       list.push(payload.game);
 
       return {

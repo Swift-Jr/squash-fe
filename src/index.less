@@ -14,6 +14,12 @@ a {
   color: inherit;
 }
 
+a:hover,
+a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
 header {
   top: 0;
   margin: 20px 0 0;
@@ -46,6 +52,10 @@ header {
 .appLogoExternal {
   display: block;
   margin: 150px auto 60px;
+
+  &.shorter {
+    margin-top: 60px;
+  }
 }
 
 nav {
@@ -212,7 +222,7 @@ button {
 }
 
 .play-match {
-  z-index: 248;
+  z-index: 250;
   background-color: @darkblue;
 }
 

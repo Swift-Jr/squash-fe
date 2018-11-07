@@ -1,16 +1,27 @@
 import React from 'react';
+import GoogleLogin from 'react-google-login';
+
 import {logoSmall} from '../App/images';
 import {InputText} from '../../components/Inputs';
 
+import styles from './styles.module.css';
+
 export const CreateInvite = props => (<div>
-  <img className="appLogoExternal" src={logoSmall} alt="Application Logo"/>
+  <img className="appLogoExternal shorter" src={logoSmall} alt="Application Logo"/>
   <form>
+    <div className={styles.googleLogin}>
+      <GoogleLogin clientId="474168737882-6eb001ad86fc66ktc0dkvhopsedfc203.apps.googleusercontent.com" isSignedIn={true} onSuccess={props.googleLoginSuccess} onFailure={props.googleLoginFailure}>
+        <i className="fab fa-google"></i>
+        <span>Register with Google</span>
+      </GoogleLogin>
+      <span className={styles.or}>or</span>
+    </div>
     {
       props.action === 'invite'
         ? <p>Enter some details to accept your invite!</p>
         : null
     }
-    <InputText disabled={props.state.invite && props.state.invite.email === props.state.invite.email} value={props.state.email} name="email" placeholder="E-mail" onChange={props.handleInputChange}/>
+    <InputText disabled={props.state.invite && props.state.email === props.state.invite.email} value={props.state.email} name="email" placeholder="E-mail" onChange={props.handleInputChange}/>
     <InputText value={props.state.firstname} name="firstname" placeholder="Firstname" onChange={props.handleInputChange}/>
     <InputText value={props.state.lastname} name="lastname" placeholder="Lastname" onChange={props.handleInputChange}/>
     <InputText value={props.state.password} name="password" placeholder="Password" type="password" onChange={props.handleInputChange} autoComplete="new-password"/>

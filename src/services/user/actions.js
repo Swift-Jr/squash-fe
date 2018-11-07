@@ -7,12 +7,12 @@ const loginRequest = user => ({
   payload: {user: user}
 });
 
-const loginSuccess = (userData, token) => {
+const loginSuccess = (userData, token, google_id) => {
   return dispatch => {
     dispatch(user.service.getUserProfile());
     return {
       type: types.LOGIN_SUCCESS,
-      payload: {user: userData, token: token}
+      payload: {user: userData, token, google_id}
     };
   };
 };

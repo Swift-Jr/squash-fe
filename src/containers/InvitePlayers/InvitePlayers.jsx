@@ -17,14 +17,14 @@ export const BodyContent = (props) => {
       {
         props
           .invites
-          .map(invite => <li>{invite}<span>
+          .map(invite => <li key={invite}>{invite}<span>
               <i className="far fa-trash-alt fa-1x" onClick={() => props.removeInvite(invite)}></i>
             </span>
           </li>)
       }
     </ul>
     <div className="fixedBottom">
-      <InputButton className="large" onClick={props.onSubmit} disabled={props.loading || props.invites.length == 0} isLoading={props.loading}>Send Invites</InputButton>
+      <InputButton className="large" onClick={props.onSubmit} disabled={props.loading || props.invites.length === 0} isLoading={props.loading}>Send Invites</InputButton>
     </div>
   </div>);
 }
@@ -32,7 +32,7 @@ export class InvitePlayersComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: props.visible || false,
+      visible: props.visible || props.modal.open,
       buttonClass: props.buttonClass || 'large',
       buttonTitle: props.buttonTitle || 'Invite Players',
       pendingInvites: [],
@@ -57,8 +57,16 @@ export class InvitePlayersComponent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state !== nextProps) {
+    /*if (this.state !== nextProps) {
       this.setState(nextProps);
+    }*/
+
+    if (!nextProps.modal.open && this.state.visible) {
+      this.setState({closeModal: true})
+    }
+
+    if (nextProps.modal.open && !this.state.visible) {
+      this.handleOnOpen(); //this.setState({closeModal: true})
     }
   }
 
@@ -74,6 +82,7 @@ export class InvitePlayersComponent extends React.Component {
     this.setState({
       visible: true,
       email: null,
+      closeModal: false,
       pendingInvites: []
     }, () => onOpen && onOpen(this.state.visible));
   }
@@ -97,18 +106,18 @@ export class InvitePlayersComponent extends React.Component {
     let emailExists = this
       .state
       .pendingInvites
-      .filter(invite => invite == this.state.email)
+      .filter(invite => invite === this.state.email)
       .length;
 
     if (emailExists) 
-      return this.setState({email: null});
+      return this.setState({email: ''});
     
     this.setState({
       pendingInvites: this
         .state
         .pendingInvites
         .concat([this.state.email]),
-      email: null
+      email: ''
     })
   }
 
@@ -116,7 +125,7 @@ export class InvitePlayersComponent extends React.Component {
     this.setState((state) => {
       state.pendingInvites = state
         .pendingInvites
-        .filter(invite => invite != removed);
+        .filter(invite => invite !== removed);
 
       return state;
     })
@@ -167,7 +176,7 @@ export class InvitePlayersComponent extends React.Component {
 
 function mapStateToProps(state) {
   const {invites} = state;
-  return {invites};
+  return {invites, modal: invites.modal};
 }
 
 const connectedInvitePlayersComponent = withRouter(connect(mapStateToProps)(InvitePlayersComponent));

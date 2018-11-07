@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from "react-router";
 
-import {user, inviteService} from '../../services';
+import {user, inviteService, alerts, authService} from '../../services';
 
 import {InputText} from '../../components/Inputs';
 
@@ -60,6 +60,20 @@ export class AccountPage extends React.Component {
     })
   }
 
+  googleLoginSuccess = (data) => {
+    const {dispatch} = this.props;
+    const invite = this.state.invite
+      ? this.state.invite.token
+      : null;
+
+    dispatch(authService.googleLogin(data, invite));
+  }
+
+  googleLoginFailure = (data) => {
+    const {dispatch} = this.props;
+    dispatch(alerts.actions.bad('Hmm... Google register failed!'));
+  }
+
   handleCreate = (e) => {
     e.preventDefault();
     const {dispatch} = this.props;
@@ -102,7 +116,7 @@ export class AccountPage extends React.Component {
     switch (this.state.action) {
       case 'create':
       case 'invite':
-        return <CreateInvite action={action} state={this.state} handleInputChange={handleInputChange} handleSignin={handleSignin} handleCreate={handleCreate}></CreateInvite>
+        return <CreateInvite googleLoginSuccess={this.googleLoginSuccess} googleLoginFailure={this.googleLoginFailure} action={action} state={this.state} handleInputChange={handleInputChange} handleSignin={handleSignin} handleCreate={handleCreate}></CreateInvite>
 
       case 'forgot':
         return <div>

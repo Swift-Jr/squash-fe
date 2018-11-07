@@ -21,7 +21,7 @@ export class UserModel extends Model {
   }
 
   getUserId() {
-    return this.getId();
+    return parseInt(this.getId(), 10);
   }
 
   getClubs() {
@@ -110,7 +110,7 @@ function getUserById(id) {
 
   let user = club
     .getMembers()
-    .filter(member => member.getUserId() == parseInt(id));
+    .filter(member => member.getUserId() === parseInt(id, 10));
 
   if (user.length > 0) {
     return user[0];

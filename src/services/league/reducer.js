@@ -1,4 +1,5 @@
 import leagueService from "./";
+import {gameService} from "../";
 
 const initialState = {
   list: [],
@@ -54,7 +55,11 @@ export const leagueReducer = (state = initialState, action = null) => {
         ...state,
         listUpdated: false
       };
+
+    case gameService.types.CREATE_GAME_SUCCESS:
     case types.FETCH_LEAGUES_SUCCESS:
+      if (payload.league && !payload.leagues)
+        payload.leagues = [payload.league];
       let existingLeagues = state.list.filter(league => {
         return (
           payload.leagues.filter(newLeague => league.id === newLeague.id)
