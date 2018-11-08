@@ -45,6 +45,56 @@ function create(name) {
   }
 }
 
+function updateClub(id, attrs) {
+  return dispatch => {
+    dispatch(request(id, attrs));
+
+    clubService
+      .update(id, attrs)
+      .then(club => {
+        dispatch(success(club));
+        dispatch(alerts.actions.good(() => (<div>
+          <b>{club.name}</b>&nbsp; is now {
+            club.deleted
+              ? 'deleted'
+              : 'archived'
+          }
+        </div>)));
+      })
+      .catch(error => {
+        if (!responseHandler(error)) {
+          dispatch(failure(error));
+        }
+      });
+  };
+
+  function request(id, attrs) {
+    return {
+      type: clubService.types.UPDATE_CLUB_REQUEST,
+      payload: {
+        id,
+        attrs
+      }
+    };
+  }
+
+  function success(updatedclub) {
+    return {
+      type: clubService.types.UPDATE_CLUB_SUCCESS,
+      payload: {
+        club: updatedclub
+      }
+    };
+  }
+
+  function failure(error) {
+    return {type: clubService.types.UPDATE_CLUB_FAILURE, payload: {
+        error
+      }};
+  }
+}
+
 export const clubActions = {
-  create
+  create,
+  updateClub
 };

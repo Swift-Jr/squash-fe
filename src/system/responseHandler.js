@@ -34,7 +34,7 @@ const responseHandler = response => {
       }
       return false;
     case 500:
-      if (response.data.error) {
+      if (response.data && response.data.error) {
         dispatch(
           alerts.actions.bad(
             `The server responded with a sad face. (${response.data.error})`,

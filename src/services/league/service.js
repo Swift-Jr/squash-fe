@@ -3,7 +3,7 @@ import {store} from "../../system/store";
 import moment from "moment";
 import responseHandler from "../../system/responseHandler";
 
-import {clubService, leagueService} from "../../services";
+import {clubService, leagueService, gameService} from "../../services";
 
 import {Model} from "react-axiom";
 import {UserModel} from "../user.service";
@@ -32,6 +32,10 @@ export class LeagueModel extends Model {
 
   getResults() {
     return this.state.results.map(result => new LeagueResult(result));
+  }
+
+  getGames() {
+    return gameService.getLeagueGames(this.state.id);
   }
 }
 
@@ -77,6 +81,25 @@ function create(name, shortname) {
     });
 }
 
+function update(id, attrs) {
+  const data = {
+    id,
+    attrs
+  };
+
+  return api()
+    .post("/league/update/", data)
+    .then(response => {
+      if (response.status === 202 && response.data.league) {
+        return response.data.league;
+      } else if (!responseHandler(response)) {
+        throw new Error(
+          "Yikes! Ran into an unknown problem trying to update that."
+        );
+      }
+    });
+}
+
 function getLeagues(clubId) {
   return api()
     .get("/me/leagues/" + clubId)
@@ -88,7 +111,7 @@ function getLeagues(clubId) {
     });
 }
 
-function getUsersLeagues(clubId) {
+function getUsersLeagues(clubId, archived = false) {
   let leagues = [];
 
   if (store && store.getState().league.list) {
@@ -119,6 +142,7 @@ function getUsersLeagues(clubId) {
     }
   }
   return leagues
+    .filter(league => archived || !league.archived)
     .map(league => new LeagueModel(league))
     .sort(
       (a, b) => (!a.getLastGame() || a.getLastGame() < b.getLastGame() ? 1 : -1)
@@ -167,6 +191,7 @@ function getUserScorecard(userId, leagues) {
 
 export const leaguesService = {
   create,
+  update,
   getUsersLeagues,
   getLeagueById,
   getUserScorecard,

@@ -18,8 +18,8 @@ export class ClubModel extends Model {
     };
   }
 
-  getLeagues() {
-    return leagueService.getUsersLeagues(this.state.id);
+  getLeagues(archived = false) {
+    return leagueService.getUsersLeagues(this.state.id, archived);
   }
 
   getMembers() {
@@ -60,6 +60,25 @@ function create(name) {
     });
 }
 
+function update(id, attrs) {
+  const data = {
+    id,
+    attrs
+  };
+
+  return api()
+    .post("/club/update/", data)
+    .then(response => {
+      if (response.status === 202 && response.data.club) {
+        return response.data.club;
+      } else if (!responseHandler(response)) {
+        throw new Error(
+          "Yikes! Ran into an unknown problem trying to update that."
+        );
+      }
+    });
+}
+
 function getUserClubs() {
   let userClubsData = [];
 
@@ -82,6 +101,7 @@ function getCurrentClub() {
 
 export const clubsService = {
   create,
+  update,
   getUserClubs,
   getCurrentClub
 };

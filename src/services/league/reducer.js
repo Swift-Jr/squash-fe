@@ -9,6 +9,12 @@ const initialState = {
     created: false,
     league: null,
     error: null
+  },
+  update: {
+    submitted: false,
+    updated: false,
+    league: null,
+    error: null
   }
 };
 
@@ -42,6 +48,37 @@ export const leagueReducer = (state = initialState, action = null) => {
           submitted: false,
           created: false,
           league: payload.name,
+          error: payload.error
+        }
+      };
+    case types.UPDATE_LEAGUE_REQUEST:
+      return {
+        ...state,
+        update: {
+          submitted: true,
+          updated: false
+        }
+      };
+    case types.UPDATE_LEAGUE_SUCCESS:
+      let leagueList = state.list.filter(
+        league => league.id !== payload.league.id
+      );
+      return {
+        ...state,
+        update: {
+          submitted: false,
+          updated: true,
+          league: payload.league
+        },
+        list: leagueList.concat([payload.league])
+      };
+    case types.UPDATE_LEAGUE_FAILURE:
+      return {
+        ...state,
+        updated: {
+          submitted: false,
+          updated: false,
+          league: payload.league,
           error: payload.error
         }
       };

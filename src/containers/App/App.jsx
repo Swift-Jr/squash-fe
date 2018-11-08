@@ -23,6 +23,7 @@ import {Club} from '../Club';
 import {HeadToHead} from '../HeadToHead';
 import {Scorecard} from '../Scorecard';
 import {Profile} from '../Profile';
+import {Privacy} from '../Privacy';
 import {NotFound} from '../NotFound';
 import {ViewLeague} from '../ViewLeague';
 import {MyLeaguesClubs} from '../MyLeaguesClubs';
@@ -154,6 +155,7 @@ export class AppWrapper extends React.Component {
             : <Switch>
                 <Route path="/login/:func?" component={Login}/>
                 <Route path="/account/:action?/:actionId?" component={Account}/>
+                <Route path="/privacy/" component={Privacy}/>
                 <ProtectedRoute exact={true} path="/" component={MyLeagues}/>
                 <ProtectedRoute path="/myleagues" component={MyLeagues}/>
                 <ProtectedRoute path="/club" component={Club}/>

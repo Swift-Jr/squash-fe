@@ -45,6 +45,51 @@ function create(name, shortname) {
   }
 }
 
+function updateLeague(id, attrs) {
+  return dispatch => {
+    dispatch(request(id, attrs));
+
+    leagueService
+      .update(id, attrs)
+      .then(league => {
+        dispatch(success(league));
+        dispatch(alerts.actions.good(() => (<div>
+          <b>{league.name}</b>&nbsp; is now {league.deleted && 'deleted' || league.archived && 'archived' || !league.archived && 'unarchived'}
+        </div>)));
+      })
+      .catch(error => {
+        if (!responseHandler(error)) {
+          dispatch(failure(error));
+        }
+      });
+  };
+
+  function request(id, attrs) {
+    return {
+      type: leagueService.types.UPDATE_LEAGUE_REQUEST,
+      payload: {
+        id,
+        attrs
+      }
+    };
+  }
+
+  function success(updatedleague) {
+    return {
+      type: leagueService.types.UPDATE_LEAGUE_SUCCESS,
+      payload: {
+        league: updatedleague
+      }
+    };
+  }
+
+  function failure(error) {
+    return {type: leagueService.types.UPDATE_LEAGUE_FAILURE, payload: {
+        error
+      }};
+  }
+}
+
 function getLeagues(clubId) {
   return dispatch => {
 
@@ -83,5 +128,6 @@ function getLeagues(clubId) {
 
 export const leagueActions = {
   create,
-  getLeagues
+  getLeagues,
+  updateLeague
 };

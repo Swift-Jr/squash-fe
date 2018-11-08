@@ -10,7 +10,7 @@ export const CreateInvite = props => (<div>
   <img className="appLogoExternal shorter" src={logoSmall} alt="Application Logo"/>
   <form>
     <div className={styles.googleLogin}>
-      <GoogleLogin clientId="474168737882-6eb001ad86fc66ktc0dkvhopsedfc203.apps.googleusercontent.com" isSignedIn={true} onSuccess={props.googleLoginSuccess} onFailure={props.googleLoginFailure}>
+      <GoogleLogin clientId={process.env.GOOGLE_CLIENT_ID} isSignedIn={true} onSuccess={props.googleLoginSuccess} onFailure={props.googleLoginFailure}>
         <i className="fab fa-google"></i>
         <span>Register with Google</span>
       </GoogleLogin>

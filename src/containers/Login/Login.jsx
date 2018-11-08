@@ -90,7 +90,7 @@ export class LoginPage extends React.Component {
   }
 
   googleLogin = () => {
-    return <GoogleLogin clientId="474168737882-6eb001ad86fc66ktc0dkvhopsedfc203.apps.googleusercontent.com" isSignedIn={true} onSuccess={this.googleLoginSuccess} onFailure={this.googleLoginFailure} style={{}} className={styles.googleLoginButton}>
+    return <GoogleLogin clientId={process.env.GOOGLE_CLIENT_ID} isSignedIn={true} onSuccess={this.googleLoginSuccess} onFailure={this.googleLoginFailure} style={{}} className={styles.googleLoginButton}>
       <i className="fab fa-google"></i>
       <span>Sign in with Google</span>
     </GoogleLogin>

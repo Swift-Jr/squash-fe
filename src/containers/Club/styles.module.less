@@ -1,0 +1,69 @@
+@import "../../shared.less";
+
+ul.invitesList,
+ul.leaguesList,
+ul.membersList {
+  padding: 0;
+  margin: 0;
+
+  li {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px;
+
+    p {
+      color: @almostwhite;
+      opacity: 0.6;
+    }
+  }
+}
+
+ul.leaguesList {
+  li {
+    padding: 1px 10px 10px;
+    background-color: rgba(196, 196, 196, 0.1);
+
+    &.archived {
+      opacity: 0.5;
+    }
+
+    > i {
+      margin-top: 34px;
+    }
+
+    > i.leftIcon {
+      float: left;
+      margin-right: 15px;
+      margin-left: 7px;
+    }
+
+    i.rightIcon {
+      float: right;
+      margin-left: 15px;
+      margin-right: 7px;
+    }
+  }
+}
+
+.actions {
+  button {
+    &.badAction {
+      color: @bloodred !important;
+    }
+
+    i {
+      margin-right: 15px;
+      margin-top: 18px;
+    }
+  }
+}
+
+.badge {
+  text-transform: uppercase;
+  margin-right: 10px;
+
+  span {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+}

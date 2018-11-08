@@ -9,6 +9,12 @@ const initialState = {
     created: false,
     club: null,
     error: null
+  },
+  update: {
+    submitted: false,
+    updated: false,
+    club: null,
+    error: null
   }
 };
 
@@ -44,6 +50,35 @@ export const clubReducer = (state = initialState, action = null) => {
           club: payload.name,
           error: payload.error
         }
+      };
+    case types.UPDATE_CLUB_FAILURE:
+      return {
+        ...state,
+        updated: {
+          submitted: false,
+          updated: false,
+          club: payload.name,
+          error: payload.error
+        }
+      };
+    case types.UPDATE_CLUB_REQUEST:
+      return {
+        ...state,
+        update: {
+          submitted: true,
+          updated: false
+        }
+      };
+    case types.UPDATE_CLUB_SUCCESS:
+      let clubList = state.list.filter(club => club.id !== payload.club.id);
+      return {
+        ...state,
+        update: {
+          submitted: false,
+          updated: true,
+          club: payload.club
+        },
+        list: clubList.concat([payload.club])
       };
     case userService.types.RETREIVE_PROFILE:
       return {
