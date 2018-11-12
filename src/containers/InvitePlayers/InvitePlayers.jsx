@@ -158,7 +158,7 @@ export class InvitePlayersComponent extends React.Component {
   }
 
   isVisible = () => {
-    return this.props.invites.request.error || (this.props.invites.request.submitted && this.props.invites.request.created === false) || this.state.visible;
+    return this.props.modal.open;
   }
 
   render() {

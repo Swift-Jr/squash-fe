@@ -62,43 +62,9 @@ export class AppWrapper extends React.Component {
   }
 
   homescreenPreflight = (e) => {
-    // Prevent Chrome 67 and earlier from automatically showing the prompt
     e.preventDefault();
-    // Stash the event so it can be triggered later.
     let saveToHomescreenPrompt = e;
-    /*let promptOptions = {
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true
-    };*/
-
     this.setState({appInstalled: false, saveToHomescreenPrompt});
-
-    /*this
-      .props
-      .dispatch(alerts.actions.good(this.addToHomescreenAlert(saveToHomescreenPrompt), promptOptions));*/
-
-  }
-
-  addToHomescreenAlert = saveToHomescreenPrompt => {
-    return <div>Add to homescreen<button onClick={() => { // hide our user interface that shows our A2HS button
-        // Show the prompt
-        saveToHomescreenPrompt.prompt();
-        // Wait for the user to respond to the prompt
-        saveToHomescreenPrompt
-          .userChoice
-          .then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-              console.log('User accepted the A2HS prompt');
-            } else {
-              console.log('User dismissed the A2HS prompt');
-            }
-            saveToHomescreenPrompt = null;
-          });
-      }}>Do it</button>
-    </div>
   }
 
   componentDidUpdate = () => {
@@ -167,7 +133,7 @@ export class AppWrapper extends React.Component {
   render() {
     const {alerts} = this.props;
 
-    if (this.state.appInstalled !== true) {
+    if (this.state.appInstalled !== true && this.isLoggedIn()) {
       return (<InstallPrompt prompt={this.state.saveToHomescreenPrompt} appInstalled={this.state.appInstalled} onInstall={this.onAppInstall}></InstallPrompt>);
     }
 
