@@ -40,8 +40,8 @@ export class AppWrapper extends React.Component {
     super(props);
     let appInstalled = true;
 
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-      appInstalled = -1;
+    if (!window.matchMedia('(display-mode: standalone)').matches) {
+      appInstalled = false;
     }
 
     this.state = {

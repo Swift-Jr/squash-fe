@@ -74,7 +74,7 @@ export const invitesReducer = (state = initialState, action = null) => {
     case types.FETCH_INVITES_SUCCESS:
       return {
         ...state,
-        list: state.list.concat(payload.invites),
+        list: payload.invites,
         listUpdated: new Date()
       };
     default:
