@@ -2,7 +2,7 @@ import React from 'react';
 
 import {JoinLeagueClub} from '../JoinLeagueClub';
 import {CreateClub} from '../CreateClub';
-import {CreateLeague} from '../CreateLeague';
+import {leagueService} from '../../services';
 
 import styles from './styles.module.css';
 
@@ -11,8 +11,12 @@ class DefaultWelcome extends React.Component {
     super(props);
     this.state = props;
 
-    this.handleCreateType = this.handleCreateType.bind(this);
-    this.handleClubClose = this.handleClubClose.bind(this);
+    this.handleCreateType = this
+      .handleCreateType
+      .bind(this);
+    this.handleClubClose = this
+      .handleClubClose
+      .bind(this);
   }
 
   handleCreateType(type) {
@@ -21,6 +25,12 @@ class DefaultWelcome extends React.Component {
     } else {
       this.setState({createLeague: true});
     }
+  }
+
+  handleLeagueOpen = (e) => {
+    this
+      .props
+      .dispatch(leagueService.actions.open());
   }
 
   handleClubClose() {

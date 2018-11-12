@@ -7,7 +7,7 @@ import {GoogleLogout} from 'react-google-login';
 
 import {iconSettings, logoSmall} from './images';
 
-import {userService, authService, inviteService} from '../../services';
+import {userService, authService, inviteService, leagueService} from '../../services';
 
 import styles from './styles.module.css';
 
@@ -50,6 +50,15 @@ export class AppHeaderComponent extends React.Component {
     return false;
   }
 
+  handleCreateLeague = e => {
+    this.handleLinkClick(e);
+    e.preventDefault();
+    this
+      .props
+      .dispatch(leagueService.actions.open());
+    return false;
+  }
+
   render = () => {
     const {clubname} = this.props;
     const username = userService
@@ -71,7 +80,7 @@ export class AppHeaderComponent extends React.Component {
       </div>
       <ul className={`${styles.settingMenu} ${menuState}`}>
         <li>
-          <Link to="/" onClick={this.handleLinkClick}>Create a League</Link>
+          <Link to="/" onClick={this.handleCreateLeague}>Create a League</Link>
         </li>
         <li>
           <Link to="/" onClick={this.handleInvite}>Invite</Link>
@@ -79,7 +88,7 @@ export class AppHeaderComponent extends React.Component {
         <li>
           <Link to="/profile" onClick={this.handleLinkClick}>Profile</Link>
         </li>
-        <li>
+        <li className={styles.googleSignout}>
           <GoogleLogout style={{}}>
             <Link to="/login/out" onClick={this.handleSignOut}>Sign Out
             </Link>

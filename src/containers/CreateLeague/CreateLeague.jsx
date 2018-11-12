@@ -17,7 +17,7 @@ export const BodyContent = (props) => {
 
   return (<div className={styles.bottomContent}>
     <InputText name="shortLeagueName" value={props.value} onChange={props.onChange} darkStyle={true} label="Short Name" placeholder="Max 10 characters" maxLength="10" autoComplete="off"/>
-    <div className="fixedBottom">
+    <div className="fixedBottom lightBg">
       <button className="large" onClick={props.onSubmit}>Create League</button>
     </div>
   </div>);
@@ -44,6 +44,9 @@ export class CreateLeagueComponent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.league.createLeague.open) {
+      return this.setState({visible: true});
+    }
     if (this.state !== nextProps) {
       this.setState(nextProps);
     }
@@ -54,6 +57,9 @@ export class CreateLeagueComponent extends React.Component {
     this.setState({
       visible: false
     }, () => onClose && onClose(this.state.visible));
+    this
+      .props
+      .dispatch(leagueService.actions.close());
   }
 
   handleOnOpen() {
@@ -99,12 +105,16 @@ export class CreateLeagueComponent extends React.Component {
   }
 
   isVisible = () => {
-    return this.props.league.submitted || this.props.league.created === false || this.state.visible;
+    return this.props.league.createLeague.open;
   }
 
   render() {
     return (<div>
-      <button className={this.state.buttonClass} onClick={this.handleOnOpen}>{this.state.buttonTitle}</button>
+      {
+        this.props.noButton
+          ? null
+          : <button className={this.state.buttonClass} onClick={this.handleOnOpen}>{this.state.buttonTitle}</button>
+      }
       {
         this.isVisible()
           ? <FullModal onClose={this.handleOnClose} headContent={this.getHeadContent()} bodyContent={this.getBodyContent()}></FullModal>

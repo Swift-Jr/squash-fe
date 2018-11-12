@@ -31,6 +31,13 @@ export const invitesReducer = (state = initialState, action = null) => {
           created: false
         }
       };
+    case types.CLOSE_INVITE:
+      return {
+        ...state,
+        modal: {
+          open: false
+        }
+      };
     case types.CREATE_INVITE_REQUEST:
       return {
         ...state,

@@ -7,6 +7,8 @@ import {authService, alerts} from '../../services';
 import {InputText} from '../../components/Inputs';
 
 import {logoSmall} from '../App/images';
+import googleIcon from '../App/images/google-icon.png';
+
 import styles from './styles.module.css';
 
 //TODO: Move to history service
@@ -90,8 +92,8 @@ export class LoginPage extends React.Component {
   }
 
   googleLogin = () => {
-    return <GoogleLogin clientId={process.env.GOOGLE_CLIENT_ID} isSignedIn={true} onSuccess={this.googleLoginSuccess} onFailure={this.googleLoginFailure} style={{}} className={styles.googleLoginButton}>
-      <i className="fab fa-google"></i>
+    return <GoogleLogin clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} isSignedIn={true} onSuccess={this.googleLoginSuccess} onFailure={this.googleLoginFailure} style={{}} className={styles.googleLoginButton}>
+      <img src={googleIcon} alt="Google Logo"/>
       <span>Sign in with Google</span>
     </GoogleLogin>
   }
@@ -119,6 +121,7 @@ export class LoginPage extends React.Component {
               {this.googleLogin()}
               <span className={styles.or}>or</span>
             </div>
+            <button className="small" onClick={this.handleCreate}>Create Account</button>
             <button onClick={this.showLoginForm} className="large">Sign in with e-mail</button>
           </div>
       }

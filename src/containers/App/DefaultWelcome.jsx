@@ -3,10 +3,9 @@ import {withRouter} from "react-router";
 
 import {connect} from 'react-redux';
 import {CreateClub} from '../CreateClub';
-import {CreateLeague} from '../CreateLeague';
 import {InvitePlayers} from '../InvitePlayers';
 
-import {clubService} from '../../services';
+import {clubService, leagueService} from '../../services';
 
 import styles from './styles.module.css';
 
@@ -17,6 +16,12 @@ class DefaultWelcomeComponent extends React.Component {
 
   handleLeagueClose = () => {
     this.setState({createLeague: false});
+  }
+
+  handleLeagueOpen = (e) => {
+    this
+      .props
+      .dispatch(leagueService.actions.open());
   }
 
   createClubIsVisible = () => {
@@ -58,7 +63,7 @@ class DefaultWelcomeComponent extends React.Component {
       {
         !this.userHasClubs()
           ? <div className={styles.noClubs}>
-              <i class="far fa-hand-peace fa-6x"></i>
+              <i className="far fa-hand-peace fa-6x"></i>
               <p>If you’re ready to beat someone, ask your friends to invite you or create your own club.</p>
               <CreateClub buttonClass="large" buttonTitle="Create a club"></CreateClub>
             </div>
@@ -74,7 +79,7 @@ class DefaultWelcomeComponent extends React.Component {
                       .getUserClubs()[0]
                       .getName()
                   }</b>. Now let's add a League!</p>
-              <CreateLeague buttonTitle="Create a league"></CreateLeague>
+              <button className="large" onClick={this.handleLeagueOpen}>Create a league</button>
             </div>
           : null
       }

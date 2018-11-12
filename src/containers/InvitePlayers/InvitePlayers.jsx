@@ -75,6 +75,9 @@ export class InvitePlayersComponent extends React.Component {
     this.setState({
       visible: false
     }, () => onClose && onClose(this.state.visible));
+    this
+      .props
+      .dispatch(inviteService.actions.close());
   }
 
   handleOnOpen() {

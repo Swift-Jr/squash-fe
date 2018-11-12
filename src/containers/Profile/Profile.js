@@ -53,7 +53,7 @@ export class ProfileComponent extends React.Component {
       <InputText name="email" label="Email" value={profile.email} disabled={isDisabled} onChange={this.onInputChange}/>
       <InputText name="firstname" label="First name" value={profile.firstname} disabled={isDisabled} onChange={this.onInputChange}/>
       <InputText name="lastname" label="Last name" value={profile.lastname} disabled={isDisabled} onChange={this.onInputChange}/>
-      <div className="fixedBottom">
+      <div className="stickyBottom">
         <InputButton className="large" onClick={this.onSubmit} disabled={isDisabled || missingValues} isLoading={isSaving}>
           Save Profile
         </InputButton>

@@ -5,6 +5,7 @@ const CREATE_INVITE_FAILURE = "@app/invite/CREATE_INVITE_FAILURE";
 const FETCH_INVITES_SUCCESS = "@app/invite/FETCH_INVITES_SUCCESS";
 
 const OPEN_INVITE = "@app/invite/OPEN_INVITE";
+const CLOSE_INVITE = "@app/invite/CLOSE_INVITE";
 
 export const invitesTypes = {
   CREATE_INVITE_REQUEST,
@@ -13,5 +14,6 @@ export const invitesTypes = {
 
   FETCH_INVITES_SUCCESS,
 
-  OPEN_INVITE
+  OPEN_INVITE,
+  CLOSE_INVITE
 };

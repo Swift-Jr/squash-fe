@@ -2,7 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {Link} from 'react-router-dom';
 
-import {clubService, leagueService} from '../../services';
+import {clubService, leagueService, userService} from '../../services';
 import {InputButton} from '../../components/Inputs';
 
 import styles from './styles.module.css';
@@ -120,18 +120,33 @@ export class ClubComponent extends React.Component {
                 }
               </div>
               <div className="col-xs-6">
-                <InputButton className={`small ${styles.badAction}`} onClick={() => this.deleteLeague(league.getId(), deleteConfirm)}>
+                <InputButton className={`small ${styles.badAction}`} onClick={() => this.deleteLeague(league.getId(), deleteConfirm)} disabled={this.canDeleteLeague(league)}>
                   <i className="far fa-trash-alt"></i>
                   {
                     deleteConfirm === league.getId()
                       ? `Sure?`
                       : `Delete`
                   }</InputButton>
+                : null
+
               </div>
 
             </div>
         }
       </li>)
+  }
+
+  canDeleteLeague = league => {
+    const userId = userService
+      .getCurrentUser()
+      .getId();
+
+    return league
+      .owner
+      .getId() === userId || clubService
+      .getCurrentClub()
+      .owner
+      .getId();
   }
 
   getMembers = () => {

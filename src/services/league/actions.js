@@ -45,6 +45,13 @@ function create(name, shortname) {
   }
 }
 
+function open() {
+  return {type: leagueService.types.OPEN_CREATE_LEAGUE, payload: {}}
+}
+function close() {
+  return {type: leagueService.types.CLOSE_CREATE_LEAGUE, payload: {}}
+}
+
 function updateLeague(id, attrs) {
   return dispatch => {
     dispatch(request(id, attrs));
@@ -54,7 +61,7 @@ function updateLeague(id, attrs) {
       .then(league => {
         dispatch(success(league));
         dispatch(alerts.actions.good(() => (<div>
-          <b>{league.name}</b>&nbsp; is now {league.deleted && 'deleted' || league.archived && 'archived' || !league.archived && 'unarchived'}
+          <b>{league.name}</b>&nbsp; is now {(league.deleted && 'deleted') || (league.archived && 'archived') || (!league.archived && 'unarchived')}
         </div>)));
       })
       .catch(error => {
@@ -129,5 +136,7 @@ function getLeagues(clubId) {
 export const leagueActions = {
   create,
   getLeagues,
-  updateLeague
+  updateLeague,
+  open,
+  close
 };

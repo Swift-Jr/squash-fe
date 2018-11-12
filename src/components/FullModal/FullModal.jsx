@@ -18,8 +18,12 @@ export class FullModal extends React.Component {
       onBack: props.onBack || null
     }
 
-    this.handleOnClose = this.handleOnClose.bind(this);
-    this.handleOnBack = this.handleOnBack.bind(this);
+    this.handleOnClose = this
+      .handleOnClose
+      .bind(this);
+    this.handleOnBack = this
+      .handleOnBack
+      .bind(this);
   }
 
   componentDidMount() {

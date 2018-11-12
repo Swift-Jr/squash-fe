@@ -185,6 +185,20 @@ button {
   left: 0;
   right: 0;
   padding: 0 20px 10px;
+
+  &.lightBg {
+    background-color: @lightgrey;
+  }
+}
+
+.stickyBottom {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 20px 10px;
+  z-index: 500;
+  background-color: @darkblue;
 }
 
 .fixedBottom+.fader,
@@ -203,6 +217,23 @@ button {
   left: 15px;
   background: @darkblue;
   z-index: 249;
+}
+
+.stickyTop {
+  position: sticky;
+  top: 0;
+  right: 15px;
+  left: 15px;
+  background: @darkblue;
+  z-index: 249;
+}
+
+.stickyHeader {
+  position: sticky;
+  top: 20px;
+  right: 15px;
+  left: 15px;
+  background: @darkblue;
 }
 
 .menuIsVisible {

@@ -1,12 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {clubService, inviteService} from '../../services';
+import {clubService, inviteService, leagueService} from '../../services';
 
 import {LeagueRepeater} from './LeagueRepeater';
 import {PlayMatch} from '../PlayMatch';
 import {Loading} from '../App/Loading';
-import {CreateLeague} from '../CreateLeague';
 
 import styles from './styles.module.css';
 
@@ -42,6 +41,12 @@ export class MyLeaguesComponent extends React.Component {
       .dispatch(inviteService.actions.open());
   }
 
+  handleLeagueOpen = (e) => {
+    this
+      .props
+      .dispatch(leagueService.actions.open());
+  }
+
   render() {
     return (<div className="fixedPaddingBottom">
       <h1>Club Leagues</h1>
@@ -63,9 +68,9 @@ export class MyLeaguesComponent extends React.Component {
       {
         !this.clubHasLeagues() && typeof(this.props.league.listUpdated) !== "boolean"
           ? <div className={styles.noLeagues}>
-              <i class="far fa-grin-beam-sweat fa-6x"></i>
+              <i className="far fa-grin-beam-sweat fa-6x"></i>
               <p>You'll need to add a League to this Club to get playing!</p>
-              <CreateLeague visible={false} buttonTitle="Add a league"></CreateLeague>
+              <button className="large" onClick={this.handleLeagueOpen}>Add a league</button>
             </div>
           : null
       } {

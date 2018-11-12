@@ -7,7 +7,6 @@
   left: 0;
   right: 0;
   background-color: @lightgrey;
-  margin-top: 20px;
   padding-bottom: 20px;
   animation-duration: 500ms;
   z-index: 1000;
@@ -15,16 +14,15 @@
 
 .topContent {
   background-color: @darkblue;
-  height: 240px;
   text-align: right;
-  padding: 0 20px;
+  padding: 20px 20px 10px;
 
   .closeIcon {
     margin-right: -15px;
   }
 
   .appLogo {
-    margin: 24px auto 60px;
+    margin: 24px auto 40px;
     display: block;
   }
 
@@ -33,9 +31,17 @@
   }
 }
 
+.headContent {
+  background-color: @darkblue;
+}
+
 .bodyContent {
   bottom: 0;
   color: @darkblue;
   padding: 10px;
   margin-top: 20px;
+}
+
+.modalContent {
+  overflow: auto;
 }

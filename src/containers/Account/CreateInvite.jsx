@@ -5,13 +5,14 @@ import {logoSmall} from '../App/images';
 import {InputText} from '../../components/Inputs';
 
 import styles from './styles.module.css';
+import googleIcon from '../App/images/google-icon.png';
 
 export const CreateInvite = props => (<div>
   <img className="appLogoExternal shorter" src={logoSmall} alt="Application Logo"/>
   <form>
     <div className={styles.googleLogin}>
-      <GoogleLogin clientId={process.env.GOOGLE_CLIENT_ID} isSignedIn={true} onSuccess={props.googleLoginSuccess} onFailure={props.googleLoginFailure}>
-        <i className="fab fa-google"></i>
+      <GoogleLogin clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} isSignedIn={true} onSuccess={props.googleLoginSuccess} onFailure={props.googleLoginFailure} style={{}}>
+        <img src={googleIcon} alt="Google logo"/>
         <span>Register with Google</span>
       </GoogleLogin>
       <span className={styles.or}>or</span>

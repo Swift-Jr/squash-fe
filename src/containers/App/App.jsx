@@ -15,6 +15,7 @@ import AppMenu from './AppMenu';
 import {DefaultWelcome} from './DefaultWelcome';
 import AlertDisplay from './AlertDisplay';
 import Loading from './Loading';
+import InstallPrompt from './InstallPrompt';
 
 import {Account} from '../Account';
 import {Login} from '../Login';
@@ -30,16 +31,24 @@ import {MyLeaguesClubs} from '../MyLeaguesClubs';
 import {Results} from '../Results';
 
 import {InvitePlayers} from '../InvitePlayers';
+import {CreateLeague} from '../CreateLeague';
 
 //import {Authenticator} from './services/Authenticator';
 
 export class AppWrapper extends React.Component {
   constructor(props) {
     super(props);
+    let appInstalled = true;
+
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+      appInstalled = -1;
+    }
+
     this.state = {
       menuIsVisible: false,
       settingsMenuIsVisible: false,
-      authState: null
+      authState: null,
+      appInstalled
     }
 
     authService.registerAuthChange(this.handleAuthChange);
@@ -48,6 +57,48 @@ export class AppWrapper extends React.Component {
       props.dispatch(user.service.getUserProfile());
     }
 
+    window.addEventListener('beforeinstallprompt', this.homescreenPreflight);
+
+  }
+
+  homescreenPreflight = (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    let saveToHomescreenPrompt = e;
+    /*let promptOptions = {
+      autoClose: false,
+      hideProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true
+    };*/
+
+    this.setState({appInstalled: false, saveToHomescreenPrompt});
+
+    /*this
+      .props
+      .dispatch(alerts.actions.good(this.addToHomescreenAlert(saveToHomescreenPrompt), promptOptions));*/
+
+  }
+
+  addToHomescreenAlert = saveToHomescreenPrompt => {
+    return <div>Add to homescreen<button onClick={() => { // hide our user interface that shows our A2HS button
+        // Show the prompt
+        saveToHomescreenPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        saveToHomescreenPrompt
+          .userChoice
+          .then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the A2HS prompt');
+            } else {
+              console.log('User dismissed the A2HS prompt');
+            }
+            saveToHomescreenPrompt = null;
+          });
+      }}>Do it</button>
+    </div>
   }
 
   componentDidUpdate = () => {
@@ -109,25 +160,16 @@ export class AppWrapper extends React.Component {
     });
   }
 
-  getContentPadding = () => {
-    var style = {};
-    if (this.state.menuIsVisible) {
-      style = {
-        paddingTop: '211px'
-      }
-    }
-
-    if (this.state.settingsMenuIsVisible) {
-      style = {
-        paddingTop: '307px'
-      }
-    }
-
-    return style;
+  onAppInstall = () => {
+    this.setState({appInstalled: -1});
   }
 
   render() {
     const {alerts} = this.props;
+
+    if (this.state.appInstalled !== true) {
+      return (<InstallPrompt prompt={this.state.saveToHomescreenPrompt} appInstalled={this.state.appInstalled} onInstall={this.onAppInstall}></InstallPrompt>);
+    }
 
     if (!this.props.user.profile && this.isLoggedIn()) {
       return (<Loading></Loading>);
@@ -137,7 +179,7 @@ export class AppWrapper extends React.Component {
       <AlertDisplay alerts={alerts}></AlertDisplay>
       {
         this.isLoggedIn()
-          ? <div className="fixedTop">
+          ? <div className="stickyHeader">
               <AppHeader visible={this.state.settingsMenuIsVisible} onToggle={this.settingsMenuToggled} clubname={this.getClubname()}></AppHeader>
               {
                 this.isMemberOfSomething()
@@ -148,7 +190,7 @@ export class AppWrapper extends React.Component {
           : null
       }
 
-      <div className="fader" style={this.getContentPadding()}>
+      <div className="fader">
         {
           this.isLoggedIn() && !this.isMemberOfSomething()
             ? <DefaultWelcome club={this.props.club}></DefaultWelcome>
@@ -171,6 +213,7 @@ export class AppWrapper extends React.Component {
       </div>
 
       <InvitePlayers noButton={true}></InvitePlayers>
+      <CreateLeague noButton={true}></CreateLeague>
 
     </div>)
   }

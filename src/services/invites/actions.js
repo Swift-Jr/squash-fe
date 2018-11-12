@@ -55,6 +55,10 @@ function open() {
   return {type: inviteService.types.OPEN_INVITE, payload: {}}
 }
 
+function close() {
+  return {type: inviteService.types.CLOSE_INVITE, payload: {}}
+}
+
 function getAllInvites() {
   return dispatch => {
 
@@ -94,5 +98,6 @@ function getAllInvites() {
 export const invitesActions = {
   create,
   getAllInvites,
-  open
+  open,
+  close
 };

@@ -8,7 +8,8 @@ const initialState = {
     submitted: false,
     created: false,
     league: null,
-    error: null
+    error: null,
+    open: false
   },
   update: {
     submitted: false,
@@ -23,12 +24,30 @@ export const leagueReducer = (state = initialState, action = null) => {
   const {types} = leagueService;
 
   switch (type) {
+    case types.OPEN_CREATE_LEAGUE:
+      return {
+        ...state,
+        createLeague: {
+          submitted: false,
+          created: false,
+          open: true
+        }
+      };
+    case types.CLOSE_CREATE_LEAGUE:
+      return {
+        ...state,
+        createLeague: {
+          ...state.createLeague,
+          open: false
+        }
+      };
     case types.CREATE_LEAGUE_REQUEST:
       return {
         ...state,
         createLeague: {
           submitted: true,
-          created: false
+          created: false,
+          open: true
         }
       };
     case types.CREATE_LEAGUE_SUCCESS:
@@ -37,7 +56,8 @@ export const leagueReducer = (state = initialState, action = null) => {
         createLeague: {
           submitted: false,
           created: true,
-          league: payload.league
+          league: payload.league,
+          open: false
         },
         list: state.list.concat([payload.league])
       };
@@ -48,7 +68,8 @@ export const leagueReducer = (state = initialState, action = null) => {
           submitted: false,
           created: false,
           league: payload.name,
-          error: payload.error
+          error: payload.error,
+          open: true
         }
       };
     case types.UPDATE_LEAGUE_REQUEST:
