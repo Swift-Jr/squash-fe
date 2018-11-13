@@ -150,7 +150,7 @@ function getUsersLeagues(clubId, archived = false) {
 }
 
 function getLeagueById(id) {
-  return getUsersLeagues(null, true).filter(
+  return getUsersLeagues(undefined, true).filter(
     league => league.getId() === parseInt(id, 10)
   )[0];
 }

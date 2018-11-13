@@ -2,6 +2,11 @@
 
 .gameTable {
   margin-bottom: 20px;
+
+  em {
+    font-style: normal;
+    opacity: 0.5;
+  }
 }
 
 .lightText {
@@ -21,9 +26,13 @@
 }
 
 .currentUserHighlight {
-  background-color: rgba(196, 196, 196, 0.2);
+  background-color: rgba(196, 196, 196, 0.15);
 
   .lightText {
     color: @almostwhite;
+  }
+
+  &.stripedRow {
+    background-color: rgba(196, 196, 196, 0.2);
   }
 }

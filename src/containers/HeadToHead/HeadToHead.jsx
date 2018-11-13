@@ -120,6 +120,15 @@ export class HeadToHeadComponent extends React.Component {
           return true;
         }
       })
+      .filter(player => {
+        if (key === 2 && player.getUserId() === this.state.player1Id) {
+          return false;
+        }
+        if (key === 1 && player.getUserId() === this.state.player2Id) {
+          return false;
+        }
+        return true;
+      })
       .map((player) => {
         return {value: player.getUserId(), option: player.getFirstname()}
       });

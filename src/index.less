@@ -22,12 +22,12 @@ a:visited {
 
 header {
   top: 0;
-  margin: 20px 0 0;
+  margin: 0;
   z-index: 1000;
 
   .name {
     font-weight: 700;
-    line-height: 20px;
+    line-height: 26px;
     text-transform: uppercase;
 
     span {
@@ -60,7 +60,7 @@ header {
 }
 
 nav {
-  margin: 30px 0;
+  margin: 30px 0 5px;
   z-index: 1000;
 
   img {
@@ -111,6 +111,7 @@ h1 {
   font-size: 36px;
   line-height: 47px;
   font-weight: 700;
+  margin-top: 5px;
 }
 
 h2 {
@@ -232,11 +233,13 @@ button {
 
 .stickyHeader {
   position: sticky;
-  top: 20px;
+  top: 0;
   right: 15px;
   left: 15px;
   background: @darkblue;
-  z-index: 1000;
+  z-index: 249;
+  margin: 0;
+  padding: 15px 0;
 }
 
 .menuIsVisible {

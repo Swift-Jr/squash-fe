@@ -29,16 +29,20 @@ export const GameHistory = (props) => {
       </tr>
     </thead>
     <tbody className={styles.bold}>
-      <GameHistoryRows games={games.slice(0, props.listSize)} showLeague={showLeague} userId={userId}></GameHistoryRows>
+      <GameHistoryRows games={games.slice(0, props.listSize)} showLeague={showLeague} userContextId={userId}></GameHistoryRows>
     </tbody>
   </table>
 }
 
 export const GameHistoryRows = (props) => {
-  const {games, showLeague, userId} = props;
+  const {games, showLeague, userContextId} = props;
   var counter = 1;
 
-  const selectOtherPlayer = (player1, player2) => player1.getUserId() === userId
+  const currentUserId = userService
+    .getCurrentUser()
+    .getUserId()
+
+  const selectOtherPlayer = (player1, player2) => player1.getUserId() === userContextId
     ? player2
     : player1;
 
@@ -49,7 +53,7 @@ export const GameHistoryRows = (props) => {
       : null;
 
     const userStyle = (
-      game.getPlayer1().getUserId() === userId || game.getPlayer2().getUserId() === userId
+      game.getPlayer1().getUserId() === currentUserId || game.getPlayer2().getUserId() === currentUserId
       ? styles.currentUserHighlight
       : null);
 
@@ -89,9 +93,7 @@ export const GameHistoryRows = (props) => {
                       .getUserId()}`}>{
                       game
                         .getPlayer1()
-                        .getUserId() === userService
-                        .getCurrentUser()
-                        .getUserId()
+                        .getUserId() === currentUserId
                           ? 'Me'
                           : game
                             .getPlayer1()
@@ -118,7 +120,19 @@ export const GameHistoryRows = (props) => {
         }
       </td>
       <td className={styles.score}>
-        <span className={styles.lightText}>{game.getPlayer1Score()}&nbsp;-&nbsp;{game.getPlayer2Score()}</span>
+        <span className={styles.lightText}>{
+            showLeague && game
+              .getPlayer2()
+              .getUserId() === userContextId
+                ? <em>{game.getPlayer1Score()}</em>
+                : game.getPlayer1Score()
+          }&nbsp;-&nbsp;{
+            showLeague && game
+              .getPlayer1()
+              .getUserId() === userContextId
+                ? <em>{game.getPlayer2Score()}</em>
+                : game.getPlayer2Score()
+          }</span>
       </td>
     </tr>
   })
