@@ -40,7 +40,7 @@ export class AppWrapper extends React.Component {
     super(props);
     let appInstalled = true;
 
-    if (!window.matchMedia('(display-mode: standalone)').matches) {
+    if (!window.matchMedia('(display-mode: standalone)').matches && process.env.NODE_ENV === "production") {
       appInstalled = false;
     }
 
@@ -104,7 +104,7 @@ export class AppWrapper extends React.Component {
     if (!authService.check()) {
       state = false;
     }
-    this.setState({menuIsVisible: state, settingsMenuIsVisible: state});
+    this.setState({settingsMenuIsVisible: state});
   }
 
   getMenuState = () => {

@@ -127,8 +127,6 @@ export class ClubComponent extends React.Component {
                       ? `Sure?`
                       : `Delete`
                   }</InputButton>
-                : null
-
               </div>
 
             </div>
@@ -142,10 +140,10 @@ export class ClubComponent extends React.Component {
       .getId();
 
     return league
-      .owner
+      .getOwner()
       .getId() === userId || clubService
       .getCurrentClub()
-      .owner
+      .getOwner()
       .getId();
   }
 
