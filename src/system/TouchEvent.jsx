@@ -36,6 +36,8 @@ class TouchEvent extends React.Component {
   }
 
   addScrollEventListener() {
+    if (!this.hasSwipeEvents()) 
+      return;
     document.addEventListener('touchstart', this.scrollEventListener, {passive: false});
     document.addEventListener('touchmove', this.scrollEventListener, {passive: false});
   }
@@ -59,6 +61,10 @@ class TouchEvent extends React.Component {
   cancelTimeout = () => {
     clearTimeout(this.timeout);
   };
+
+  hasSwipeEvents = () => {
+    return typeof this.props.onSwipe === 'function' || typeof this.props.onSwipeUp === 'function' || typeof this.props.onSwipeDown === 'function' || typeof this.props.onSwipeLeft === 'function' || typeof this.props.onSwipeRight === 'function';
+  }
 
   handleLongPressed = () => {
     this.isLongPress = true;
@@ -171,7 +177,7 @@ class TouchEvent extends React.Component {
           .onTap(event);
       }
 
-    } else if (!this.swipeOutBounded && this.isLongPress === false) {
+    } else if (!this.swipeOutBounded && this.isLongPress === false && this.hasSwipeEvents()) {
       let directionAndDistance = this.calculateDirectionAndDistance();
       let {direction, distance} = directionAndDistance;
 
