@@ -25,10 +25,9 @@ export const gamesReducer = (state = initialState, action = null) => {
         }
       };
     case types.CREATE_GAME_SUCCESS:
-      let list = state.list[payload.leagueId]
-        ? state.list[payload.leagueId].list
-        : [];
-      list.push(payload.game);
+      let leagueId = payload.league.id;
+      let list = state.list[leagueId] ? state.list[leagueId].list : [];
+      list = [payload.game].concat(list);
 
       return {
         ...state,
@@ -39,8 +38,8 @@ export const gamesReducer = (state = initialState, action = null) => {
         },
         list: {
           ...state.list,
-          [payload.leagueId]: {
-            ...state.list[payload.leagueId],
+          [leagueId]: {
+            ...state.list[leagueId],
             list
           }
         }
@@ -82,6 +81,17 @@ export const gamesReducer = (state = initialState, action = null) => {
       /*let leagueGames = state.list[payload.leagueId] || [];
       leagueGames.concat(payload.matches);*/
 
+      return {
+        ...state,
+        list: {
+          ...state.list,
+          [payload.leagueId]: {
+            list: payload.matches,
+            listUpdated: new Date()
+          }
+        }
+      };
+    case types.DELETE_GAME_SUCCESS:
       return {
         ...state,
         list: {

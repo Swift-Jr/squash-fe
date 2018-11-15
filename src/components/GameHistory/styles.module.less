@@ -25,6 +25,30 @@
   background-color: rgba(196, 196, 196, 0.1);
 }
 
+.actions {
+  td {
+    padding: 0;
+
+    div {
+      overflow: hidden;
+      transition: all 1s;
+    }
+  }
+
+  button {
+    margin-bottom: 7px!important;
+
+    &.badAction {
+      color: @bloodred !important;
+    }
+
+    i {
+      margin-right: 15px;
+      margin-top: 18px;
+    }
+  }
+}
+
 .currentUserHighlight {
   background-color: rgba(196, 196, 196, 0.15);
 

@@ -29,7 +29,8 @@ function saveGame(game) {
 
     return gameService
       .saveGame(game)
-      .then(updatedLeague => {
+      .then(response => {
+        let {league, match} = response;
         let message = "Game saved!";
         let me = userService.getCurrentUser().getUserId();
         if (game.player1.getId() === me || game.player2.getId() === me) {
@@ -50,7 +51,7 @@ function saveGame(game) {
               ];
           }
         }
-        dispatch(success(updatedLeague, game));
+        dispatch(success(league, match));
         dispatch(alerts.actions.good(message));
       })
       .catch(error => {
@@ -137,7 +138,57 @@ function getAllGames(leagueId = null) {
   }
 }
 
+function deleteGame(id) {
+  return dispatch => {
+    dispatch(request(id));
+
+    gameService
+      .deleteGame(id)
+      .then(response => {
+        let {league, matches} = response;
+        dispatch(success(league, id, matches));
+        dispatch(alerts.actions.good("Game deleted!"));
+      })
+      .catch(error => {
+        if (!responseHandler(error)) {
+          dispatch(failure(error));
+        }
+      });
+  };
+
+  function request(id) {
+    return {
+      type: gameService.types.DELETE_GAME_REQUEST,
+      payload: {
+        id
+      }
+    };
+  }
+
+  function success(league, id, matches) {
+    return {
+      type: gameService.types.DELETE_GAME_SUCCESS,
+      payload: {
+        league,
+        matches,
+        leagueId: league.id,
+        id
+      }
+    };
+  }
+
+  function failure(error) {
+    return {
+      type: gameService.types.DELETE_GAME_FAILURE,
+      payload: {
+        error
+      }
+    };
+  }
+}
+
 export const gamesActions = {
   saveGame,
+  deleteGame,
   getAllGames
 };

@@ -54,7 +54,7 @@ function saveGame(game) {
     .then(response => {
       if (response.status === 202 && response.data.league) {
         //TODO:Could store games locally to be saved when offline
-        return response.data.league;
+        return response.data;
       } else if (!responseHandler(response)) {
         throw new Error(
           "Yikes! Ran into an unknown problem trying to create that."
@@ -71,6 +71,24 @@ function getAllGames(leagueId = null) {
         return response.data.matches;
       }
       return [];
+    });
+}
+
+function deleteGame(id) {
+  const data = {
+    id
+  };
+
+  return api()
+    .post("/game/delete/", data)
+    .then(response => {
+      if (response.status === 202) {
+        return response.data;
+      } else if (!responseHandler(response)) {
+        throw new Error(
+          "Yikes! Ran into an unknown problem trying to delete that."
+        );
+      }
     });
 }
 
@@ -119,6 +137,7 @@ function getLeagueGames(leagueId = null) {
 export const gamesService = {
   saveGame,
   getAllGames,
+  deleteGame,
   getLeagueGames
 };
 
