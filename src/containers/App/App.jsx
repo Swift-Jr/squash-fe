@@ -5,13 +5,13 @@ import {withRouter} from "react-router";
 import {connect} from 'react-redux';
 
 import PropTypes from 'prop-types';
-import {ProtectedRoute} from '../../system'
+import {ProtectedRoute} from '../../system';
 
 import {authService} from '../../services';
 import {alerts, user, clubService} from '../../services';
 
 import {AppHeader} from './AppHeader';
-import AppMenu from './AppMenu';
+import {AppMenu} from './AppMenu';
 import {DefaultWelcome} from './DefaultWelcome';
 import AlertDisplay from './AlertDisplay';
 import Loading from './Loading';
@@ -48,7 +48,7 @@ export class AppWrapper extends React.Component {
       menuIsVisible: false,
       settingsMenuIsVisible: false,
       authState: null,
-      appInstalled
+      appInstalled,
     }
 
     authService.registerAuthChange(this.handleAuthChange);

@@ -2,12 +2,14 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TouchEvent from '../../system/TouchEvent';
+import {withRouter} from "react-router";
+import {connect} from 'react-redux';
 
 import {PlayMatch} from '../PlayMatch';
 
 import {iconMenu} from './images';
 
-export class AppMenu extends React.Component {
+export class AppMenuComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,10 +29,34 @@ export class AppMenu extends React.Component {
     //this.toggleMenu();
   }
 
+  swipeLocations = ['/myleagues', '/results', '/headtohead', '/scorecard'];
+
+  handleSwipeNavigation = (event) => {
+    const {history, location} = this.props;
+
+    const pathNo = this
+      .swipeLocations
+      .indexOf(
+        location.pathname === '/'
+        ? '/myleagues'
+        : location.pathname);
+
+    console.log(pathNo);
+
+    switch (pathNo) {
+      case - 1:
+        return;
+      case 3:
+        return history.push(this.swipeLocations[0]);
+      default:
+        return history.push(this.swipeLocations[pathNo + 1]);
+    }
+  }
+
   render() {
     const {visible} = this.state;
 
-    return (<TouchEvent onSwipeDown={this.toggleMenu} onSwipeUp={this.toggleMenu} onTap={this.toggleMenu}>
+    return (<TouchEvent onSwipeLeft={this.handleSwipeNavigation} onSwipeRight={this.handleSwipeNavigation} onSwipeDown={this.toggleMenu} onSwipeUp={this.toggleMenu} onTap={this.toggleMenu}>
       <nav>
         <ul className={visible
             ? 'showMenu'
@@ -60,15 +86,24 @@ export class AppMenu extends React.Component {
   }
 }
 
-AppMenu.propTypes = {
+AppMenuComponent.propTypes = {
   visible: PropTypes.bool,
 
   onToggle: PropTypes.func
 }
 
-AppMenu.propDefaults = {
+AppMenuComponent.propDefaults = {
   visible: false,
   onToggle: (state) => {}
 }
 
-export default AppMenu;
+function mapStateToProps(state) {
+  return {};
+}
+
+const connectedAppMenu = withRouter(connect(mapStateToProps)(AppMenuComponent));
+export {
+  connectedAppMenu as AppMenu
+};
+
+//export default AppMenu;
